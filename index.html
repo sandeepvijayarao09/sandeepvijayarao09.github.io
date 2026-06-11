@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sandeep Vijayarao | AI Engineer</title>
+  <meta name="description" content="Sandeep Vijayarao is an AI engineer and MS CS student at Northeastern University building multi-agent systems, vision pipelines, and full-stack products.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/">
+  <meta property="og:title" content="Sandeep Vijayarao | AI Engineer">
+  <meta property="og:description" content="Multi-agent systems, vision pipelines, and full-stack products. MS CS at Northeastern, Apple Swift Student Challenge 2026 winner.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="#top">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="hero container" id="top">
+      <div class="hero-copy">
+        <h1>I build AI systems<br>that ship.</h1>
+        <p class="hero-sub">MS CS at Northeastern. Swift Student Challenge 2026 winner. I work on multi-agent systems, vision pipelines, and full-stack products.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#work">View work</a>
+          <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <canvas id="field"></canvas>
+      </div>
+    </section>
+
+    <section class="proof" aria-label="Credentials">
+      <div class="container proof-grid">
+        <div class="proof-item" data-reveal>
+          <strong>Apple Swift Student Challenge</strong>
+          <span>2026 Winner</span>
+        </div>
+        <div class="proof-item" data-reveal style="--d:.08s">
+          <strong>IEEE</strong>
+          <span>Published researcher</span>
+        </div>
+        <div class="proof-item" data-reveal style="--d:.16s">
+          <strong>Northeastern University</strong>
+          <span>MS in Computer Science</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="work container" id="work">
+      <h2 data-reveal>Selected work</h2>
+
+      <a class="card card-featured" href="https://github.com/sandeepvijayarao09/dual-llm-system" target="_blank" rel="noopener" data-reveal>
+        <div class="card-featured-copy">
+          <h3>Dual-LLM Router</h3>
+          <p>A local model answers simple queries on device, Claude handles the hard ones. Confidence-gated routing keeps most traffic off the API entirely.</p>
+          <ul class="tags" aria-label="Built with">
+            <li>python</li><li>ollama</li><li>claude api</li>
+          </ul>
+          <span class="card-link-hint">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></span>
+        </div>
+        <div class="card-featured-stats">
+          <div class="stat">
+            <span class="stat-num">92.6%</span>
+            <span class="stat-label">routing accuracy</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">85%</span>
+            <span class="stat-label">of queries at zero API cost</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="work-grid">
+        <a class="card span-2" href="https://github.com/sandeepvijayarao09/agentic-research-assistant" target="_blank" rel="noopener" data-reveal>
+          <h3>Agentic Research Assistant</h3>
+          <p>Multi-agent research loop with orchestrator, research, and reasoning agents. Persistent ChromaDB memory plus a sliding window for long sessions.</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>chromadb</li><li>arxiv api</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <a class="card card-grid-bg" href="https://github.com/sandeepvijayarao09/realtime-pose-estimation" target="_blank" rel="noopener" data-reveal style="--d:.08s">
+          <h3>Real-time Pose Estimation</h3>
+          <p>Human pose tracking built on MediaPipe and OpenCV, tuned to hold 30 FPS on commodity hardware.</p>
+          <p class="metric">30 FPS, 85% mAP</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>mediapipe</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <a class="card" href="https://github.com/sandeepvijayarao09/realtime-lane-detection" target="_blank" rel="noopener" data-reveal>
+          <h3>Real-time Lane Detection</h3>
+          <p>Optimized LaneNet inference pipeline for lane detection, profiled and pruned until it ran in real time.</p>
+          <p class="metric">150 FPS</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>pytorch</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <a class="card" href="https://github.com/sandeepvijayarao09/vision-language-grounding" target="_blank" rel="noopener" data-reveal style="--d:.08s">
+          <h3>Vision-Language Grounding</h3>
+          <p>CLIP zero-shot image-text grounding with cross-modal attention visualization, packaged as an interactive Streamlit demo.</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>clip</li><li>streamlit</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <a class="card card-tint" href="https://github.com/sandeepvijayarao09/autofill-pro" target="_blank" rel="noopener" data-reveal style="--d:.16s">
+          <h3>AutoFill Pro</h3>
+          <p>Browser extension that fills job applications across 30+ ATS platforms, with an AI fallback for custom questions.</p>
+          <p class="metric">30+ platforms</p>
+          <ul class="tags" aria-label="Built with"><li>javascript</li><li>chrome extension</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+      </div>
+
+      <p class="work-more" data-reveal>More experiments and coursework live on <a href="https://github.com/sandeepvijayarao09?tab=repositories" target="_blank" rel="noopener">GitHub</a>.</p>
+    </section>
+
+    <section class="about container" id="about">
+      <h2 data-reveal>About</h2>
+      <div class="about-grid">
+        <div class="about-bio" data-reveal>
+          <p>I'm Sandeep, a software engineer focused on AI systems architecture. I've shipped end-to-end products: RAG pipelines, confidence-gated LLM routing, on-device agents in Swift and Kotlin, and the interfaces around them.</p>
+          <p>Right now I'm pursuing my MS in Computer Science at Northeastern University and building agentic tools that hold up outside the demo. Based in San Jose.</p>
+        </div>
+        <div class="about-stack" data-reveal style="--d:.1s">
+          <div class="stack-group">
+            <h3>Systems and agents</h3>
+            <ul class="tags"><li>python</li><li>rag</li><li>chromadb</li><li>ollama</li><li>claude api</li><li>coreml</li></ul>
+          </div>
+          <div class="stack-group">
+            <h3>Vision</h3>
+            <ul class="tags"><li>pytorch</li><li>opencv</li><li>yolov5</li><li>mediapipe</li><li>clip</li></ul>
+          </div>
+          <div class="stack-group">
+            <h3>Full-stack and cloud</h3>
+            <ul class="tags"><li>typescript</li><li>react</li><li>node.js</li><li>swift</li><li>azure</li><li>docker</li><li>kubernetes</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact container" id="contact">
+      <h2 data-reveal>Open to AI engineering internships and new-grad roles.</h2>
+      <a class="contact-email" href="mailto:sandeepvijayarao09@gmail.com" data-reveal style="--d:.08s">sandeepvijayarao09@gmail.com</a>
+      <div class="contact-links" data-reveal style="--d:.16s">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# local agent tooling, not part of the site
+.claude/
+.agents/
+skills-lock.json
+.DS_Store

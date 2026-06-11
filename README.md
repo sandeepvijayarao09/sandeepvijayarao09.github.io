@@ -3,8 +3,11 @@
 Personal portfolio of Sandeep Vijayarao, served by GitHub Pages at
 [sandeepvijayarao09.github.io](https://sandeepvijayarao09.github.io/).
 
-Static site, no build step: plain HTML, CSS, and vanilla JavaScript.
-Fonts (Geist and Geist Mono, OFL-licensed) are self-hosted in `assets/fonts/`.
+Static multi-page site, no build step: plain HTML, CSS, and vanilla JavaScript.
+
+- `/` home, `/work/` projects, `/about/` experience and stack, `/contact/`
+- Cross-page transitions via the CSS View Transitions API (progressive enhancement)
+- Fonts (Geist and Geist Mono, OFL-licensed) self-hosted in `assets/fonts/`
 
 ## Local preview
 

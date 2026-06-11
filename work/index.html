@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work | Sandeep Vijayarao</title>
+  <meta name="description" content="Projects by Sandeep Vijayarao: multi-agent orchestration, LLM routing, on-device inference, and real-time computer vision. Cards link to public repos.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/">
+  <meta property="og:title" content="Work | Sandeep Vijayarao">
+  <meta property="og:description" content="Multi-agent orchestration, LLM routing, on-device inference, and real-time computer vision.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Work</h1>
+      <p class="lede">Agents, vision pipelines, and full-stack products. The numbers are real, and cards link to public repos where they exist.</p>
+    </header>
+
+    <section class="work container" aria-label="Projects">
+
+      <article class="card card-featured" data-reveal>
+        <div class="card-featured-copy">
+          <h3>ANU</h3>
+          <p class="card-context">Apple Swift Student Challenge 2026 winner</p>
+          <p>A Swift-native iOS app with a 10-agent orchestration system on Apple Intelligence APIs. On-device CoreML routing resolves most intents before touching cloud models.</p>
+          <ul class="tags" aria-label="Built with">
+            <li>swift</li><li>coreml</li><li>apple intelligence</li><li>swiftui</li>
+          </ul>
+        </div>
+        <div class="card-featured-stats">
+          <div class="stat">
+            <span class="stat-num">10</span>
+            <span class="stat-label">coordinated on-device agents</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">50%</span>
+            <span class="stat-label">fewer frontier API tokens</span>
+          </div>
+        </div>
+      </article>
+
+      <a class="card card-featured card-featured-alt" href="https://github.com/sandeepvijayarao09/dual-llm-system" target="_blank" rel="noopener" data-reveal>
+        <div class="card-featured-stats">
+          <div class="stat">
+            <span class="stat-num">92.6%</span>
+            <span class="stat-label">routing accuracy</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">85.3%</span>
+            <span class="stat-label">of queries served at zero cost</span>
+          </div>
+        </div>
+        <div class="card-featured-copy">
+          <h3>Dual-LLM Personalization System</h3>
+          <p class="card-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
+          <p>A dual-model router that classifies query complexity and dispatches to a lightweight local model or a frontier LLM, cutting cascade rate from 30.8% to 14.7%.</p>
+          <ul class="tags" aria-label="Built with">
+            <li>python</li><li>langchain</li><li>openclip</li><li>chromadb</li>
+          </ul>
+          <span class="card-link-hint">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></span>
+        </div>
+      </a>
+
+      <div class="work-grid">
+        <a class="card span-2" href="https://github.com/sandeepvijayarao09/agentic-research-assistant" target="_blank" rel="noopener" data-reveal>
+          <h3>Agentic Research Assistant</h3>
+          <p>Multi-agent research loop on Google ADK with dual-layer ChromaDB memory, episodic plus semantic, retaining context across multi-session research workflows.</p>
+          <p class="metric">35% fewer redundant retrievals</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>google adk</li><li>chromadb</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <article class="card" data-reveal style="--d:.07s">
+          <h3>AIFORG</h3>
+          <p>Modular agentic orchestration framework with standardized agent interfaces, dynamic tool registration, and Plan, Reason, Act execution loops.</p>
+          <p class="metric">new tool integration under 2 hours</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>google adk</li><li>langchain</li></ul>
+        </article>
+        <article class="card" data-reveal>
+          <h3>TryOn</h3>
+          <p>NeRF plus 3D Gaussian Splatting pipeline that turns a 360 degree video into a textured human mesh in about 12 minutes end to end.</p>
+          <p class="metric">85% accuracy vs pro 3D capture</p>
+          <ul class="tags" aria-label="Built with"><li>nerf</li><li>gaussian splatting</li><li>pytorch</li></ul>
+        </article>
+        <a class="card" href="https://github.com/sandeepvijayarao09/realtime-lane-detection" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+          <h3>Real-time Lane Detection</h3>
+          <p>YOLOv8 lane segmentation with TensorRT INT8 optimization, built for autonomous-driving edge hardware.</p>
+          <p class="metric">99% accuracy at 150 FPS</p>
+          <ul class="tags" aria-label="Built with"><li>yolov8</li><li>tensorrt</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <a class="card" href="https://github.com/sandeepvijayarao09/vision-language-grounding" target="_blank" rel="noopener" data-reveal style="--d:.14s">
+          <h3>Vision-Language Grounding</h3>
+          <p>Zero-shot grounding on OpenCLIP embeddings, with Stable Diffusion synthetic views improving cross-domain generalization by 14%.</p>
+          <p class="metric">88% top-3, fully zero-shot</p>
+          <ul class="tags" aria-label="Built with"><li>openclip</li><li>stable diffusion</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <article class="card card-tint" data-reveal>
+          <h3>SkillGap AI</h3>
+          <p>Skills-gap analysis platform mapping user profiles against live job-market embeddings. Three PMI San Francisco awards as sole developer.</p>
+          <p class="metric">500+ concurrent users</p>
+          <ul class="tags" aria-label="Built with"><li>react</li><li>rag</li><li>postgresql</li></ul>
+        </article>
+        <a class="card span-2 card-grid-bg" href="https://github.com/sandeepvijayarao09/realtime-pose-estimation" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+          <h3>Real-time Human Pose Estimation</h3>
+          <p>Published at IEEE AISP 2024. A lightweight keypoint regression head on MediaPipe landmark priors cuts parameters by 22% at near-baseline accuracy.</p>
+          <p class="metric">85% mAP, 0.78 IoU, 30 FPS on CPU</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>mediapipe</li><li>pytorch</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+      </div>
+
+      <p class="work-more" data-reveal>More experiments and coursework live on <a href="https://github.com/sandeepvijayarao09?tab=repositories" target="_blank" rel="noopener">GitHub</a>.</p>
+    </section>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/about/" data-reveal>
+        <div>
+          <strong>About</strong><br>
+          <span>Experience, education, and the stack I work in</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/contact/" data-reveal style="--d:.07s">
+        <div>
+          <strong>Contact</strong><br>
+          <span>Email, LinkedIn, and resume</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

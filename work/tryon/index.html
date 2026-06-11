@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TryOn | Sandeep Vijayarao</title>
+  <meta name="description" content="A NeRF plus 3D Gaussian Splatting pipeline that turns a single 360 degree video into a textured human mesh, no studio rig required.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/tryon/">
+  <meta property="og:title" content="TryOn | Sandeep Vijayarao">
+  <meta property="og:description" content="A NeRF plus 3D Gaussian Splatting pipeline that turns a single 360 degree video into a textured human mesh, no studio rig required.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/tryon/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>TryOn</h1>
+      <p class="case-context">360 degree video to textured 3D human reconstruction</p>
+      <p class="lede">A NeRF plus 3D Gaussian Splatting pipeline that turns a single 360 degree video into a textured human mesh, no studio rig required.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">85%</span>
+          <span class="stat-label">accuracy vs professional 3D cameras</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">12 min</span>
+          <span class="stat-label">end-to-end processing</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">18%</span>
+          <span class="stat-label">lower per-frame pose error</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Professional 3D body capture needs a camera rig and a studio. TryOn needs a person, a phone, and twelve minutes. The pipeline reconstructs a textured 3D human mesh from a single 360 degree walk-around video, accurate enough to stand next to rig-based capture.</p>
+      <h2 data-reveal>How it works</h2>
+      <ul class="case-list" data-reveal>
+        <li>MediaPipe landmark preprocessing normalizes each frame before volumetric rendering, anchoring the body's pose.</li>
+        <li>A NeRF stage learns the volumetric representation of the subject from the video sweep.</li>
+        <li>3D Gaussian Splatting converts that representation into a fast, textured mesh.</li>
+        <li>The full pipeline runs end to end in about 12 minutes per subject.</li>
+      </ul>
+      <h2 data-reveal>Results</h2>
+      <ul class="case-list" data-reveal>
+        <li>Achieved 85% reconstruction accuracy compared with professional 3D camera rigs.</li>
+        <li>Reduced per-frame pose estimation error by 18% via MediaPipe input normalization.</li>
+        <li>End-to-end processing in roughly 12 minutes.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>python</li>
+        <li>nerf</li>
+        <li>gaussian splatting</li>
+        <li>mediapipe</li>
+        <li>pytorch</li>
+        <li>opencv</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <p class="case-note">This project is not open source.</p>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/lane-detection/" data-reveal>
+        <div>
+          <strong>Next: Real-time Lane Detection</strong><br>
+          <span>Optimized for autonomous-driving edge hardware</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, nine projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

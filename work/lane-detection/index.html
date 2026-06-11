@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real-time Lane Detection | Sandeep Vijayarao</title>
+  <meta name="description" content="A YOLOv8 lane segmentation model compressed with TensorRT INT8 until it ran at 150 frames per second on embedded GPUs.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/lane-detection/">
+  <meta property="og:title" content="Real-time Lane Detection | Sandeep Vijayarao">
+  <meta property="og:description" content="A YOLOv8 lane segmentation model compressed with TensorRT INT8 until it ran at 150 frames per second on embedded GPUs.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/lane-detection/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Real-time Lane Detection</h1>
+      <p class="case-context">Optimized for autonomous-driving edge hardware</p>
+      <p class="lede">A YOLOv8 lane segmentation model compressed with TensorRT INT8 until it ran at 150 frames per second on embedded GPUs.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">99%</span>
+          <span class="stat-label">detection accuracy</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">150</span>
+          <span class="stat-label">FPS on embedded GPU</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">80%</span>
+          <span class="stat-label">faster than prior baseline</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Lane detection models are easy to make accurate and hard to make fast. On autonomous-driving edge hardware the frame budget is brutal, and a model that misses it is useless no matter how accurate. This project chased both numbers at once.</p>
+      <h2 data-reveal>How it works</h2>
+      <ul class="case-list" data-reveal>
+        <li>A YOLOv8-based segmentation model is trained for lane geometry rather than generic objects.</li>
+        <li>TensorRT INT8 quantization compresses inference without giving back accuracy.</li>
+        <li>The pipeline is profiled and pruned end to end, targeting embedded GPU deployment from the start.</li>
+      </ul>
+      <h2 data-reveal>Results</h2>
+      <ul class="case-list" data-reveal>
+        <li>99% detection accuracy at 150 FPS on embedded GPU hardware.</li>
+        <li>Outperformed the prior baseline by 80% in inference speed at accuracy parity.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>python</li>
+        <li>yolov8</li>
+        <li>tensorrt</li>
+        <li>pytorch</li>
+        <li>opencv</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/realtime-lane-detection" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/vision-language-grounding/" data-reveal>
+        <div>
+          <strong>Next: Vision-Language Grounding</strong><br>
+          <span>Zero-shot, open-vocabulary, no fine-tuning</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, nine projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

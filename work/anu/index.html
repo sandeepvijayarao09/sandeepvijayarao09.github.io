@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ANU | Sandeep Vijayarao</title>
+  <meta name="description" content="A Swift-native iOS app that coordinates ten on-device agents through Apple Intelligence APIs, going as far as a phone can go before it needs the cloud.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/anu/">
+  <meta property="og:title" content="ANU | Sandeep Vijayarao">
+  <meta property="og:description" content="A Swift-native iOS app that coordinates ten on-device agents through Apple Intelligence APIs, going as far as a phone can go before it needs the cloud.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/anu/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>ANU</h1>
+      <p class="case-context">Apple Swift Student Challenge 2026 winner, sole developer</p>
+      <p class="lede">A Swift-native iOS app that coordinates ten on-device agents through Apple Intelligence APIs, going as far as a phone can go before it needs the cloud.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">10</span>
+          <span class="stat-label">coordinated on-device agents</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">50%</span>
+          <span class="stat-label">fewer frontier API tokens</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">2026</span>
+          <span class="stat-label">Swift Student Challenge winner</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>ANU started from a simple question: how much of an AI assistant can run entirely on the device in your pocket? Most assistants send every request to a frontier model, which costs money, adds latency, and ships your data off the phone. ANU inverts that default.</p>
+      <p data-reveal>I built it solo in Swift, and it won the Apple Swift Student Challenge 2026.</p>
+      <h2 data-reveal>How it works</h2>
+      <ul class="case-list" data-reveal>
+        <li>Ten specialized agents are orchestrated on top of Apple Intelligence APIs, each owning a slice of the assistant's behavior.</li>
+        <li>A CoreML routing layer classifies every user intent before any network call happens.</li>
+        <li>The majority of intents resolve locally on device; only genuinely high-complexity requests escalate to cloud frontier models.</li>
+        <li>The interface is SwiftUI end to end, designed so the local-first routing is invisible to the user.</li>
+      </ul>
+      <h2 data-reveal>Results</h2>
+      <ul class="case-list" data-reveal>
+        <li>Won the Apple Swift Student Challenge 2026 as sole developer.</li>
+        <li>Cut frontier API token usage by 50% through on-device CoreML routing.</li>
+        <li>Resolved the majority of user intents locally, without a network round trip.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>swift</li>
+        <li>swiftui</li>
+        <li>coreml</li>
+        <li>apple intelligence</li>
+        <li>on-device orchestration</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <p class="case-note">This project is not open source.</p>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/dual-llm/" data-reveal>
+        <div>
+          <strong>Next: Dual-LLM Personalization System</strong><br>
+          <span>Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, nine projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

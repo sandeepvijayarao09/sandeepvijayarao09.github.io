@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dual-LLM Personalization System | Sandeep Vijayarao</title>
+  <meta name="description" content="A dual-model router that classifies query complexity and dispatches each request to a lightweight local model or a frontier LLM.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/dual-llm/">
+  <meta property="og:title" content="Dual-LLM Personalization System | Sandeep Vijayarao">
+  <meta property="og:description" content="A dual-model router that classifies query complexity and dispatches each request to a lightweight local model or a frontier LLM.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/dual-llm/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Dual-LLM Personalization System</h1>
+      <p class="case-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
+      <p class="lede">A dual-model router that classifies query complexity and dispatches each request to a lightweight local model or a frontier LLM.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">92.6%</span>
+          <span class="stat-label">routing accuracy</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">85.3%</span>
+          <span class="stat-label">of queries served at zero cost</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">14.7%</span>
+          <span class="stat-label">cascade rate, down from 30.8%</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Most queries sent to frontier LLMs don't need one. A question like "what's on my calendar" doesn't deserve the same model, latency, and cost as "compare these two research papers." This system makes that distinction automatically, per query.</p>
+      <p data-reveal>At Google I/O 2026, DeepMind product and AI researchers independently recognized the multimodal routing architecture as parallel to Google Omni.</p>
+      <h2 data-reveal>How it works</h2>
+      <ul class="case-list" data-reveal>
+        <li>A complexity classifier scores each incoming query and routes it to a lightweight on-device model or a frontier LLM.</li>
+        <li>Confidence gating decides when the local answer is good enough and when to cascade upward.</li>
+        <li>OpenCLIP embeddings extend routing to multimodal inputs, so images and text share one dispatch policy.</li>
+        <li>ChromaDB stores user context, letting the lightweight path personalize responses without touching the cloud.</li>
+      </ul>
+      <h2 data-reveal>Results</h2>
+      <ul class="case-list" data-reveal>
+        <li>92.6% routing accuracy on complexity classification.</li>
+        <li>Cut the LLM cascade rate from 30.8% to 14.7%.</li>
+        <li>Served 85.3% of all queries at zero API cost via on-device inference.</li>
+        <li>Architecture recognized by DeepMind researchers at Google I/O 2026 as parallel to Google Omni.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>python</li>
+        <li>langchain</li>
+        <li>openclip</li>
+        <li>chromadb</li>
+        <li>llm routing</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/dual-llm-system" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/agentic-research-assistant/" data-reveal>
+        <div>
+          <strong>Next: Agentic Research Assistant</strong><br>
+          <span>Multi-agent research loop with memory that survives across sessions</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, nine projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Research Assistant | Sandeep Vijayarao</title>
+  <meta name="description" content="An orchestrator, a research agent, and a reasoning agent working a Plan, Reason, Act loop over a dual-layer memory.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/agentic-research-assistant/">
+  <meta property="og:title" content="Agentic Research Assistant | Sandeep Vijayarao">
+  <meta property="og:description" content="An orchestrator, a research agent, and a reasoning agent working a Plan, Reason, Act loop over a dual-layer memory.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/agentic-research-assistant/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Agentic Research Assistant</h1>
+      <p class="case-context">Multi-agent research loop with memory that survives across sessions</p>
+      <p class="lede">An orchestrator, a research agent, and a reasoning agent working a Plan, Reason, Act loop over a dual-layer memory.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">3</span>
+          <span class="stat-label">cooperating agents</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">35%</span>
+          <span class="stat-label">fewer redundant retrieval calls</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">2</span>
+          <span class="stat-label">memory layers, episodic and semantic</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Research assistants usually forget everything between sessions, so every conversation starts from zero. This one is built around memory: it keeps what it learned, deduplicates it, and picks up multi-session research threads where they left off.</p>
+      <h2 data-reveal>How it works</h2>
+      <ul class="case-list" data-reveal>
+        <li>Built on Google ADK with three agents: an orchestrator that plans, a research agent that gathers, and a reasoning agent that synthesizes.</li>
+        <li>A Plan, Reason, Act execution loop drives each research task from question to grounded answer.</li>
+        <li>Memory is dual-layer ChromaDB: episodic events from sessions, plus a long-term semantic store.</li>
+        <li>Hierarchical memory indexing deduplicates episodic events against the semantic store before retrieval.</li>
+      </ul>
+      <h2 data-reveal>Results</h2>
+      <ul class="case-list" data-reveal>
+        <li>Reduced redundant retrieval calls by 35% through hierarchical memory indexing.</li>
+        <li>Maintained context across multi-session research workflows.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>python</li>
+        <li>google adk</li>
+        <li>chromadb</li>
+        <li>rag</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/agentic-research-assistant" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/aiforg/" data-reveal>
+        <div>
+          <strong>Next: AIFORG</strong><br>
+          <span>Called structurally parallel to Google Spark by DeepMind researchers at Google I/O 2026</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, nine projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

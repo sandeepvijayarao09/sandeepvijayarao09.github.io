@@ -52,6 +52,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* ambient accent glow behind every page */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(60% 42% at 50% -12%, rgba(52, 211, 153, 0.055), transparent 70%);
+}
+
 .container {
   max-width: var(--container);
   margin-inline: auto;
@@ -155,12 +165,26 @@ a { color: inherit; }
 .nav nav { display: flex; gap: 1.75rem; }
 
 .nav nav a {
+  position: relative;
   text-decoration: none;
   color: var(--muted);
   font-size: 0.92rem;
   transition: color 200ms ease;
 }
+.nav nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 280ms var(--ease);
+}
 .nav nav a[aria-current="page"] { color: var(--text); }
+.nav nav a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* ---------- page header (sub-pages) ---------- */
 
@@ -486,6 +510,7 @@ a.card:active { transform: translateY(-1px) scale(0.995); }
   font-weight: 560;
   letter-spacing: -0.03em;
   color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 .stat-label { color: var(--muted); font-size: 0.9rem; }
 
@@ -708,10 +733,47 @@ article.card { cursor: default; }
   to { opacity: 1; transform: none; }
 }
 
+/* headline word-rise: spans injected by script.js, never under reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1.split,
+  .page-header h1.split { animation: none; }
+
+  .h-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.55em);
+    filter: blur(6px);
+    animation: word-rise 640ms var(--ease) both;
+    animation-delay: calc(var(--wi) * 60ms);
+  }
+
+  @keyframes word-rise {
+    to { opacity: 1; transform: none; filter: blur(0); }
+  }
+}
+
 /* ---------- hover effects: fine pointers only ---------- */
 
 @media (hover: hover) and (pointer: fine) {
   .nav nav a:hover { color: var(--text); }
+  .nav nav a:hover::after { transform: scaleX(1); }
+
+  /* cursor-tracked spotlight sheen on linked cards */
+  a.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 350ms ease;
+    background: radial-gradient(
+      260px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(52, 211, 153, 0.09),
+      transparent 65%
+    );
+  }
+  a.card:hover::after { opacity: 1; }
   .btn-primary:hover { background: #4be0a8; }
   .btn-ghost:hover { border-color: var(--muted); }
   .section-head .more-link:hover { color: var(--text); }

@@ -2,6 +2,7 @@
   "use strict";
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   /* nav border: sentinel observer instead of scroll listener */
   const nav = document.getElementById("nav");
@@ -10,6 +11,32 @@
     new IntersectionObserver(([entry]) => {
       nav.classList.toggle("scrolled", !entry.isIntersecting);
     }).observe(sentinel);
+  }
+
+  /* headline word-rise: split h1 text into staggered word spans */
+  if (!reduceMotion) {
+    document.querySelectorAll(".hero h1, .page-header h1").forEach((h) => {
+      const nodes = Array.from(h.childNodes);
+      let wi = 0;
+      for (const node of nodes) {
+        if (node.nodeType !== Node.TEXT_NODE) continue;
+        const frag = document.createDocumentFragment();
+        for (const part of node.textContent.split(/(\s+)/)) {
+          if (!part) continue;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+          } else {
+            const s = document.createElement("span");
+            s.className = "h-word";
+            s.style.setProperty("--wi", wi++);
+            s.textContent = part;
+            frag.appendChild(s);
+          }
+        }
+        h.replaceChild(frag, node);
+      }
+      h.classList.add("split");
+    });
   }
 
   /* scroll reveals */
@@ -29,6 +56,54 @@
       { threshold: 0.18, rootMargin: "0px 0px -40px 0px" }
     );
     revealEls.forEach((el) => revealObserver.observe(el));
+  }
+
+  /* stat count-up: numbers tick to their value when first seen */
+  function countUp(el) {
+    const original = el.textContent.trim();
+    const m = original.match(/^(\d+(?:\.\d+)?)([\s\S]*)$/);
+    if (!m) return;
+    if (/^(19|20)\d{2}$/.test(m[1])) return; /* years don't count up */
+    const target = parseFloat(m[1]);
+    const suffix = m[2];
+    const decimals = (m[1].split(".")[1] || "").length;
+    const duration = 900;
+    const t0 = performance.now();
+    function tick(now) {
+      const p = Math.min(1, (now - t0) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * eased).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = original;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const statNums = document.querySelectorAll(".stat-num");
+  if (!reduceMotion && statNums.length) {
+    const statObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            statObserver.unobserve(entry.target);
+            countUp(entry.target);
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+    statNums.forEach((n) => statObserver.observe(n));
+  }
+
+  /* card spotlight: cursor-tracked sheen, fine pointers only */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll("a.card").forEach((card) => {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", e.clientX - r.left + "px");
+        card.style.setProperty("--my", e.clientY - r.top + "px");
+      });
+    });
   }
 
   /* hero canvas: drifting node field with proximity edges */

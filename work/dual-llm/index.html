@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dual-LLM Personalization System | Sandeep Vijayarao</title>
-  <meta name="description" content="A dual-model router that classifies query complexity and dispatches each request to a lightweight local model or a frontier LLM.">
+  <meta name="description" content="A three-layer router that learns which model each query deserves, sending the easy ones to a small model and the hard ones to a frontier LLM.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/dual-llm/">
   <meta property="og:title" content="Dual-LLM Personalization System | Sandeep Vijayarao">
-  <meta property="og:description" content="A dual-model router that classifies query complexity and dispatches each request to a lightweight local model or a frontier LLM.">
+  <meta property="og:description" content="A three-layer router that learns which model each query deserves, sending the easy ones to a small model and the hard ones to a frontier LLM.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/dual-llm/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -37,18 +37,18 @@
     <header class="page-header container">
       <h1>Dual-LLM Personalization System</h1>
       <p class="case-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
-      <p class="lede">A dual-model router that classifies query complexity and dispatches each request to a lightweight local model or a frontier LLM.</p>
+      <p class="lede">A three-layer router that learns which model each query deserves, sending the easy ones to a small model and the hard ones to a frontier LLM.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
           <span class="stat-num">92.6%</span>
-          <span class="stat-label">routing accuracy</span>
+          <span class="stat-label">routing accuracy, 1000-case eval</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
           <span class="stat-num">85.3%</span>
-          <span class="stat-label">of queries served at zero cost</span>
+          <span class="stat-label">of queries routed at zero API cost</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
           <span class="stat-num">14.7%</span>
@@ -59,29 +59,30 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Most queries sent to frontier LLMs don't need one. A question like "what's on my calendar" doesn't deserve the same model, latency, and cost as "compare these two research papers." This system makes that distinction automatically, per query.</p>
-      <p data-reveal>At Google I/O 2026, DeepMind product and AI researchers independently recognized the multimodal routing architecture as parallel to Google Omni.</p>
+      <p data-reveal>Most queries sent to frontier LLMs don't need one. A question like "what's on my calendar" doesn't deserve the same model, latency, and cost as "compare these two research papers." This system makes that distinction automatically, per query, and was evaluated on 1,500 labeled cases.</p>
+      <p data-reveal>At Google I/O 2026, DeepMind product and AI researchers independently recognized the routing architecture as parallel to Google Omni.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>A complexity classifier scores each incoming query and routes it to a lightweight on-device model or a frontier LLM.</li>
-        <li>Confidence gating decides when the local answer is good enough and when to cascade upward.</li>
-        <li>OpenCLIP embeddings extend routing to multimodal inputs, so images and text share one dispatch policy.</li>
-        <li>ChromaDB stores user context, letting the lightweight path personalize responses without touching the cloud.</li>
+        <li>Layer 1 is a local TF-IDF plus logistic-regression router that classifies most queries instantly, at zero API cost.</li>
+        <li>Low-confidence queries fall back to a GPT-4o-mini JSON classifier before any answer is generated.</li>
+        <li>Simple queries are answered by GPT-4o-mini; only genuinely complex ones escalate to GPT-4o.</li>
+        <li>Persistent SQLite user profiles and sliding-window memory with rolling summaries personalize both paths.</li>
+        <li>Every routing decision is logged into a self-improving retraining loop, and a Streamlit UI exposes each routing choice transparently.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
-        <li>92.6% routing accuracy on complexity classification.</li>
+        <li>92.6% routing accuracy on a 1,000-case evaluation, with 0.885 precision, 0.963 recall, and 0.922 F1.</li>
         <li>Cut the LLM cascade rate from 30.8% to 14.7%.</li>
-        <li>Served 85.3% of all queries at zero API cost via on-device inference.</li>
+        <li>Routed 85.3% of queries with the local ML layer alone, at zero API cost.</li>
         <li>Architecture recognized by DeepMind researchers at Google I/O 2026 as parallel to Google Omni.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
-        <li>langchain</li>
-        <li>openclip</li>
-        <li>chromadb</li>
-        <li>llm routing</li>
+        <li>scikit-learn</li>
+        <li>gpt-4o</li>
+        <li>streamlit</li>
+        <li>sqlite</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/dual-llm-system" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>

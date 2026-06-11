@@ -539,6 +539,7 @@ article.card { cursor: default; }
 }
 
 .span-2 { grid-column: span 2; }
+.span-3 { grid-column: 1 / -1; }
 
 .card-grid-bg {
   background-image:
@@ -872,7 +873,7 @@ article.card { cursor: default; }
   .contact { padding-block: 4.5rem; }
 
   .work-grid { grid-template-columns: 1fr; }
-  .span-2 { grid-column: auto; }
+  .span-2, .span-3 { grid-column: auto; }
 
   .card-featured-stats { flex-direction: column; gap: 1.2rem; }
 }

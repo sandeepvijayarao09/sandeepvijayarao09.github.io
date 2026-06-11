@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Real-time Human Pose Estimation | Sandeep Vijayarao</title>
-  <meta name="description" content="A lightweight keypoint regression head on MediaPipe landmark priors, fast enough for real-time multi-person tracking on a CPU.">
+  <meta name="description" content="A lightweight keypoint regression head on MediaPipe landmark priors, with an LSTM activity classifier riding on top, all running in real time.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/pose-estimation/">
   <meta property="og:title" content="Real-time Human Pose Estimation | Sandeep Vijayarao">
-  <meta property="og:description" content="A lightweight keypoint regression head on MediaPipe landmark priors, fast enough for real-time multi-person tracking on a CPU.">
+  <meta property="og:description" content="A lightweight keypoint regression head on MediaPipe landmark priors, with an LSTM activity classifier riding on top, all running in real time.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/pose-estimation/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -37,47 +37,49 @@
     <header class="page-header container">
       <h1>Real-time Human Pose Estimation</h1>
       <p class="case-context">Published at IEEE AISP 2024</p>
-      <p class="lede">A lightweight keypoint regression head on MediaPipe landmark priors, fast enough for real-time multi-person tracking on a CPU.</p>
+      <p class="lede">A lightweight keypoint regression head on MediaPipe landmark priors, with an LSTM activity classifier riding on top, all running in real time.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
           <span class="stat-num">85%</span>
-          <span class="stat-label">mAP, multi-person</span>
+          <span class="stat-label">mAP, COCO standard</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">30</span>
-          <span class="stat-label">FPS on standard CPU</span>
+          <span class="stat-num">0.78</span>
+          <span class="stat-label">IoU, multi-person</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">22%</span>
-          <span class="stat-label">fewer parameters</span>
+          <span class="stat-num">30+</span>
+          <span class="stat-label">FPS, real time</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Pose estimation research mostly trades accuracy against compute, and the compute side usually loses: models assume a GPU. This work, published at IEEE AISP 2024 while I was an undergrad, targets the opposite corner: real-time multi-person pose on standard CPU hardware.</p>
+      <p data-reveal>Pose estimation research mostly trades accuracy against compute. This work, published at IEEE AISP 2024 while I was an undergrad, keeps the full pipeline real time: landmark extraction, keypoint refinement, and activity recognition in one pass.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>MediaPipe provides landmark priors, doing the cheap coarse work first.</li>
-        <li>A custom lightweight keypoint regression head refines those priors into final keypoints.</li>
-        <li>The head cuts parameter count by 22% while staying within 2% of full-model baseline accuracy.</li>
+        <li>MediaPipe Holistic provides 33 landmark priors per frame, doing the cheap coarse work first.</li>
+        <li>A lightweight keypoint regression head refines those priors; the published model cuts parameter count by 22% while staying within 2% of full-model baselines.</li>
+        <li>3D joint angles and velocities feed an LSTM classifier covering 11 activities, from locomotion to strength training to yoga.</li>
+        <li>Exercise rep counting and COCO-standard evaluation, mAP, OKS, and IoU, round out the system.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
-        <li>85% mAP and 0.78 IoU on multi-person pose estimation.</li>
-        <li>Real-time inference at 30+ FPS on standard CPU hardware.</li>
-        <li>22% parameter reduction within 2% of full-model accuracy.</li>
+        <li>85% mAP and 0.78 IoU on multi-person pose estimation, COCO standard.</li>
+        <li>Real-time inference at 30+ FPS.</li>
+        <li>11-activity recognition from pose dynamics via LSTM.</li>
         <li>Published at IEEE AISP 2024.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
         <li>mediapipe</li>
-        <li>pytorch</li>
+        <li>tensorflow</li>
+        <li>lstm</li>
         <li>opencv</li>
       </ul>
       <div class="case-actions" data-reveal>

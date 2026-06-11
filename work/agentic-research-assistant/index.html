@@ -47,37 +47,37 @@
           <span class="stat-label">cooperating agents</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">35%</span>
-          <span class="stat-label">fewer redundant retrieval calls</span>
+          <span class="stat-num">2</span>
+          <span class="stat-label">memory layers, long-term and working</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">2</span>
-          <span class="stat-label">memory layers, episodic and semantic</span>
+          <span class="stat-num">3</span>
+          <span class="stat-label">registered tools: search, ArXiv, calculator</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Research assistants usually forget everything between sessions, so every conversation starts from zero. This one is built around memory: it keeps what it learned, deduplicates it, and picks up multi-session research threads where they left off.</p>
+      <p data-reveal>Research assistants usually forget everything between sessions, so every conversation starts from zero. This one is built around memory: long-term vectors plus a working window, so multi-session research threads pick up where they left off.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>Built on Google ADK with three agents: an orchestrator that plans, a research agent that gathers, and a reasoning agent that synthesizes.</li>
+        <li>An orchestrator agent decomposes each query and routes the pieces to a research agent, which searches ArXiv and gathers citations, and a reasoning agent, which runs chain-of-thought synthesis and fact-checking.</li>
         <li>A Plan, Reason, Act execution loop drives each research task from question to grounded answer.</li>
-        <li>Memory is dual-layer ChromaDB: episodic events from sessions, plus a long-term semantic store.</li>
-        <li>Hierarchical memory indexing deduplicates episodic events against the semantic store before retrieval.</li>
+        <li>Memory is dual-layer: ChromaDB long-term vectors plus a sliding-window working memory.</li>
+        <li>An OpenAI-compatible tool registry exposes search, ArXiv, and calculator tools, all driven from an interactive CLI built on LangChain.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
-        <li>Reduced redundant retrieval calls by 35% through hierarchical memory indexing.</li>
-        <li>Maintained context across multi-session research workflows.</li>
+        <li>Maintains research context across sessions through ChromaDB long-term memory.</li>
+        <li>Grounds answers in ArXiv citations rather than model recall.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
-        <li>google adk</li>
+        <li>langchain</li>
         <li>chromadb</li>
-        <li>rag</li>
+        <li>arxiv api</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/agentic-research-assistant" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>

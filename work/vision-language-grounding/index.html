@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vision-Language Grounding | Sandeep Vijayarao</title>
-  <meta name="description" content="OpenCLIP-based image-text grounding that hits 88% top-3 accuracy across open-vocabulary categories without a single category-specific training run.">
+  <meta name="description" content="Four pipelines for seeing how vision-language models think: CLIP grounding, cross-modal attention maps, diffusion generation, and embedding-space analysis.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/vision-language-grounding/">
   <meta property="og:title" content="Vision-Language Grounding | Sandeep Vijayarao">
-  <meta property="og:description" content="OpenCLIP-based image-text grounding that hits 88% top-3 accuracy across open-vocabulary categories without a single category-specific training run.">
+  <meta property="og:description" content="Four pipelines for seeing how vision-language models think: CLIP grounding, cross-modal attention maps, diffusion generation, and embedding-space analysis.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/vision-language-grounding/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,49 +36,45 @@
 
     <header class="page-header container">
       <h1>Vision-Language Grounding</h1>
-      <p class="case-context">Zero-shot, open-vocabulary, no fine-tuning</p>
-      <p class="lede">OpenCLIP-based image-text grounding that hits 88% top-3 accuracy across open-vocabulary categories without a single category-specific training run.</p>
+      <p class="case-context">Zero-shot, open-vocabulary, no fine-tuning anywhere</p>
+      <p class="lede">Four pipelines for seeing how vision-language models think: CLIP grounding, cross-modal attention maps, diffusion generation, and embedding-space analysis.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
-          <span class="stat-num">88%</span>
-          <span class="stat-label">top-3 accuracy, zero-shot</span>
+          <span class="stat-num">4</span>
+          <span class="stat-label">multimodal pipelines</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">12</span>
-          <span class="stat-label">open-vocabulary categories</span>
-        </div>
-        <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">14%</span>
-          <span class="stat-label">better cross-domain generalization</span>
+          <span class="stat-num">0</span>
+          <span class="stat-label">category-specific training runs</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>The interesting part of zero-shot grounding is what you don't do: no labels, no fine-tuning, no category list fixed in advance. The system grounds free-form text against images using embedding geometry alone, then gets measurably better with synthetic data.</p>
+      <p data-reveal>The interesting part of zero-shot grounding is what you don't do: no labels, no fine-tuning, no category list fixed in advance. This toolkit grounds free-form text against images using embedding geometry alone, then makes the model's reasoning visible.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>OpenCLIP embeddings place images and text in a shared space, where grounding is nearest-neighbor search.</li>
-        <li>Cross-modal attention visualization exposes which image regions support each phrase.</li>
-        <li>Stable Diffusion generates synthetic training views, widening domain coverage without new photography.</li>
-        <li>An interactive Streamlit demo wraps the whole system for exploration.</li>
+        <li>CLIP ViT-B/32 embeddings, via OpenCLIP, place images and text in a shared space where grounding is nearest-neighbor search.</li>
+        <li>Cross-modal attention extraction and visualization expose which image regions support each phrase.</li>
+        <li>Stable Diffusion v1.5 serves as a generation backend for synthetic views.</li>
+        <li>Embedding-space analysis rounds it out: cosine similarity matrices and t-SNE or UMAP projections of the joint space.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
-        <li>88% top-3 accuracy across 12 open-vocabulary categories, fully zero-shot.</li>
-        <li>Improved cross-domain generalization by 14% with synthetic augmentation.</li>
+        <li>Grounds free-form text against images with no category-specific training.</li>
+        <li>Makes cross-modal attention inspectable, so model behavior can be debugged visually.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
         <li>openclip</li>
         <li>stable diffusion</li>
-        <li>huggingface</li>
-        <li>streamlit</li>
+        <li>pytorch</li>
+        <li>umap</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/vision-language-grounding" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>

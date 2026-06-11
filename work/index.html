@@ -71,15 +71,15 @@
           </div>
           <div class="stat">
             <span class="stat-num">85.3%</span>
-            <span class="stat-label">of queries served at zero cost</span>
+            <span class="stat-label">of queries routed at zero API cost</span>
           </div>
         </div>
         <div class="card-featured-copy">
           <h3>Dual-LLM Personalization System</h3>
           <p class="card-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
-          <p>A dual-model router that classifies query complexity and dispatches to a lightweight local model or a frontier LLM, cutting cascade rate from 30.8% to 14.7%.</p>
+          <p>A three-layer router that classifies query complexity and dispatches each request to the right model, cutting cascade rate from 30.8% to 14.7%.</p>
           <ul class="tags" aria-label="Built with">
-            <li>python</li><li>langchain</li><li>openclip</li><li>chromadb</li>
+            <li>python</li><li>scikit-learn</li><li>gpt-4o</li><li>streamlit</li>
           </ul>
           <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
         </div>
@@ -88,9 +88,9 @@
       <div class="work-grid">
         <a class="card span-2" href="/work/agentic-research-assistant/" data-reveal>
           <h3>Agentic Research Assistant</h3>
-          <p>Multi-agent research loop on Google ADK with dual-layer ChromaDB memory, episodic plus semantic, retaining context across multi-session research workflows.</p>
-          <p class="metric">35% fewer redundant retrievals</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>google adk</li><li>chromadb</li></ul>
+          <p>Multi-agent research loop with orchestrator, research, and reasoning agents over dual-layer ChromaDB memory, long-term plus working, retaining context across sessions.</p>
+          <p class="metric">3 agents, ArXiv-grounded</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>langchain</li><li>chromadb</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
         <a class="card" href="/work/aiforg/" data-reveal style="--d:.07s">
@@ -109,30 +109,37 @@
         </a>
         <a class="card" href="/work/lane-detection/" data-reveal style="--d:.07s">
           <h3>Real-time Lane Detection</h3>
-          <p>YOLOv8 lane segmentation with TensorRT INT8 optimization, built for autonomous-driving edge hardware.</p>
+          <p>LaneNet encoder-decoder with an EfficientNet backbone, profiled in PyTorch until it ran in real time.</p>
           <p class="metric">99% accuracy at 150 FPS</p>
-          <ul class="tags" aria-label="Built with"><li>yolov8</li><li>tensorrt</li></ul>
+          <ul class="tags" aria-label="Built with"><li>pytorch</li><li>lanenet</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
         <a class="card" href="/work/vision-language-grounding/" data-reveal style="--d:.14s">
           <h3>Vision-Language Grounding</h3>
-          <p>Zero-shot grounding on OpenCLIP embeddings, with Stable Diffusion synthetic views improving cross-domain generalization by 14%.</p>
-          <p class="metric">88% top-3, fully zero-shot</p>
+          <p>Zero-shot CLIP grounding with cross-modal attention visualization, Stable Diffusion generation, and embedding-space analysis.</p>
+          <p class="metric">4 pipelines, fully zero-shot</p>
           <ul class="tags" aria-label="Built with"><li>openclip</li><li>stable diffusion</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card card-tint" href="/work/skillgap/" data-reveal>
+        <a class="card span-2" href="/work/autofill-pro/" data-reveal>
+          <h3>AutoFill Pro</h3>
+          <p>Shipped Chrome extension that fills job applications across 30+ ATS platforms from 44 locally stored profile fields, with an AI fallback for custom questions. Privacy-first: sensitive data never leaves the device.</p>
+          <p class="metric">30+ platforms, 424 test cases</p>
+          <ul class="tags" aria-label="Built with"><li>javascript</li><li>chrome mv3</li><li>nvidia nim</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
+        </a>
+        <a class="card card-tint" href="/work/skillgap/" data-reveal style="--d:.07s">
           <h3>SkillGap AI</h3>
           <p>Skills-gap analysis platform mapping user profiles against live job-market embeddings. Three PMI San Francisco awards as sole developer.</p>
           <p class="metric">500+ concurrent users</p>
           <ul class="tags" aria-label="Built with"><li>react</li><li>rag</li><li>postgresql</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card span-2 card-grid-bg" href="/work/pose-estimation/" data-reveal style="--d:.07s">
+        <a class="card span-3 card-grid-bg" href="/work/pose-estimation/" data-reveal>
           <h3>Real-time Human Pose Estimation</h3>
-          <p>Published at IEEE AISP 2024. A lightweight keypoint regression head on MediaPipe landmark priors cuts parameters by 22% at near-baseline accuracy.</p>
-          <p class="metric">85% mAP, 0.78 IoU, 30 FPS on CPU</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>mediapipe</li><li>pytorch</li></ul>
+          <p>Published at IEEE AISP 2024. A lightweight keypoint regression head on MediaPipe landmark priors, with LSTM activity recognition across 11 activities.</p>
+          <p class="metric">85% mAP, 0.78 IoU, 30+ FPS</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>mediapipe</li><li>lstm</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
       </div>

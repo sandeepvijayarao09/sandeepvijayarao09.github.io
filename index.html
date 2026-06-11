@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sandeep Vijayarao | AI Engineer</title>
-  <meta name="description" content="Sandeep Vijayarao is an AI engineer and MS CS student at Northeastern University building multi-agent systems, vision pipelines, and full-stack products.">
+  <meta name="description" content="Sandeep Vijayarao is an AI engineer and MS CS student at Northeastern University building multi-agent systems, vision pipelines, and full-stack products. Apple Swift Student Challenge 2026 winner.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/">
   <meta property="og:title" content="Sandeep Vijayarao | AI Engineer">
   <meta property="og:description" content="Multi-agent systems, vision pipelines, and full-stack products. MS CS at Northeastern, Apple Swift Student Challenge 2026 winner.">
@@ -16,6 +16,22 @@
   <link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sandeep Vijayarao",
+    "alternateName": "Sai Sandeep Kumar Vijayarao",
+    "url": "https://sandeepvijayarao09.github.io/",
+    "email": "mailto:sandeepvijayarao09@gmail.com",
+    "jobTitle": "AI Engineer",
+    "alumniOf": "Northeastern University",
+    "sameAs": [
+      "https://github.com/sandeepvijayarao09",
+      "https://www.linkedin.com/in/sandeepvijayarao/"
+    ]
+  }
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -48,19 +64,23 @@
       </div>
     </section>
 
-    <section class="proof" aria-label="Credentials">
+    <section class="proof" aria-label="Recognition">
       <div class="container proof-grid">
         <div class="proof-item" data-reveal>
           <strong>Apple Swift Student Challenge</strong>
-          <span>2026 Winner</span>
+          <span>2026 winner, sole developer</span>
         </div>
-        <div class="proof-item" data-reveal style="--d:.08s">
-          <strong>IEEE</strong>
+        <div class="proof-item" data-reveal style="--d:.07s">
+          <strong>Google I/O 2026</strong>
+          <span>Work recognized by DeepMind researchers</span>
+        </div>
+        <div class="proof-item" data-reveal style="--d:.14s">
+          <strong>IEEE AISP 2024</strong>
           <span>Published researcher</span>
         </div>
-        <div class="proof-item" data-reveal style="--d:.16s">
-          <strong>Northeastern University</strong>
-          <span>MS in Computer Science</span>
+        <div class="proof-item" data-reveal style="--d:.21s">
+          <strong>PMI San Francisco</strong>
+          <span>3x award winner</span>
         </div>
       </div>
     </section>
@@ -68,59 +88,94 @@
     <section class="work container" id="work">
       <h2 data-reveal>Selected work</h2>
 
-      <a class="card card-featured" href="https://github.com/sandeepvijayarao09/dual-llm-system" target="_blank" rel="noopener" data-reveal>
+      <article class="card card-featured" data-reveal>
         <div class="card-featured-copy">
-          <h3>Dual-LLM Router</h3>
-          <p>A local model answers simple queries on device, Claude handles the hard ones. Confidence-gated routing keeps most traffic off the API entirely.</p>
+          <h3>ANU</h3>
+          <p class="card-context">Apple Swift Student Challenge 2026 winner</p>
+          <p>A Swift-native iOS app with a 10-agent orchestration system on Apple Intelligence APIs. On-device CoreML routing resolves most intents before touching cloud models.</p>
           <ul class="tags" aria-label="Built with">
-            <li>python</li><li>ollama</li><li>claude api</li>
+            <li>swift</li><li>coreml</li><li>apple intelligence</li><li>swiftui</li>
           </ul>
-          <span class="card-link-hint">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></span>
         </div>
+        <div class="card-featured-stats">
+          <div class="stat">
+            <span class="stat-num">10</span>
+            <span class="stat-label">coordinated on-device agents</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">50%</span>
+            <span class="stat-label">fewer frontier API tokens</span>
+          </div>
+        </div>
+      </article>
+
+      <a class="card card-featured card-featured-alt" href="https://github.com/sandeepvijayarao09/dual-llm-system" target="_blank" rel="noopener" data-reveal>
         <div class="card-featured-stats">
           <div class="stat">
             <span class="stat-num">92.6%</span>
             <span class="stat-label">routing accuracy</span>
           </div>
           <div class="stat">
-            <span class="stat-num">85%</span>
-            <span class="stat-label">of queries at zero API cost</span>
+            <span class="stat-num">85.3%</span>
+            <span class="stat-label">of queries served at zero cost</span>
           </div>
+        </div>
+        <div class="card-featured-copy">
+          <h3>Dual-LLM Personalization System</h3>
+          <p class="card-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
+          <p>A dual-model router that classifies query complexity and dispatches to a lightweight local model or a frontier LLM, cutting cascade rate from 30.8% to 14.7%.</p>
+          <ul class="tags" aria-label="Built with">
+            <li>python</li><li>langchain</li><li>openclip</li><li>chromadb</li>
+          </ul>
+          <span class="card-link-hint">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></span>
         </div>
       </a>
 
       <div class="work-grid">
         <a class="card span-2" href="https://github.com/sandeepvijayarao09/agentic-research-assistant" target="_blank" rel="noopener" data-reveal>
           <h3>Agentic Research Assistant</h3>
-          <p>Multi-agent research loop with orchestrator, research, and reasoning agents. Persistent ChromaDB memory plus a sliding window for long sessions.</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>chromadb</li><li>arxiv api</li></ul>
+          <p>Multi-agent research loop on Google ADK with dual-layer ChromaDB memory, episodic plus semantic, retaining context across multi-session research workflows.</p>
+          <p class="metric">35% fewer redundant retrievals</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>google adk</li><li>chromadb</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card card-grid-bg" href="https://github.com/sandeepvijayarao09/realtime-pose-estimation" target="_blank" rel="noopener" data-reveal style="--d:.08s">
-          <h3>Real-time Pose Estimation</h3>
-          <p>Human pose tracking built on MediaPipe and OpenCV, tuned to hold 30 FPS on commodity hardware.</p>
-          <p class="metric">30 FPS, 85% mAP</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>mediapipe</li></ul>
-          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
-        </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/realtime-lane-detection" target="_blank" rel="noopener" data-reveal>
+        <article class="card" data-reveal style="--d:.08s">
+          <h3>AIFORG</h3>
+          <p>Modular agentic orchestration framework with standardized agent interfaces, dynamic tool registration, and Plan, Reason, Act execution loops.</p>
+          <p class="metric">new tool integration under 2 hours</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>google adk</li><li>langchain</li></ul>
+        </article>
+        <article class="card" data-reveal>
+          <h3>TryOn</h3>
+          <p>NeRF plus 3D Gaussian Splatting pipeline that turns a 360 degree video into a textured human mesh in about 12 minutes end to end.</p>
+          <p class="metric">85% accuracy vs pro 3D capture</p>
+          <ul class="tags" aria-label="Built with"><li>nerf</li><li>gaussian splatting</li><li>pytorch</li></ul>
+        </article>
+        <a class="card" href="https://github.com/sandeepvijayarao09/realtime-lane-detection" target="_blank" rel="noopener" data-reveal style="--d:.08s">
           <h3>Real-time Lane Detection</h3>
-          <p>Optimized LaneNet inference pipeline for lane detection, profiled and pruned until it ran in real time.</p>
-          <p class="metric">150 FPS</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>pytorch</li></ul>
+          <p>YOLOv8 lane segmentation with TensorRT INT8 optimization, built for autonomous-driving edge hardware.</p>
+          <p class="metric">99% accuracy at 150 FPS</p>
+          <ul class="tags" aria-label="Built with"><li>yolov8</li><li>tensorrt</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/vision-language-grounding" target="_blank" rel="noopener" data-reveal style="--d:.08s">
+        <a class="card" href="https://github.com/sandeepvijayarao09/vision-language-grounding" target="_blank" rel="noopener" data-reveal style="--d:.16s">
           <h3>Vision-Language Grounding</h3>
-          <p>CLIP zero-shot image-text grounding with cross-modal attention visualization, packaged as an interactive Streamlit demo.</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>clip</li><li>streamlit</li></ul>
+          <p>Zero-shot grounding on OpenCLIP embeddings, with Stable Diffusion synthetic views improving cross-domain generalization by 14%.</p>
+          <p class="metric">88% top-3, fully zero-shot</p>
+          <ul class="tags" aria-label="Built with"><li>openclip</li><li>stable diffusion</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card card-tint" href="https://github.com/sandeepvijayarao09/autofill-pro" target="_blank" rel="noopener" data-reveal style="--d:.16s">
-          <h3>AutoFill Pro</h3>
-          <p>Browser extension that fills job applications across 30+ ATS platforms, with an AI fallback for custom questions.</p>
-          <p class="metric">30+ platforms</p>
-          <ul class="tags" aria-label="Built with"><li>javascript</li><li>chrome extension</li></ul>
+        <article class="card card-tint" data-reveal>
+          <h3>SkillGap AI</h3>
+          <p>Skills-gap analysis platform mapping user profiles against live job-market embeddings. Three PMI San Francisco awards as sole developer.</p>
+          <p class="metric">500+ concurrent users</p>
+          <ul class="tags" aria-label="Built with"><li>react</li><li>rag</li><li>postgresql</li></ul>
+        </article>
+        <a class="card span-2 card-grid-bg" href="https://github.com/sandeepvijayarao09/realtime-pose-estimation" target="_blank" rel="noopener" data-reveal style="--d:.08s">
+          <h3>Real-time Human Pose Estimation</h3>
+          <p>Published at IEEE AISP 2024. A lightweight keypoint regression head on MediaPipe landmark priors cuts parameters by 22% at near-baseline accuracy.</p>
+          <p class="metric">85% mAP, 0.78 IoU, 30 FPS on CPU</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>mediapipe</li><li>pytorch</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
       </div>
@@ -128,25 +183,67 @@
       <p class="work-more" data-reveal>More experiments and coursework live on <a href="https://github.com/sandeepvijayarao09?tab=repositories" target="_blank" rel="noopener">GitHub</a>.</p>
     </section>
 
+    <section class="experience container" id="experience">
+      <h2 data-reveal>Experience</h2>
+      <div class="exp-list">
+        <div class="exp-row" data-reveal>
+          <div class="exp-head">
+            <h3>Graduate Teaching Assistant</h3>
+            <p class="exp-org">Northeastern University</p>
+            <p class="exp-dates">Sep 2025 - present</p>
+          </div>
+          <p class="exp-desc">Teaching support across three graduate courses, Computer Vision, Generative AI, and HCI, serving 100+ MS students. Built curriculum modules on transformers, diffusion models, and vision-language grounding.</p>
+        </div>
+        <div class="exp-row" data-reveal>
+          <div class="exp-head">
+            <h3>AI Developer</h3>
+            <p class="exp-org">Trominosoft</p>
+            <p class="exp-dates">Feb 2025 - Aug 2025</p>
+          </div>
+          <p class="exp-desc">Cut inference latency 30% on a production LLM pipeline serving 10K+ daily requests. Redesigned the multi-agent prompt pipeline, reducing hallucination rate 38%, and lifted RLHF alignment 19% with DPO and LoRA fine-tuning.</p>
+        </div>
+        <div class="exp-row" data-reveal>
+          <div class="exp-head">
+            <h3>AI Engineering Intern</h3>
+            <p class="exp-org">Infosys Springboard</p>
+            <p class="exp-dates">Sep 2024 - Dec 2024</p>
+          </div>
+          <p class="exp-desc">Shipped an LLM evaluation and fine-tuning framework with INT8 and INT4 quantization via vLLM, reaching 3.2x baseline throughput and halving analyst task completion time.</p>
+        </div>
+        <div class="exp-row" data-reveal>
+          <div class="exp-head">
+            <h3>Software Engineering Intern</h3>
+            <p class="exp-org">Global Techno Solutions</p>
+            <p class="exp-dates">Jan 2024 - Apr 2024</p>
+          </div>
+          <p class="exp-desc">Built a React and Node.js hospital management system with role-based access control for five clinical departments, cutting page load time 45% through caching and query optimization.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="about container" id="about">
       <h2 data-reveal>About</h2>
       <div class="about-grid">
         <div class="about-bio" data-reveal>
-          <p>I'm Sandeep, a software engineer focused on AI systems architecture. I've shipped end-to-end products: RAG pipelines, confidence-gated LLM routing, on-device agents in Swift and Kotlin, and the interfaces around them.</p>
-          <p>Right now I'm pursuing my MS in Computer Science at Northeastern University and building agentic tools that hold up outside the demo. Based in San Jose.</p>
+          <p>I'm Sandeep, an AI engineer focused on systems architecture: LLM routing, multi-agent orchestration, on-device inference, and the interfaces around them. I published IEEE research on real-time pose estimation as an undergrad.</p>
+          <p>Right now I'm pursuing my MS in Computer Science at Northeastern University in San Jose, TAing Computer Vision, GenAI, and HCI, and serving on the core team at GDG Sunnyvale.</p>
         </div>
         <div class="about-stack" data-reveal style="--d:.1s">
           <div class="stack-group">
-            <h3>Systems and agents</h3>
-            <ul class="tags"><li>python</li><li>rag</li><li>chromadb</li><li>ollama</li><li>claude api</li><li>coreml</li></ul>
+            <h3>LLMs and fine-tuning</h3>
+            <ul class="tags"><li>pytorch</li><li>huggingface</li><li>vllm</li><li>lora</li><li>dpo</li><li>quantization</li></ul>
           </div>
           <div class="stack-group">
-            <h3>Vision</h3>
-            <ul class="tags"><li>pytorch</li><li>opencv</li><li>yolov5</li><li>mediapipe</li><li>clip</li></ul>
+            <h3>Agents and retrieval</h3>
+            <ul class="tags"><li>langchain</li><li>google adk</li><li>rag</li><li>chromadb</li><li>coreml</li><li>apple intelligence</li></ul>
+          </div>
+          <div class="stack-group">
+            <h3>Vision and 3D</h3>
+            <ul class="tags"><li>opencv</li><li>yolov8</li><li>mediapipe</li><li>openclip</li><li>nerf</li><li>gaussian splatting</li></ul>
           </div>
           <div class="stack-group">
             <h3>Full-stack and cloud</h3>
-            <ul class="tags"><li>typescript</li><li>react</li><li>node.js</li><li>swift</li><li>azure</li><li>docker</li><li>kubernetes</li></ul>
+            <ul class="tags"><li>typescript</li><li>react</li><li>swift</li><li>node.js</li><li>gcp</li><li>azure</li><li>docker</li><li>kubernetes</li></ul>
           </div>
         </div>
       </div>
@@ -161,6 +258,7 @@
           GitHub
         </a>
         <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn<span class="ext" aria-hidden="true">&#8599;</span></a>
+        <a href="assets/resume.pdf" target="_blank" rel="noopener">Resume (PDF)<span class="ext" aria-hidden="true">&#8599;</span></a>
       </div>
     </section>
 

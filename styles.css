@@ -210,7 +210,7 @@ a { color: inherit; }
 
 .proof-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
   padding-block: 1.9rem;
 }
@@ -221,7 +221,7 @@ a { color: inherit; }
 
 /* ---------- sections ---------- */
 
-section.work, section.about, section.contact { padding-block: 6.5rem; }
+section.work, section.experience, section.about, section.contact { padding-block: 6.5rem; }
 
 h2 {
   font-size: clamp(1.7rem, 3.2vw, 2.4rem);
@@ -230,7 +230,7 @@ h2 {
   line-height: 1.15;
 }
 
-.work h2, .about h2 { margin-bottom: 2.6rem; }
+.work h2, .experience h2, .about h2 { margin-bottom: 2.6rem; }
 
 /* ---------- work cards ---------- */
 
@@ -313,6 +313,29 @@ h2 {
 
 .card-featured h3 { font-size: 1.45rem; }
 
+.card-context {
+  font-size: 0.88rem;
+  color: var(--accent);
+  margin-top: 0.35rem !important;
+}
+
+/* mirrored featured variant: stats on the left */
+.card-featured-alt {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  background:
+    radial-gradient(90% 130% at 0% 100%, var(--accent-dim) 0%, transparent 55%),
+    var(--surface);
+}
+.card-featured-alt .card-featured-stats {
+  border-left: 0;
+  border-right: 1px solid var(--line);
+  padding-left: 0;
+  padding-right: 2.5rem;
+}
+
+article.card { cursor: default; }
+article.card:hover { transform: none; }
+
 .card-link-hint {
   display: inline-flex;
   align-items: center;
@@ -376,6 +399,33 @@ h2 {
   text-decoration-color: var(--accent);
   text-underline-offset: 3px;
 }
+
+/* ---------- experience ---------- */
+
+.experience { border-top: 1px solid var(--line); }
+
+.exp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 2.5rem;
+  padding-block: 1.8rem;
+  border-top: 1px solid var(--line);
+}
+.exp-row:last-child { border-bottom: 1px solid var(--line); }
+
+.exp-head h3 {
+  font-size: 1.05rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+}
+.exp-org { color: var(--text); font-size: 0.95rem; margin-top: 0.15rem; }
+.exp-dates {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+.exp-desc { color: var(--muted); font-size: 0.95rem; max-width: 58ch; }
 
 /* ---------- about ---------- */
 
@@ -527,6 +577,15 @@ h2 {
     flex-direction: row;
     gap: 2.5rem;
   }
+  .card-featured-alt .card-featured-stats {
+    border-right: 0;
+    padding-right: 0;
+    order: 2;
+  }
+
+  .proof-grid { grid-template-columns: 1fr 1fr; }
+
+  .exp-row { grid-template-columns: 1fr; gap: 0.8rem; }
 
   .work-grid { grid-template-columns: 1fr 1fr; }
   .span-2 { grid-column: span 2; }

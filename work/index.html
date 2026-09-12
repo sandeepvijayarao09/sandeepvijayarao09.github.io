@@ -41,7 +41,7 @@
 
     <section class="work container" aria-label="Projects">
 
-      <a class="card card-featured" href="/work/anu/" data-reveal>
+      <a class="card card-featured" data-hue="agent" href="/work/anu/" data-reveal>
         <div class="card-featured-copy">
           <h3>ANU</h3>
           <p class="card-context">Apple Swift Student Challenge 2026 winner</p>
@@ -63,7 +63,7 @@
         </div>
       </a>
 
-      <a class="card card-featured card-featured-alt" href="/work/dual-llm/" data-reveal>
+      <a class="card card-featured card-featured-alt" data-hue="llm" href="/work/dual-llm/" data-reveal>
         <div class="card-featured-stats">
           <div class="stat">
             <span class="stat-num">92.6%</span>
@@ -86,56 +86,56 @@
       </a>
 
       <div class="work-grid">
-        <a class="card span-2" href="/work/agentic-research-assistant/" data-reveal>
+        <a class="card span-2" data-hue="agent" href="/work/agentic-research-assistant/" data-reveal>
           <h3>Agentic Research Assistant</h3>
           <p>Multi-agent research loop with orchestrator, research, and reasoning agents over dual-layer ChromaDB memory, long-term plus working, retaining context across sessions.</p>
           <p class="metric">3 agents, ArXiv-grounded</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>langchain</li><li>chromadb</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card" href="/work/aiforg/" data-reveal style="--d:.07s">
+        <a class="card" data-hue="tools" href="/work/aiforg/" data-reveal style="--d:.07s">
           <h3>AIFORG</h3>
           <p>Modular agentic orchestration framework with standardized agent interfaces, dynamic tool registration, and Plan, Reason, Act execution loops.</p>
           <p class="metric">new tool integration under 2 hours</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>google adk</li><li>langchain</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card" href="/work/tryon/" data-reveal>
+        <a class="card" data-hue="vision" href="/work/tryon/" data-reveal>
           <h3>TryOn</h3>
           <p>NeRF plus 3D Gaussian Splatting pipeline that turns a 360 degree video into a textured human mesh in about 12 minutes end to end.</p>
           <p class="metric">85% accuracy vs pro 3D capture</p>
           <ul class="tags" aria-label="Built with"><li>nerf</li><li>gaussian splatting</li><li>pytorch</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card" href="/work/lane-detection/" data-reveal style="--d:.07s">
+        <a class="card" data-hue="vision" href="/work/lane-detection/" data-reveal style="--d:.07s">
           <h3>Real-time Lane Detection</h3>
           <p>LaneNet encoder-decoder with an EfficientNet backbone, profiled in PyTorch until it ran in real time.</p>
           <p class="metric">99% accuracy at 150 FPS</p>
           <ul class="tags" aria-label="Built with"><li>pytorch</li><li>lanenet</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card" href="/work/vision-language-grounding/" data-reveal style="--d:.14s">
+        <a class="card" data-hue="vision" href="/work/vision-language-grounding/" data-reveal style="--d:.14s">
           <h3>Vision-Language Grounding</h3>
           <p>Zero-shot CLIP grounding with cross-modal attention visualization, Stable Diffusion generation, and embedding-space analysis.</p>
           <p class="metric">4 pipelines, fully zero-shot</p>
           <ul class="tags" aria-label="Built with"><li>openclip</li><li>stable diffusion</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card span-2" href="/work/autofill-pro/" data-reveal>
+        <a class="card span-2" data-hue="product" href="/work/autofill-pro/" data-reveal>
           <h3>AutoFill Pro</h3>
           <p>Shipped Chrome extension that fills job applications across 30+ ATS platforms from 44 locally stored profile fields, with an AI fallback for custom questions. Privacy-first: sensitive data never leaves the device.</p>
           <p class="metric">30+ platforms, 424 test cases</p>
           <ul class="tags" aria-label="Built with"><li>javascript</li><li>chrome mv3</li><li>nvidia nim</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card card-tint" href="/work/skillgap/" data-reveal style="--d:.07s">
+        <a class="card card-tint" data-hue="product" href="/work/skillgap/" data-reveal style="--d:.07s">
           <h3>SkillGap AI</h3>
           <p>Skills-gap analysis platform mapping user profiles against live job-market embeddings. Three PMI San Francisco awards as sole developer.</p>
           <p class="metric">500+ concurrent users</p>
           <ul class="tags" aria-label="Built with"><li>react</li><li>rag</li><li>postgresql</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
-        <a class="card span-3 card-grid-bg" href="/work/pose-estimation/" data-reveal>
+        <a class="card span-3 card-grid-bg" data-hue="vision" href="/work/pose-estimation/" data-reveal>
           <h3>Real-time Human Pose Estimation</h3>
           <p>Published at IEEE AISP 2024. A lightweight keypoint regression head on MediaPipe landmark priors, with LSTM activity recognition across 11 activities.</p>
           <p class="metric">85% mAP, 0.78 IoU, 30+ FPS</p>
@@ -143,70 +143,70 @@
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
       
-        <a class="card span-2" href="https://github.com/sandeepvijayarao09/notova-ios" target="_blank" rel="noopener" data-reveal>
+        <a class="card span-2" data-hue="product" href="https://github.com/sandeepvijayarao09/notova-ios" target="_blank" rel="noopener" data-reveal>
           <h3>Notova</h3>
           <p>On-device notes for iOS and Android from one record, transcribe, summarize pipeline. Transcription and summarization run on the phone; the TypeScript backend is an OAuth2 broker that holds no note content.</p>
           <p class="metric">two native platforms, metadata-only sync</p>
           <ul class="tags" aria-label="Built with"><li>swift</li><li>swiftui</li><li>kotlin</li><li>jetpack compose</li><li>typescript</li><li>whisper</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/meeting-bot" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+        <a class="card" data-hue="product" href="https://github.com/sandeepvijayarao09/meeting-bot" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>Meeting Bot</h3>
           <p>Local-first macOS notetaker that captures system audio from any running app and transcribes it on device with Whisper, producing summary, decisions, and action items with speaker attribution.</p>
           <p class="metric">three frontends, fully local</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>swift</li><li>swiftui</li><li>whisper</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/Agent-Certifier" target="_blank" rel="noopener" data-reveal>
+        <a class="card" data-hue="tools" href="https://github.com/sandeepvijayarao09/Agent-Certifier" target="_blank" rel="noopener" data-reveal>
           <h3>Agent-Certifier</h3>
           <p>Reads agent codebases it did not author and runs a static-analysis suite across six safety and reliability categories, returning one weighted certification level.</p>
           <p class="metric">60 tests across 6 categories</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>fastapi</li><li>next.js</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/AI-Agentic-Mar28" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+        <a class="card" data-hue="agent" href="https://github.com/sandeepvijayarao09/AI-Agentic-Mar28" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>Agentic Second Brain</h3>
           <p>Gemini extraction agent that parses order confirmations into a structured SQLite database, then answers order-history queries and surfaces re-order links through a chat UI.</p>
           <p class="metric">deployed on DigitalOcean</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>fastapi</li><li>gemini</li><li>next.js</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/Agent-Guidelines" target="_blank" rel="noopener" data-reveal>
+        <a class="card" data-hue="tools" href="https://github.com/sandeepvijayarao09/Agent-Guidelines" target="_blank" rel="noopener" data-reveal>
           <h3>Agent-Guidelines</h3>
           <p>Guideline-driven multi-agent orchestrator with persistent memory across runs and a live execution dashboard, so agent runs can be watched and diagnosed while they happen.</p>
           <p class="metric">live execution dashboard</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>gemini</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card card-tint" href="https://github.com/sandeepvijayarao09/a1110-week9" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+        <a class="card card-tint" data-hue="tools" href="https://github.com/sandeepvijayarao09/a1110-week9" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>BugHound</h3>
           <p>Agentic debugging assistant running a plan, analyze, act, test, reflect loop over a Python codebase, with a heuristic fallback path so it still works when the model is unavailable.</p>
           <p class="metric">heuristic fallback when the model is down</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>gemini</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/Gemini-Devpost-Hackathon-Feb09" target="_blank" rel="noopener" data-reveal>
+        <a class="card" data-hue="llm" href="https://github.com/sandeepvijayarao09/Gemini-Devpost-Hackathon-Feb09" target="_blank" rel="noopener" data-reveal>
           <h3>Neural Studio</h3>
           <p>Infinite-canvas workspace pairing Research and Creator modes on a single surface, built against the Gemini API.</p>
           <p class="metric">Devpost hackathon build</p>
           <ul class="tags" aria-label="Built with"><li>react</li><li>vite</li><li>typescript</li><li>gemini</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/Hospital-Management-System-Updated" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+        <a class="card" data-hue="product" href="https://github.com/sandeepvijayarao09/Hospital-Management-System-Updated" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>Hospital Management System</h3>
           <p>Full-stack clinical portal covering patients, appointments, and billing, with JWT authentication and role-scoped access over MongoDB.</p>
           <p class="metric">jwt auth, role-scoped access</p>
           <ul class="tags" aria-label="Built with"><li>react</li><li>typescript</li><li>vite</li><li>express</li><li>mongodb</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card" href="https://github.com/sandeepvijayarao09/Omni-Axon" target="_blank" rel="noopener" data-reveal>
+        <a class="card" data-hue="agent" href="https://github.com/sandeepvijayarao09/Omni-Axon" target="_blank" rel="noopener" data-reveal>
           <h3>Omni-Axon</h3>
           <p>Built and shipped for the Stanford and DeepMind hackathon.</p>
           <p class="metric">hackathon build</p>
           <ul class="tags" aria-label="Built with"><li>typescript</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card span-2" href="https://github.com/sandeepvijayarao09/avigis-biopharma" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+        <a class="card span-2" data-hue="product" href="https://github.com/sandeepvijayarao09/avigis-biopharma" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>Avigis Biopharma</h3>
           <p>The official website for Avigis Biopharma Private Limited, built and deployed end to end for an external client.</p>
           <p class="metric">shipped for a client</p>

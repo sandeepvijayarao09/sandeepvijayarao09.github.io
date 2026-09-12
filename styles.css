@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------
    Sandeep Vijayarao, portfolio
-   Theme: dark, locked site-wide. One accent (emerald).
+   Theme: dark, locked site-wide. Emerald base + per-domain hues.
    Radius system: surfaces 20px, interactive pills, inline tokens 6px.
    Motion: strong ease-out entrances, asymmetric page transitions
    (exit 180ms, enter 460ms), hover effects gated to fine pointers.
@@ -28,7 +28,20 @@
   --muted: #98a2ad;
   --accent: #34d399;
   --accent-ink: #07150e;
+  --accent-rgb: 52, 211, 153;
   --accent-dim: rgba(52, 211, 153, 0.13);
+
+  /* domain hues. --accent is re-pointed per card/page via [data-hue]. */
+  --hue-agent: #34d399;
+  --hue-agent-rgb: 52, 211, 153;
+  --hue-vision: #38bdf8;
+  --hue-vision-rgb: 56, 189, 248;
+  --hue-llm: #a78bfa;
+  --hue-llm-rgb: 167, 139, 250;
+  --hue-product: #fbbf24;
+  --hue-product-rgb: 251, 191, 36;
+  --hue-tools: #fb7185;
+  --hue-tools-rgb: 251, 113, 133;
   --sans: "Geist", system-ui, -apple-system, sans-serif;
   --mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
   --r-surface: 20px;
@@ -59,7 +72,7 @@ body::before {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(60% 42% at 50% -12%, rgba(52, 211, 153, 0.055), transparent 70%);
+  background: radial-gradient(60% 42% at 50% -12%, rgba(var(--accent-rgb), 0.055), transparent 70%);
 }
 
 .container {
@@ -404,6 +417,21 @@ h2 {
   text-decoration: none;
   transition: color 200ms ease;
 }
+
+/* ---------- domain hues ---------- */
+/* Re-point --accent on a scope and every accent-driven rule inside it
+   (metric, arrow, tint, hover border, sheen) follows. */
+
+[data-hue="agent"]   { --accent: var(--hue-agent);   --accent-rgb: var(--hue-agent-rgb); }
+[data-hue="vision"]  { --accent: var(--hue-vision);  --accent-rgb: var(--hue-vision-rgb); }
+[data-hue="llm"]     { --accent: var(--hue-llm);     --accent-rgb: var(--hue-llm-rgb); }
+[data-hue="product"] { --accent: var(--hue-product); --accent-rgb: var(--hue-product-rgb); }
+[data-hue="tools"]   { --accent: var(--hue-tools);   --accent-rgb: var(--hue-tools-rgb); }
+
+[data-hue] { --accent-dim: rgba(var(--accent-rgb), 0.13); }
+
+/* amber needs a darker ink than the emerald default to stay readable */
+[data-hue="product"] { --accent-ink: #1a1203; }
 
 /* ---------- work cards ---------- */
 
@@ -770,7 +798,7 @@ article.card { cursor: default; }
     transition: opacity 350ms ease;
     background: radial-gradient(
       260px circle at var(--mx, 50%) var(--my, 50%),
-      rgba(52, 211, 153, 0.09),
+      rgba(var(--accent-rgb), 0.09),
       transparent 65%
     );
   }
@@ -786,6 +814,10 @@ article.card { cursor: default; }
   a.card:hover .card-arrow {
     color: var(--accent);
     transform: translate(2px, -2px);
+  }
+  a.card:hover .tags li {
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+    color: var(--text);
   }
 
   .contact-email:hover { border-bottom-color: var(--accent); }

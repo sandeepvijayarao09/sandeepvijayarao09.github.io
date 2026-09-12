@@ -111,7 +111,14 @@
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
+  /* emerald leads; the other domain hues appear as accents in the field */
   const ACCENT = "52, 211, 153";
+  const PALETTE = [
+    "52, 211, 153", "52, 211, 153", "52, 211, 153", "52, 211, 153",
+    "56, 189, 248",
+    "167, 139, 250",
+    "251, 191, 36",
+  ];
   const LINK_DIST = 110;
   let nodes = [];
   let width = 0;
@@ -141,6 +148,7 @@
       vx: (Math.random() - 0.5) * 0.35,
       vy: (Math.random() - 0.5) * 0.35,
       r: Math.random() < 0.12 ? 2.4 : 1.4,
+      c: PALETTE[(Math.random() * PALETTE.length) | 0],
     }));
   }
 
@@ -177,7 +185,8 @@
         const dy = a.y - b.y;
         const d = Math.hypot(dx, dy);
         if (d < LINK_DIST) {
-          ctx.strokeStyle = `rgba(${ACCENT}, ${(1 - d / LINK_DIST) * 0.32})`;
+          const tint = a.c === b.c ? a.c : ACCENT;
+          ctx.strokeStyle = `rgba(${tint}, ${(1 - d / LINK_DIST) * 0.32})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -187,7 +196,7 @@
       }
     }
     for (const n of nodes) {
-      ctx.fillStyle = `rgba(${ACCENT}, ${n.r > 2 ? 0.9 : 0.55})`;
+      ctx.fillStyle = `rgba(${n.c}, ${n.r > 2 ? 0.9 : 0.55})`;
       ctx.beginPath();
       ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
       ctx.fill();

@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ANU | Sandeep Vijayarao</title>
-  <meta name="description" content="A Swift-native iOS app that coordinates ten on-device agents through Apple Intelligence APIs, going as far as a phone can go before it needs the cloud.">
+  <title>Anu | Sandeep Vijayarao</title>
+  <meta name="description" content="A voice-first, multimodal iOS assistant whose brain is Gemma 4 E4B running entirely on the device, with on-device classifiers routing every message before generation.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/anu/">
-  <meta property="og:title" content="ANU | Sandeep Vijayarao">
-  <meta property="og:description" content="A Swift-native iOS app that coordinates ten on-device agents through Apple Intelligence APIs, going as far as a phone can go before it needs the cloud.">
+  <meta property="og:title" content="Anu | Sandeep Vijayarao">
+  <meta property="og:description" content="A voice-first, multimodal iOS assistant whose brain is Gemma 4 E4B running entirely on the device, with on-device classifiers routing every message before generation.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/anu/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -35,70 +35,79 @@
   <main id="main">
 
     <header class="page-header container">
-      <h1>ANU</h1>
-      <p class="case-context">Apple Swift Student Challenge 2026 winner, sole developer</p>
-      <p class="lede">A Swift-native iOS app that coordinates ten on-device agents through Apple Intelligence APIs, going as far as a phone can go before it needs the cloud.</p>
+      <h1>Anu</h1>
+      <p class="case-context">Apple Swift Student Challenge 2026 Winner &amp;middot; built in a two-week sprint</p>
+      <p class="lede">An iOS assistant whose brain runs on the phone: Gemma 4 E4B through LiteRT, two on-device classifiers routing every message, and the cloud as a sanitized, optional fallback.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
-          <span class="stat-num">10</span>
-          <span class="stat-label">coordinated on-device agents</span>
+          <span class="stat-num">300+</span>
+          <span class="stat-label">unit and UI tests green in CI</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">50%</span>
-          <span class="stat-label">fewer frontier API tokens</span>
+          <span class="stat-num">86.7%</span>
+          <span class="stat-label">task classifier, 60-case eval</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">2026</span>
-          <span class="stat-label">Swift Student Challenge winner</span>
+          <span class="stat-num">2</span>
+          <span class="stat-label">on-device classifiers before any generation</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>ANU started from a simple question: how much of an AI assistant can run entirely on the device in your pocket? Most assistants send every request to a frontier model, which costs money, adds latency, and ships your data off the phone. ANU inverts that default.</p>
-      <p data-reveal>I built it solo in Swift, and it won the Apple Swift Student Challenge 2026.</p>
+      <p data-reveal>Most assistants are a thin client over someone else&rsquo;s inference. Anu inverts the default: the model lives on the phone, the cloud is opt-in, and every message is classified locally before a single token is generated.</p>
+      <p data-reveal>It was built in a two-week sprint for the Apple Swift Student Challenge, which it won. The constraint that shaped it was not the deadline but the privacy posture &mdash; once you decide memory never leaves the device, a lot of convenient architecture stops being available.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>Ten specialized agents are orchestrated on top of Apple Intelligence APIs, each owning a slice of the assistant's behavior.</li>
-        <li>A CoreML routing layer classifies every user intent before any network call happens.</li>
-        <li>The majority of intents resolve locally on device; only genuinely high-complexity requests escalate to cloud frontier models.</li>
-        <li>The interface is SwiftUI end to end, designed so the local-first routing is invisible to the user.</li>
+        <li><strong>On-device brain.</strong> Gemma 4 E4B runs through Google&rsquo;s LiteRT engine from a <code>.litertlm</code> bundle, loading in roughly a second with KV-cache reuse across turns. Core ML Gemma 3 4B is a secondary fallback.</li>
+        <li><strong>Two classifiers, not one.</strong> A task classifier and a model classifier both run before generation, using Apple&rsquo;s <code>NLEmbedding</code> sentence embeddings. Both are confidence-gated; when confidence is low the message falls through to the agent loop rather than being forced into a bucket.</li>
+        <li><strong>ReAct agent loop</strong> over calculator, web search and a Gemini-escalation tool, with structured <code>{&quot;tool_call&quot;: &hellip;}</code> parsing and a reasoning trace the user can actually read.</li>
+        <li><strong>Voice-first by default.</strong> <code>SFSpeechRecognizer</code> handles dictation on-device; the microphone is the primary control and auto-sends on stop.</li>
+        <li><strong>Editable memory.</strong> Saved notes are treated as sources rather than hidden state: visible and editable in Settings, retrieved by embedding similarity, layered onto the prompt as numbered <code>[M#]</code> ground truth, and cited back in the trace.</li>
+        <li><strong>Multimodal input</strong> feeds attached images straight into E4B&rsquo;s native vision encoder.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
+      <h2 data-reveal>Privacy as an architectural property</h2>
       <ul class="case-list" data-reveal>
-        <li>Won the Apple Swift Student Challenge 2026 as sole developer.</li>
-        <li>Cut frontier API token usage by 50% through on-device CoreML routing.</li>
-        <li>Resolved the majority of user intents locally, without a network round trip.</li>
+        <li>API keys live in the Keychain; speech recognition is pinned to on-device.</li>
+        <li>A two-layer PII scrub runs before any cloud call is permitted.</li>
+        <li>Memory never leaves the device at all &mdash; there is no sync path for it.</li>
       </ul>
+      <h2 data-reveal>Production posture</h2>
+      <p data-reveal>There is no mock in the product: a missing model surfaces as an explicit error rather than a silent fallback to canned text. Tool calls have timeouts, in-flight work is cancellable, conversations persist, and Siri and Shortcuts integration runs through App Intents. Continuous integration keeps 300+ unit and UI tests green, and the app builds and runs across iOS 17 through 26.5.</p>
+      <h2 data-reveal>Where it stops, deliberately</h2>
+      <p data-reveal>A sandboxed third-party app cannot <em>be</em> the system assistant. Being the &ldquo;Hey Siri&rdquo; default, on-screen awareness across other apps, Safari and system control, and OS-level personal-context indexing are Apple-only surfaces. Those are documented as out of scope rather than stubbed to look complete. Where Anu goes further than the system assistant is the part it controls: fully on-device by default, with a swappable brain.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
-        <li>swift</li>
+        <li>swift 6</li>
         <li>swiftui</li>
-        <li>coreml</li>
-        <li>apple intelligence</li>
-        <li>on-device orchestration</li>
+        <li>litert</li>
+        <li>gemma 4 e4b</li>
+        <li>core ml</li>
+        <li>app intents</li>
+        <li>nlembedding</li>
+        <li>xcode</li>
       </ul>
       <div class="case-actions" data-reveal>
-        <p class="case-note">This project is not open source.</p>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/Anu-iOS" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
       </div>
     </article>
 
     <section class="next container" aria-label="Keep exploring">
-      <a class="next-link" href="/work/dual-llm/" data-reveal>
+      <a class="next-link" href="/work/notova/" data-reveal>
         <div>
-          <strong>Next: Dual-LLM Personalization System</strong><br>
-          <span>Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</span>
+          <strong>Next: Notova</strong><br>
+          <span>The same on-device thesis, taken across three platforms</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

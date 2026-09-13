@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Real-time Human Pose Estimation | Sandeep Vijayarao</title>
-  <meta name="description" content="A lightweight keypoint regression head on MediaPipe landmark priors, with an LSTM activity classifier riding on top, all running in real time.">
+  <title>Real-Time Pose Estimation | Sandeep Vijayarao</title>
+  <meta name="description" content="Peer-reviewed real-time human pose estimation: 33-landmark detection, 3D spatial reasoning, LSTM activity classification and exercise counting at 30+ FPS.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/pose-estimation/">
-  <meta property="og:title" content="Real-time Human Pose Estimation | Sandeep Vijayarao">
-  <meta property="og:description" content="A lightweight keypoint regression head on MediaPipe landmark priors, with an LSTM activity classifier riding on top, all running in real time.">
+  <meta property="og:title" content="Real-Time Pose Estimation | Sandeep Vijayarao">
+  <meta property="og:description" content="Peer-reviewed real-time human pose estimation: 33-landmark detection, 3D spatial reasoning, LSTM activity classification and exercise counting at 30+ FPS.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/pose-estimation/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -35,9 +35,9 @@
   <main id="main">
 
     <header class="page-header container">
-      <h1>Real-time Human Pose Estimation</h1>
-      <p class="case-context">Published at IEEE AISP 2024</p>
-      <p class="lede">A lightweight keypoint regression head on MediaPipe landmark priors, with an LSTM activity classifier riding on top, all running in real time.</p>
+      <h1>Real-Time Pose Estimation</h1>
+      <p class="case-context">Published at IEEE AISP 2024 &amp;middot; co-authored, six authors &amp;middot; DOI 10.1109/AISP61711.2024.10870725</p>
+      <p class="lede">Thirty-three body landmarks, 3D joint angles and velocities, LSTM activity classification and repetition counting, all holding real time.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -48,32 +48,28 @@
         </div>
         <div class="stat" data-reveal style="--d:.07s">
           <span class="stat-num">0.78</span>
-          <span class="stat-label">IoU, multi-person</span>
+          <span class="stat-label">IoU</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">30+</span>
-          <span class="stat-label">FPS, real time</span>
+          <span class="stat-num">33</span>
+          <span class="stat-label">landmarks at 30+ FPS</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Pose estimation research mostly trades accuracy against compute. This work, published at IEEE AISP 2024 while I was an undergrad, keeps the full pipeline real time: landmark extraction, keypoint refinement, and activity recognition in one pass.</p>
-      <h2 data-reveal>How it works</h2>
+      <p data-reveal>This is peer-reviewed work, presented at the 4th IEEE International Conference on Artificial Intelligence and Signal Processing in October 2024. I am one of six authors on the paper, &ldquo;Real-Time Human Pose Estimation Using MediaPipe and Artificial Intelligence Applications in Health and Fitness&rdquo;.</p>
+      <p data-reveal>The system detects a full 33-landmark skeleton, computes 3D joint angles and velocities from it, classifies activity with an LSTM, and counts exercise repetitions &mdash; with the whole chain holding real-time frame rates.</p>
+      <h2 data-reveal>What the pipeline does</h2>
       <ul class="case-list" data-reveal>
-        <li>MediaPipe Holistic provides 33 landmark priors per frame, doing the cheap coarse work first.</li>
-        <li>A lightweight keypoint regression head refines those priors; the published model cuts parameter count by 22% while staying within 2% of full-model baselines.</li>
-        <li>3D joint angles and velocities feed an LSTM classifier covering 11 activities, from locomotion to strength training to yoga.</li>
-        <li>Exercise rep counting and COCO-standard evaluation, mAP, OKS, and IoU, round out the system.</li>
+        <li><strong>Landmark detection</strong> of the full 33-point body skeleton through MediaPipe.</li>
+        <li><strong>Spatial reasoning</strong> on top of the raw landmarks: 3D joint angles and per-joint velocities, which is what turns a point cloud into something you can reason about.</li>
+        <li><strong>Activity classification</strong> with LSTM networks over the landmark time series.</li>
+        <li><strong>Repetition counting</strong> for exercise tracking, driven by the angle and velocity signals rather than by raw position.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
-      <ul class="case-list" data-reveal>
-        <li>85% mAP and 0.78 IoU on multi-person pose estimation, COCO standard.</li>
-        <li>Real-time inference at 30+ FPS.</li>
-        <li>11-activity recognition from pose dynamics via LSTM.</li>
-        <li>Published at IEEE AISP 2024.</li>
-      </ul>
+      <h2 data-reveal>Reported results</h2>
+      <p data-reveal>85% mAP on the COCO standard, 0.78 IoU, and 30+ FPS on GPU. These are the figures reported in the peer-reviewed paper and measured in that study &mdash; not numbers produced by this repository&rsquo;s test suite. The repo ships benchmarking utilities so they can be re-run on other hardware and data, and the distinction between &ldquo;published result&rdquo; and &ldquo;what this code asserts&rdquo; is kept explicit in the README.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
@@ -81,6 +77,7 @@
         <li>tensorflow</li>
         <li>lstm</li>
         <li>opencv</li>
+        <li>numpy</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/realtime-pose-estimation" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
@@ -88,17 +85,17 @@
     </article>
 
     <section class="next container" aria-label="Keep exploring">
-      <a class="next-link" href="/work/anu/" data-reveal>
+      <a class="next-link" href="/work/lane-detection/" data-reveal>
         <div>
-          <strong>Next: ANU</strong><br>
-          <span>Apple Swift Student Challenge 2026 winner, sole developer</span>
+          <strong>Next: Real-Time Lane Detection</strong><br>
+          <span>LaneNet at 150 FPS, benchmarked against a named baseline on TuSimple</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

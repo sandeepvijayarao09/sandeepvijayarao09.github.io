@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Certifier | Sandeep Vijayarao</title>
+  <meta name="description" content="A testing and certification platform for AI agent codebases: 60 static-analysis tests across 6 weighted categories, producing a certification level and a report.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/agent-certifier/">
+  <meta property="og:title" content="Agent Certifier | Sandeep Vijayarao">
+  <meta property="og:description" content="A testing and certification platform for AI agent codebases: 60 static-analysis tests across 6 weighted categories, producing a certification level and a report.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/agent-certifier/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-hue="tools">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Agent Certifier</h1>
+      <p class="case-context">Grading agent code without executing a line of it</p>
+      <p class="lede">Upload an AI agent codebase and get back a weighted score across security, stability, performance, informatics, compliance and ethics &amp;mdash; from static analysis alone.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">60</span>
+          <span class="stat-label">static-analysis tests</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">6</span>
+          <span class="stat-label">weighted categories</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">10</span>
+          <span class="stat-label">languages supported</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Agent code fails in ways ordinary application code does not: prompt injection, unbounded tool loops, silent data exfiltration, missing human oversight. Those are review problems, and review does not scale.</p>
+      <p data-reveal>Agent Certifier turns the review into a graded, repeatable artifact. It reads a codebase it did not author and returns a weighted score, a certification level, and a report naming what failed and why.</p>
+      <h2 data-reveal>The scoring model</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>Security, 30%</strong> &mdash; injection, hardcoded secrets, prompt injection, data exfiltration, auth, input validation, dependencies, privilege escalation, information disclosure, LLM code injection.</li>
+        <li><strong>Stability, 20%</strong> &mdash; error handling, infinite loops, unbounded recursion, resource leaks, timeouts, graceful degradation, state management, memory, concurrency, exception specificity.</li>
+        <li><strong>Performance, 15%</strong> &mdash; caching, async I/O, batching, connection pooling, lazy loading, algorithmic complexity, streaming, rate limiting, resource cleanup, token optimization.</li>
+        <li><strong>Informatics, 15%</strong> &mdash; complexity, documentation, modularity, type annotations, response format, logging, config externalization, API contracts, naming, duplication.</li>
+        <li><strong>Compliance, 10%</strong> &mdash; PII handling, retention, audit logging, GDPR, licensing, terms of service, output filtering, consent, data minimization, regulatory awareness.</li>
+        <li><strong>Ethics, 10%</strong> &mdash; bias detection, transparency, human oversight, refusal mechanisms, fairness, explainability, harm prevention, misinformation, manipulation, accountability.</li>
+      </ul>
+      <h2 data-reveal>Why static analysis</h2>
+      <p data-reveal>Nothing is executed. Running untrusted agent code to grade it would reproduce the exact class of risk the tool is looking for, so the analysis is pattern and heuristic based instead. That trades some recall for a guarantee that the grader cannot be turned into an attack surface, which is the right trade for a tool meant to be pointed at code you do not trust.</p>
+      <h2 data-reveal>Engineering</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>Backend</strong>: FastAPI with async SQLAlchemy over SQLite, exposing OpenAPI docs.</li>
+        <li><strong>Frontend</strong>: Next.js 14 with TypeScript and Tailwind, polling live test progress as a run proceeds.</li>
+        <li><strong>Output</strong>: certification level from PLATINUM (90+) down through GOLD, SILVER and BRONZE to NOT_CERTIFIED, with a downloadable JSON report and a printable view.</li>
+        <li><strong>Reach</strong>: ten languages &mdash; Python, JavaScript, TypeScript, Go, Java, Ruby, Rust, C++, C# and PHP.</li>
+        <li><strong>Deployment</strong>: one <code>docker compose up</code> brings up both services.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>python</li>
+        <li>fastapi</li>
+        <li>sqlalchemy</li>
+        <li>next.js 14</li>
+        <li>typescript</li>
+        <li>tailwind</li>
+        <li>docker compose</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/Agent-Certifier" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/anu/" data-reveal>
+        <div>
+          <strong>Next: Anu</strong><br>
+          <span>A voice-first iOS assistant whose brain runs entirely on the phone</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

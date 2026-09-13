@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AutoFill Pro | Sandeep Vijayarao</title>
-  <meta name="description" content="Fills job applications across 30+ ATS platforms from 44 locally stored profile fields, with an AI fallback only for the odd custom questions.">
+  <meta name="description" content="A browser extension that fills job applications from a local profile: 44 recognized fields across 50+ platforms, with no accounts, no server and no tracking.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/autofill-pro/">
   <meta property="og:title" content="AutoFill Pro | Sandeep Vijayarao">
-  <meta property="og:description" content="Fills job applications across 30+ ATS platforms from 44 locally stored profile fields, with an AI fallback only for the odd custom questions.">
+  <meta property="og:description" content="A browser extension that fills job applications from a local profile: 44 recognized fields across 50+ platforms, with no accounts, no server and no tracking.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/autofill-pro/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,49 +36,49 @@
 
     <header class="page-header container">
       <h1>AutoFill Pro</h1>
-      <p class="case-context">A shipped Chrome extension for the worst part of job hunting</p>
-      <p class="lede">Fills job applications across 30+ ATS platforms from 44 locally stored profile fields, with an AI fallback only for the odd custom questions.</p>
+      <p class="case-context">No accounts, no server, no data leaving the browser</p>
+      <p class="lede">Enter your details once, or import them from a resume, and fill an entire application on any site with one click &amp;mdash; with everything stored locally.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
-          <span class="stat-num">30+</span>
-          <span class="stat-label">ATS platforms supported</span>
+          <span class="stat-num">44</span>
+          <span class="stat-label">recognized form fields</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">44</span>
-          <span class="stat-label">profile fields, stored locally</span>
+          <span class="stat-num">50+</span>
+          <span class="stat-label">application platforms</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">424</span>
-          <span class="stat-label">test cases</span>
+          <span class="stat-num">0</span>
+          <span class="stat-label">servers involved</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Anyone who has applied to jobs knows the loop: same resume, same fields, slightly different form, twenty minutes gone. AutoFill Pro pattern-matches those forms across Workday, Greenhouse, Lever, Taleo, iCIMS, and dozens of other ATS platforms and fills them instantly.</p>
-      <p data-reveal>It is built privacy-first: sensitive fields like date of birth, EEOC responses, gender, and salary expectations never leave the device.</p>
+      <p data-reveal>Job applications ask the same forty questions in forty different DOM shapes. The tools that solve this generally solve it by holding your personal data on their servers, which is a strange trade for a convenience feature.</p>
+      <p data-reveal>AutoFill Pro keeps the data in the browser&rsquo;s local storage and does the matching on the page. There are no accounts and no sign-up: install it, enter your data, and it fills forms with your data. Anyone you share it with does the same with theirs.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>A local pattern-matching engine maps 44 profile fields onto each platform's form structure, no network call needed.</li>
-        <li>An AI fallback via NVIDIA NIM handles only free-form custom questions; everything standard fills locally.</li>
-        <li>Resume PDF import seeds the profile, and one-click undo reverses any fill.</li>
-        <li>Handles iframes, single-page apps, and character limits, and meets WCAG 2.1 AA accessibility.</li>
+        <li><strong>Field recognition</strong> covers 44 common application fields across 50+ platforms, matching by structure rather than by per-site rules.</li>
+        <li><strong>Two ways in</strong> &mdash; type the profile directly, or import a resume PDF or pasted LinkedIn text and review what was extracted before saving.</li>
+        <li><strong>One action to fill</strong> &mdash; a floating button or <code>Alt+Shift+F</code>. Long-pressing the button previews what will be filled before committing, and an Undo appears after every fill.</li>
+        <li><strong>Chromium-wide</strong> &mdash; Chrome, Edge, Brave and anything else Chromium-based.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
-      <ul class="case-list" data-reveal>
-        <li>Works across 30+ ATS platforms, including Workday, Greenhouse, Lever, Taleo, and iCIMS.</li>
-        <li>424 test cases covering platform quirks and edge cases.</li>
-        <li>Sensitive personal data is never transmitted off the device.</li>
-      </ul>
+      <h2 data-reveal>The AI fallback, and its boundary</h2>
+      <p data-reveal>Some applications ask open-ended questions that no field matcher can answer &mdash; &ldquo;why do you want to work here&rdquo;. Those are optional and off by default. When enabled, only the question text and non-sensitive profile details are sent. Date of birth, race and ethnicity, disability and veteran status, gender, phone number and salary are never transmitted. With the feature off, nothing leaves the device at all.</p>
+      <h2 data-reveal>Privacy posture</h2>
+      <p data-reveal>No server, no tracking, no accounts. The profile lives in browser local storage and is visible only to the person who typed it. The sensitive-field exclusion list is enforced in the extension rather than promised in a policy, which is the only version of that promise worth making.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>javascript</li>
-        <li>chrome mv3</li>
-        <li>nvidia nim</li>
+        <li>chrome extension</li>
+        <li>manifest v3</li>
+        <li>local storage</li>
+        <li>pdf parsing</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/autofill-pro" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
@@ -86,17 +86,17 @@
     </article>
 
     <section class="next container" aria-label="Keep exploring">
-      <a class="next-link" href="/work/pose-estimation/" data-reveal>
+      <a class="next-link" href="/work/agent-certifier/" data-reveal>
         <div>
-          <strong>Next: Real-time Human Pose Estimation</strong><br>
-          <span>Published at IEEE AISP 2024</span>
+          <strong>Next: Agent Certifier</strong><br>
+          <span>Grading agent codebases without executing them</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

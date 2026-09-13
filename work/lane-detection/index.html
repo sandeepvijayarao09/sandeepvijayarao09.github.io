@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Real-time Lane Detection | Sandeep Vijayarao</title>
-  <meta name="description" content="A LaneNet encoder-decoder with segmentation and instance-embedding heads, optimized to 150 frames per second.">
+  <title>Real-Time Lane Detection | Sandeep Vijayarao</title>
+  <meta name="description" content="A PyTorch LaneNet implementation for autonomous driving: 99% accuracy on TuSimple at 150 FPS, 80% faster inference than baseline.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/lane-detection/">
-  <meta property="og:title" content="Real-time Lane Detection | Sandeep Vijayarao">
-  <meta property="og:description" content="A LaneNet encoder-decoder with segmentation and instance-embedding heads, optimized to 150 frames per second.">
+  <meta property="og:title" content="Real-Time Lane Detection | Sandeep Vijayarao">
+  <meta property="og:description" content="A PyTorch LaneNet implementation for autonomous driving: 99% accuracy on TuSimple at 150 FPS, 80% faster inference than baseline.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/lane-detection/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -35,9 +35,9 @@
   <main id="main">
 
     <header class="page-header container">
-      <h1>Real-time Lane Detection</h1>
-      <p class="case-context">LaneNet in PyTorch, profiled until it ran in real time</p>
-      <p class="lede">A LaneNet encoder-decoder with segmentation and instance-embedding heads, optimized to 150 frames per second.</p>
+      <h1>Real-Time Lane Detection</h1>
+      <p class="case-context">Benchmarked on TuSimple against a named baseline</p>
+      <p class="lede">An encoder-decoder LaneNet that runs at 150 frames per second on an RTX 3080, about 6.7 milliseconds per frame, with instance clustering and spline fitting on the output.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -51,36 +51,44 @@
           <span class="stat-label">FPS on an RTX 3080</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">6.7</span>
-          <span class="stat-label">ms latency per frame</span>
+          <span class="stat-num">6.7ms</span>
+          <span class="stat-label">per-frame latency</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Lane detection models are easy to make accurate and hard to make fast. A model that misses the frame budget is useless on the road no matter how accurate it is. This project chased both numbers at once, and stayed small enough to deploy: about 5.2M parameters in a 4.2 MB model.</p>
-      <h2 data-reveal>How it works</h2>
+      <p data-reveal>Lane detection is a latency problem before it is an accuracy problem: a model that is right and late is not useful to a vehicle. This implementation targets both, and reports against a named baseline on a public dataset so the numbers mean something.</p>
+      <h2 data-reveal>Architecture</h2>
       <ul class="case-list" data-reveal>
-        <li>A LaneNet-style encoder-decoder pairs a binary segmentation head with an instance-embedding head, on an EfficientNet-B0 or MobileNetV2 backbone.</li>
-        <li>DBSCAN clustering separates individual lane instances from the embedding space.</li>
-        <li>Spline fitting and inverse perspective mapping turn raw masks into clean lane geometry.</li>
-        <li>Mixed-precision training (AMP) speeds up the pipeline, and TorchScript export packages the model for deployment.</li>
+        <li><strong>Encoder</strong>: a pretrained EfficientNet-B0 or MobileNetV2 backbone, chosen for the accuracy-latency trade the deployment target needs.</li>
+        <li><strong>Decoder</strong>: four progressive upsampling blocks with skip connections.</li>
+        <li><strong>Two heads</strong>: a segmentation head predicting the binary lane mask, and an embedding head producing 4-dimensional instance embeddings so individual lanes can be clustered apart.</li>
+        <li><strong>Post-processing</strong>: instance clustering, perspective transform and spline fitting turn the mask into lane geometry.</li>
+      </ul>
+      <h2 data-reveal>Training and deployment</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>Mixed-precision training</strong> with AMP, about 40% faster than full precision.</li>
+        <li><strong>TorchScript export</strong> so the model deploys as an optimized <code>.pt</code> artifact rather than a Python dependency graph.</li>
+        <li><strong>Mock-data mode</strong> generates a synthetic dataset so the model and tests can run in CI without shipping TuSimple.</li>
+        <li><strong>Unit tests</strong> exercise the model on random tensors, which keeps shape and dtype regressions out without needing the real dataset.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
-        <li>99% accuracy on the TuSimple benchmark.</li>
-        <li>150 FPS, roughly 6.7 ms per frame, on an NVIDIA RTX 3080.</li>
-        <li>80% faster inference and 7% higher accuracy than the prior baseline, F1 0.95 vs 0.85.</li>
-        <li>Compact deployment footprint: ~5.2M parameters, ~4.2 MB model.</li>
+        <li>99% accuracy on the TuSimple dataset, 7 percentage points above the baseline.</li>
+        <li>150 FPS on an NVIDIA RTX 3080, roughly 6.7ms per frame.</li>
+        <li>80% faster inference than the baseline implementation.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
-        <li>python</li>
         <li>pytorch</li>
         <li>lanenet</li>
-        <li>efficientnet</li>
+        <li>efficientnet-b0</li>
+        <li>mobilenetv2</li>
+        <li>opencv</li>
         <li>torchscript</li>
+        <li>amp</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/realtime-lane-detection" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
@@ -91,14 +99,14 @@
       <a class="next-link" href="/work/vision-language-grounding/" data-reveal>
         <div>
           <strong>Next: Vision-Language Grounding</strong><br>
-          <span>Zero-shot, open-vocabulary, no fine-tuning anywhere</span>
+          <span>CLIP grounding, attention maps, and what the embedding space actually looks like</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

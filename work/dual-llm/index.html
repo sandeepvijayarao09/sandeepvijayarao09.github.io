@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dual-LLM Personalization System | Sandeep Vijayarao</title>
-  <meta name="description" content="A three-layer router that learns which model each query deserves, sending the easy ones to a small model and the hard ones to a frontier LLM.">
+  <meta name="description" content="A three-layer router that sends each query to the model it deserves, cutting cascade rate from 30.8% to 14.7% while personalizing both paths.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/dual-llm/">
   <meta property="og:title" content="Dual-LLM Personalization System | Sandeep Vijayarao">
-  <meta property="og:description" content="A three-layer router that learns which model each query deserves, sending the easy ones to a small model and the hard ones to a frontier LLM.">
+  <meta property="og:description" content="A three-layer router that sends each query to the model it deserves, cutting cascade rate from 30.8% to 14.7% while personalizing both paths.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/dual-llm/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -37,50 +37,59 @@
     <header class="page-header container">
       <h1>Dual-LLM Personalization System</h1>
       <p class="case-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
-      <p class="lede">A three-layer router that learns which model each query deserves, sending the easy ones to a small model and the hard ones to a frontier LLM.</p>
+      <p class="lede">Most queries sent to a frontier model do not need one. This routes each query to the model it actually deserves, at zero added latency, and personalizes both paths.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
           <span class="stat-num">92.6%</span>
-          <span class="stat-label">routing accuracy, 1000-case eval</span>
+          <span class="stat-label">routing accuracy, up from 88.2%</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
           <span class="stat-num">85.3%</span>
           <span class="stat-label">of queries routed at zero API cost</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">14.7%</span>
-          <span class="stat-label">cascade rate, down from 30.8%</span>
+          <span class="stat-num">0.922</span>
+          <span class="stat-label">F1 on the 1,000-case eval</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Most queries sent to frontier LLMs don't need one. A question like "what's on my calendar" doesn't deserve the same model, latency, and cost as "compare these two research papers." This system makes that distinction automatically, per query, and was evaluated on 1,500 labeled cases.</p>
-      <p data-reveal>At Google I/O 2026, DeepMind product and AI researchers independently recognized the routing architecture as parallel to Google Omni.</p>
-      <h2 data-reveal>How it works</h2>
+      <p data-reveal>Most LLM applications send every query to the most expensive model available, including &ldquo;hi&rdquo; and &ldquo;what is 2+2&rdquo;. The cost of that is obvious; the latency cost is the one people miss.</p>
+      <p data-reveal>This system decides per query, through a three-layer cascade, and was evaluated on 1,500 labeled cases across two eval sets. At Google I/O 2026, DeepMind product and AI researchers independently recognized the routing architecture as parallel to Google Omni.</p>
+      <h2 data-reveal>The three layers</h2>
       <ul class="case-list" data-reveal>
-        <li>Layer 1 is a local TF-IDF plus logistic-regression router that classifies most queries instantly, at zero API cost.</li>
-        <li>Low-confidence queries fall back to a GPT-4o-mini JSON classifier before any answer is generated.</li>
-        <li>Simple queries are answered by GPT-4o-mini; only genuinely complex ones escalate to GPT-4o.</li>
-        <li>Persistent SQLite user profiles and sliding-window memory with rolling summaries personalize both paths.</li>
-        <li>Every routing decision is logged into a self-improving retraining loop, and a Streamlit UI exposes each routing choice transparently.</li>
+        <li><strong>Layer 1 &mdash; local ML router.</strong> TF-IDF over a tag-augmented encoding of the query, classified by logistic regression. No network call, no added latency, and it resolves 85.3% of traffic by itself.</li>
+        <li><strong>Layer 2 &mdash; LLM fallback classifier.</strong> Only low-confidence queries reach a GPT-4o-mini JSON classifier, and they reach it <em>before</em> any answer is generated, so the routing decision never costs a wasted completion.</li>
+        <li><strong>Layer 3 &mdash; answer.</strong> Simple queries are answered by GPT-4o-mini; only genuinely complex ones escalate to GPT-4o.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
+      <h2 data-reveal>Feature engineering</h2>
+      <p data-reveal>The router does not embed the raw query. Each query is rewritten into a tag-augmented string before vectorization &mdash; length bands (<code>LEN_SHORT</code> at &le;8 words, <code>LEN_MEDIUM</code>, <code>LEN_LONG</code> above 40), a code-presence flag, and related signals. Giving the linear model explicit categorical features is what lets something as small as TF-IDF plus logistic regression hold 92.6%: the hard part of the decision is encoded rather than learned.</p>
+      <h2 data-reveal>Personalization on both paths</h2>
       <ul class="case-list" data-reveal>
-        <li>92.6% routing accuracy on a 1,000-case evaluation, with 0.885 precision, 0.963 recall, and 0.922 F1.</li>
-        <li>Cut the LLM cascade rate from 30.8% to 14.7%.</li>
-        <li>Routed 85.3% of queries with the local ML layer alone, at zero API cost.</li>
-        <li>Architecture recognized by DeepMind researchers at Google I/O 2026 as parallel to Google Omni.</li>
+        <li><strong>Persistent user profiles</strong> in SQLite carry expertise level, tone, domain, interests, topics already discussed, and preferred response format.</li>
+        <li><strong>Sliding-window memory</strong> keeps the last three turn-pairs verbatim; older turns are evicted and compressed into a rolling summary capped at 80 tokens, so context stays bounded without losing the thread.</li>
+        <li><strong>A self-improving loop</strong> logs every routing decision for retraining, and a Streamlit UI exposes each choice so the routing is inspectable rather than opaque.</li>
+      </ul>
+      <h2 data-reveal>Measured results</h2>
+      <ul class="case-list" data-reveal>
+        <li>92.6% routing accuracy on the 1,000-case eval, up from an 88.2% baseline.</li>
+        <li>Precision 0.885, recall 0.963, F1 0.922 (TP 438, FN 17, FP 57, TN 488).</li>
+        <li>Cascade rate cut from 30.8% to 14.7%.</li>
+        <li>Mean routing confidence improved from 0.706 to 0.764.</li>
+        <li>85.3% of queries handled by the local layer alone, at zero API cost.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
         <li>scikit-learn</li>
+        <li>tf-idf</li>
         <li>gpt-4o</li>
+        <li>gpt-4o-mini</li>
         <li>streamlit</li>
         <li>sqlite</li>
       </ul>
@@ -100,7 +109,7 @@
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

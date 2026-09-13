@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meeting Bot | Sandeep Vijayarao</title>
+  <meta name="description" content="A local-first AI meeting notetaker for macOS. Audio is transcribed on-device with Whisper and never uploaded; only finished text is optionally summarized.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/meeting-bot/">
+  <meta property="og:title" content="Meeting Bot | Sandeep Vijayarao">
+  <meta property="og:description" content="A local-first AI meeting notetaker for macOS. Audio is transcribed on-device with Whisper and never uploaded; only finished text is optionally summarized.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/meeting-bot/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-hue="product">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Meeting Bot</h1>
+      <p class="case-context">No bot joins your call, and the recording never leaves the machine</p>
+      <p class="lede">A meeting notetaker that captures whatever audio is already playing on your Mac, transcribes it locally with Whisper, and ships three front-ends over one engine.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">3</span>
+          <span class="stat-label">front-ends over one core</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">$0</span>
+          <span class="stat-label">running cost</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">0</span>
+          <span class="stat-label">audio bytes uploaded</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Cloud notetakers solve the problem by uploading your meeting. That is a reasonable engineering choice and an unreasonable privacy one, and it also means the tool only works where a bot can be invited.</p>
+      <p data-reveal>Meeting Bot takes the other path. It captures the audio already playing on the Mac &mdash; Zoom, Meet, Teams, FaceTime, or a browser tab &mdash; so it needs no meeting-platform integration and works everywhere by construction. Transcription runs locally through Whisper. The only optional network call sends finished transcript <em>text</em> for summarization, and that endpoint can be pointed at a local model instead.</p>
+      <h2 data-reveal>How it works</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>System-audio capture</strong> through a small Swift helper (<code>audiocap</code>), riding the macOS screen-recording permission that system audio sits behind.</li>
+        <li><strong>Speaker attribution</strong> without diarization in the common case: your microphone is &ldquo;Me&rdquo; and system audio is &ldquo;Them&rdquo;, with optional Speaker A/B/C diarization layered on top.</li>
+        <li><strong>Structured output per meeting</strong> &mdash; summary, decisions, action items, and the full transcript &mdash; rather than an undifferentiated wall of text.</li>
+        <li><strong>Templates</strong> for general, standup, 1:1, interview and sales-call shapes, so the summary prompt matches the meeting type.</li>
+        <li><strong>On-device transcript cleanup</strong> that strips filler, stutters and false starts, plus on-demand rewrites: key points, formal, short, long.</li>
+        <li><strong>Talk-time analytics</strong> per note: Me/Them ratio, word counts, turn counts, longest monologue.</li>
+        <li><strong>Search and ask</strong> across every meeting, including Q&amp;A over the archive.</li>
+      </ul>
+      <h2 data-reveal>Three front-ends, one engine</h2>
+      <p data-reveal>The same core is driven by a native macOS SwiftUI app, a Chrome extension, and a CLI, with an iOS companion that records from the microphone on-device. Keeping the engine separate from the surfaces is what makes three front-ends affordable to maintain: each one is a thin driver over the same record, transcribe, summarize and export pipeline.</p>
+      <h2 data-reveal>Results</h2>
+      <ul class="case-list" data-reveal>
+        <li>Raw audio and transcripts stay on the machine; the privacy property is enforced by where the compute happens, not by a policy document.</li>
+        <li>Runs at zero cost: local Whisper plus a free inference tier, with a local-model escape hatch for summarization.</li>
+        <li>Exports to Markdown, Apple Notes (iCloud or on-device) and Google Docs.</li>
+        <li>Continuous integration runs on GitHub Actions.</li>
+      </ul>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>python</li>
+        <li>whisper</li>
+        <li>swift</li>
+        <li>swiftui</li>
+        <li>avfoundation</li>
+        <li>chrome extension</li>
+        <li>uv</li>
+        <li>github actions</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/meeting-bot" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/agent-certifier/" data-reveal>
+        <div>
+          <strong>Next: Agent Certifier</strong><br>
+          <span>Sixty static-analysis tests that grade an AI agent codebase without running it</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

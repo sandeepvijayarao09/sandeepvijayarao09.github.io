@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notova | Sandeep Vijayarao</title>
+  <meta name="description" content="A privacy-first voice-notes product for iOS, Android and macOS where the AI runs on the device and the backend is deliberately kept ignorant of your audio.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/notova/">
+  <meta property="og:title" content="Notova | Sandeep Vijayarao">
+  <meta property="og:description" content="A privacy-first voice-notes product for iOS, Android and macOS where the AI runs on the device and the backend is deliberately kept ignorant of your audio.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/notova/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-hue="product">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/" aria-current="page">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <header class="page-header container">
+      <h1>Notova</h1>
+      <p class="case-context">Three platforms, one core, and a backend built to know as little as possible</p>
+      <p class="lede">A voice-notes product where transcription and summarization run on the device, and the server is architected so that it never receives audio at all.</p>
+    </header>
+
+    <section class="case-strip" aria-label="Key numbers">
+      <div class="container case-strip-grid">
+        <div class="stat" data-reveal>
+          <span class="stat-num">3</span>
+          <span class="stat-label">platforms from one shared core</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.07s">
+          <span class="stat-num">0</span>
+          <span class="stat-label">bytes of audio the server ever sees</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">4</span>
+          <span class="stat-label">OAuth integrations brokered server-side</span>
+        </div>
+      </div>
+    </section>
+
+    <article class="case-body container">
+      <h2 data-reveal>Overview</h2>
+      <p data-reveal>Every cloud notetaker has the same architecture: your microphone uploads to someone else&rsquo;s server. Notova inverts that. Audio is captured, transcribed and summarized on the device, and the backend is scoped so tightly that it has no capability to receive audio even if it wanted to.</p>
+      <p data-reveal>That constraint drives the whole design. If the server cannot do the AI work, the client has to &mdash; on three platforms, without writing the pipeline three times.</p>
+      <h2 data-reveal>Architecture</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>One shared core, three shells.</strong> Domain models, the <code>PipelineService</code>, and the on-device <code>Transcriber</code>/<code>Summarizer</code> seams live in local Swift packages. iOS (SwiftUI) and macOS (a <code>NavigationSplitView</code> app) both depend on that core; only the platform plumbing differs, such as <code>MacAudioRecorder</code> wrapping AVAudioEngine for capture and file import.</li>
+        <li><strong>Android is a parallel implementation</strong> in Kotlin and Jetpack Compose, matching the same record &rarr; transcribe &rarr; summarize contract.</li>
+        <li><strong>Model seams, not model calls.</strong> Transcription and summarization sit behind protocols, so a real engine drops in without touching a single call site. Today those are stub implementations; the intended engines are Whisper for transcription and Gemma 3n E4B for summarization.</li>
+        <li><strong>Generated project files.</strong> The Xcode project is produced by XcodeGen from <code>project.yml</code> rather than committed, so the build configuration is reviewable as source and merge conflicts in a binary project file stop existing.</li>
+        <li><strong>Swift 6 with strict concurrency</strong> across the app, targeting iOS 17 and up.</li>
+      </ul>
+      <h2 data-reveal>The backend is defined by what it refuses to do</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>Accounts</strong> with JWT access and refresh tokens. Passwords hashed with argon2id; refresh tokens stored only as SHA-256 hashes so they can be revoked without ever holding the secret.</li>
+        <li><strong>An OAuth2 token broker</strong> for Google, Notion, Slack and Salesforce, using Authorization Code with PKCE. Third-party tokens are encrypted at rest with AES-256-GCM.</li>
+        <li><strong>Metadata-only sync.</strong> Title, duration, source, status and timestamps cross devices. No audio, no transcripts, no summaries are stored at rest.</li>
+        <li><strong>Export as pass-through.</strong> A note bound for a connected service transits device &rarr; backend &rarr; third party. It is forwarded, never persisted.</li>
+        <li>Built on Node 22+ and TypeScript ESM with Hono, Drizzle ORM over better-sqlite3, zod for validation, jose for JWT, and Vitest.</li>
+      </ul>
+      <h2 data-reveal>What this bought</h2>
+      <ul class="case-list" data-reveal>
+        <li>A privacy claim that is structural rather than promissory: there is no code path by which audio reaches the server.</li>
+        <li>One behavioural contract to test instead of three, because the shared core owns the pipeline and the shells own only capture and presentation.</li>
+        <li>A model upgrade path that costs nothing at the call sites, since the engines sit behind protocol seams.</li>
+      </ul>
+      <h2 data-reveal>Honest status</h2>
+      <p data-reveal>The iOS, macOS and Android shells, the shared core, and the backend are working. The transcription and summarization engines are still stubs behind their protocols &mdash; the seams are real and tested, the models are not yet dropped in. Meeting Bot, below, is where the on-device Whisper pipeline actually runs today.</p>
+      <h2 data-reveal>Stack</h2>
+      <ul class="tags case-tags" aria-label="Built with" data-reveal>
+        <li>swift 6</li>
+        <li>swiftui</li>
+        <li>kotlin</li>
+        <li>jetpack compose</li>
+        <li>typescript</li>
+        <li>hono</li>
+        <li>drizzle</li>
+        <li>oauth2</li>
+        <li>aes-256-gcm</li>
+      </ul>
+      <div class="case-actions" data-reveal>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/notova-ios" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+    </article>
+
+    <section class="next container" aria-label="Keep exploring">
+      <a class="next-link" href="/work/meeting-bot/" data-reveal>
+        <div>
+          <strong>Next: Meeting Bot</strong><br>
+          <span>A local-first meeting notetaker where the audio genuinely never leaves the Mac</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+      <a class="next-link" href="/work/" data-reveal style="--d:.07s">
+        <div>
+          <strong>All projects</strong><br>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
+        </div>
+        <span class="ext" aria-hidden="true">&#8594;</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

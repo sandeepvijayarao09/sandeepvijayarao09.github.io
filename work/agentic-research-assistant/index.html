@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Agentic Research Assistant | Sandeep Vijayarao</title>
-  <meta name="description" content="An orchestrator, a research agent, and a reasoning agent working a Plan, Reason, Act loop over a dual-layer memory.">
+  <meta name="description" content="A multi-agent LLM research system: an orchestrator routing to research and reasoning specialists, with ChromaDB long-term memory and a sliding working-memory window.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/agentic-research-assistant/">
   <meta property="og:title" content="Agentic Research Assistant | Sandeep Vijayarao">
-  <meta property="og:description" content="An orchestrator, a research agent, and a reasoning agent working a Plan, Reason, Act loop over a dual-layer memory.">
+  <meta property="og:description" content="A multi-agent LLM research system: an orchestrator routing to research and reasoning specialists, with ChromaDB long-term memory and a sliding working-memory window.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/agentic-research-assistant/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,15 +36,15 @@
 
     <header class="page-header container">
       <h1>Agentic Research Assistant</h1>
-      <p class="case-context">Multi-agent research loop with memory that survives across sessions</p>
-      <p class="lede">An orchestrator, a research agent, and a reasoning agent working a Plan, Reason, Act loop over a dual-layer memory.</p>
+      <p class="case-context">A VLA-inspired Plan, Reason, Act loop applied to research automation</p>
+      <p class="lede">An orchestrator decomposes a query, routes it to research and reasoning specialists, and synthesizes the result &amp;mdash; over dual-layer memory that survives the session.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
-          <span class="stat-num">3</span>
-          <span class="stat-label">cooperating agents</span>
+          <span class="stat-num">2</span>
+          <span class="stat-label">specialist agents under an orchestrator</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
           <span class="stat-num">2</span>
@@ -52,32 +52,32 @@
         </div>
         <div class="stat" data-reveal style="--d:.014s">
           <span class="stat-num">3</span>
-          <span class="stat-label">registered tools: search, ArXiv, calculator</span>
+          <span class="stat-label">tools in an OpenAI-compatible registry</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Research assistants usually forget everything between sessions, so every conversation starts from zero. This one is built around memory: long-term vectors plus a working window, so multi-session research threads pick up where they left off.</p>
-      <h2 data-reveal>How it works</h2>
+      <p data-reveal>Single-agent loops degrade on multi-part questions: context fills with intermediate work, and the model loses the thread of what it was originally asked. This system borrows the Plan &rarr; Reason &rarr; Act structure from Vision-Language-Action architectures and applies it to research, so decomposition and execution are separate concerns handled by separate agents.</p>
+      <h2 data-reveal>Architecture</h2>
       <ul class="case-list" data-reveal>
-        <li>An orchestrator agent decomposes each query and routes the pieces to a research agent, which searches ArXiv and gathers citations, and a reasoning agent, which runs chain-of-thought synthesis and fact-checking.</li>
-        <li>A Plan, Reason, Act execution loop drives each research task from question to grounded answer.</li>
-        <li>Memory is dual-layer: ChromaDB long-term vectors plus a sliding-window working memory.</li>
-        <li>An OpenAI-compatible tool registry exposes search, ArXiv, and calculator tools, all driven from an interactive CLI built on LangChain.</li>
+        <li><strong>Orchestrator</strong> decomposes the incoming query and routes each part to a specialist rather than answering it directly.</li>
+        <li><strong>Research and Reasoning specialists</strong> handle retrieval-shaped and inference-shaped subtasks respectively, then hand results back for synthesis.</li>
+        <li><strong>Dual-layer memory</strong> &mdash; ChromaDB provides semantic long-term recall; a sliding working-memory window with pruning keeps the active context bounded.</li>
+        <li><strong>Tool registry</strong> exposing Calculator, ArXiv and Search through OpenAI-compatible function calling, so tools are declared once and callable by any agent.</li>
+        <li><strong>Fully async</strong> on asyncio, so agent operations run concurrently instead of serializing behind each other.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
-      <ul class="case-list" data-reveal>
-        <li>Maintains research context across sessions through ChromaDB long-term memory.</li>
-        <li>Grounds answers in ArXiv citations rather than model recall.</li>
-      </ul>
+      <h2 data-reveal>Interface</h2>
+      <p data-reveal>It runs as an interactive CLI with explicit verbs &mdash; <code>search</code> for research, <code>reason</code> for analysis, <code>stats</code> to inspect memory and system state. Making the agent&rsquo;s mode an explicit command rather than an inferred intent keeps the system debuggable: when a result is wrong, you know which path produced it.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
         <li>langchain</li>
         <li>chromadb</li>
-        <li>arxiv api</li>
+        <li>asyncio</li>
+        <li>function calling</li>
+        <li>rag</li>
       </ul>
       <div class="case-actions" data-reveal>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/agentic-research-assistant" target="_blank" rel="noopener">View on GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
@@ -85,17 +85,17 @@
     </article>
 
     <section class="next container" aria-label="Keep exploring">
-      <a class="next-link" href="/work/aiforg/" data-reveal>
+      <a class="next-link" href="/work/dual-llm/" data-reveal>
         <div>
-          <strong>Next: AIFORG</strong><br>
-          <span>Called structurally parallel to Google Spark by DeepMind researchers at Google I/O 2026</span>
+          <strong>Next: Dual-LLM Personalization System</strong><br>
+          <span>Routing each query to the model it actually deserves</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

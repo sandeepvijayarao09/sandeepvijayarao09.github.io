@@ -14,4 +14,19 @@
   <url><loc>https://sandeepvijayarao09.github.io/work/pose-estimation/</loc></url>
   <url><loc>https://sandeepvijayarao09.github.io/about/</loc></url>
   <url><loc>https://sandeepvijayarao09.github.io/contact/</loc></url>
+  <url>
+    <loc>https://sandeepvijayarao09.github.io/work/notova/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandeepvijayarao09.github.io/work/meeting-bot/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandeepvijayarao09.github.io/work/agent-certifier/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

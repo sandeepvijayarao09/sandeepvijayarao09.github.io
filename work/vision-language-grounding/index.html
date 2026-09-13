@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vision-Language Grounding | Sandeep Vijayarao</title>
-  <meta name="description" content="Four pipelines for seeing how vision-language models think: CLIP grounding, cross-modal attention maps, diffusion generation, and embedding-space analysis.">
+  <meta name="description" content="A multimodal research pipeline: zero-shot CLIP grounding, ViT cross-modal attention visualization, Stable Diffusion generation, and embedding-space analysis.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/vision-language-grounding/">
   <meta property="og:title" content="Vision-Language Grounding | Sandeep Vijayarao">
-  <meta property="og:description" content="Four pipelines for seeing how vision-language models think: CLIP grounding, cross-modal attention maps, diffusion generation, and embedding-space analysis.">
+  <meta property="og:description" content="A multimodal research pipeline: zero-shot CLIP grounding, ViT cross-modal attention visualization, Stable Diffusion generation, and embedding-space analysis.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/vision-language-grounding/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,44 +36,47 @@
 
     <header class="page-header container">
       <h1>Vision-Language Grounding</h1>
-      <p class="case-context">Zero-shot, open-vocabulary, no fine-tuning anywhere</p>
-      <p class="lede">Four pipelines for seeing how vision-language models think: CLIP grounding, cross-modal attention maps, diffusion generation, and embedding-space analysis.</p>
+      <p class="case-context">Four interconnected pipelines for VLM and VLA research</p>
+      <p class="lede">Zero-shot image-text grounding with CLIP, cross-modal attention pulled straight out of the Vision Transformer, prompt-conditioned generation, and an honest look at the embedding space underneath.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
           <span class="stat-num">4</span>
-          <span class="stat-label">multimodal pipelines</span>
+          <span class="stat-label">interconnected pipelines</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">0</span>
-          <span class="stat-label">category-specific training runs</span>
+          <span class="stat-num">ViT-B/32</span>
+          <span class="stat-label">OpenCLIP backbone</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.014s">
+          <span class="stat-num">v1.5</span>
+          <span class="stat-label">Stable Diffusion</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>The interesting part of zero-shot grounding is what you don't do: no labels, no fine-tuning, no category list fixed in advance. This toolkit grounds free-form text against images using embedding geometry alone, then makes the model's reasoning visible.</p>
-      <h2 data-reveal>How it works</h2>
+      <p data-reveal>Vision-language models are usually consumed as a black box: text in, similarity out. This pipeline opens the box in four directions at once, because the interesting failures live between the parts rather than inside any one of them.</p>
+      <h2 data-reveal>The four pipelines</h2>
       <ul class="case-list" data-reveal>
-        <li>CLIP ViT-B/32 embeddings, via OpenCLIP, place images and text in a shared space where grounding is nearest-neighbor search.</li>
-        <li>Cross-modal attention extraction and visualization expose which image regions support each phrase.</li>
-        <li>Stable Diffusion v1.5 serves as a generation backend for synthetic views.</li>
-        <li>Embedding-space analysis rounds it out: cosine similarity matrices and t-SNE or UMAP projections of the joint space.</li>
+        <li><strong>Image-text grounding</strong> &mdash; zero-shot matching of images to prompts with OpenCLIP ViT-B/32.</li>
+        <li><strong>Attention visualization</strong> &mdash; custom hooks extract multi-head attention from the Vision Transformer, overlaid as heatmaps so you can see which patches carried a match.</li>
+        <li><strong>Image generation</strong> &mdash; Stable Diffusion v1.5 through <code>diffusers</code>, with configurable conditioning, to probe the same semantics from the generative side.</li>
+        <li><strong>Embedding analysis</strong> &mdash; cosine similarity matrices plus t-SNE and UMAP projections to inspect how well the two modalities actually align.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
-      <ul class="case-list" data-reveal>
-        <li>Grounds free-form text against images with no category-specific training.</li>
-        <li>Makes cross-modal attention inspectable, so model behavior can be debugged visually.</li>
-      </ul>
+      <h2 data-reveal>Why the combination matters</h2>
+      <p data-reveal>Grounding scores tell you <em>that</em> a match happened; attention maps tell you <em>where</em>; the embedding analysis tells you whether the space is separable at all or whether a good score was luck. Running all four over the same inputs is what makes a VLM result interpretable rather than merely reported.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
         <li>openclip</li>
+        <li>vit-b/32</li>
         <li>stable diffusion</li>
-        <li>pytorch</li>
+        <li>diffusers</li>
+        <li>scikit-learn</li>
         <li>umap</li>
       </ul>
       <div class="case-actions" data-reveal>
@@ -82,17 +85,17 @@
     </article>
 
     <section class="next container" aria-label="Keep exploring">
-      <a class="next-link" href="/work/skillgap/" data-reveal>
+      <a class="next-link" href="/work/agentic-research-assistant/" data-reveal>
         <div>
-          <strong>Next: SkillGap AI</strong><br>
-          <span>3x PMI San Francisco Award winner, sole developer</span>
+          <strong>Next: Agentic Research Assistant</strong><br>
+          <span>Plan, Reason, Act with memory that survives the session</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/work/" data-reveal style="--d:.07s">
         <div>
           <strong>All projects</strong><br>
-          <span>The full set, nine projects across agents, vision, and full-stack</span>
+          <span>The full set, thirteen projects across agents, vision, and full-stack</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

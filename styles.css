@@ -909,3 +909,116 @@ article.card { cursor: default; }
 
   .card-featured-stats { flex-direction: column; gap: 1.2rem; }
 }
+
+/* ============================================================
+   Colour pass — bring the existing domain hues forward.
+
+   The five hues already existed and were re-pointed per [data-hue];
+   they were just barely spent. Nothing new is invented here, the
+   same five variables are simply used in the places that carry the
+   most visual weight: the numbers, the chips, the card edges.
+   ============================================================ */
+
+/* The proof numbers are the most looked-at elements on the site and
+   they were plain text. Tinting them is the single biggest change. */
+.stat-num {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.stat-label { color: var(--muted); }
+
+/* Every card already declares its domain; show it, rather than
+   revealing it only on hover. A hairline top edge reads as a colour
+   mosaic across the grid without shouting. */
+a.card {
+  border-top: 2px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+}
+a.card:hover {
+  border-top-color: var(--accent);
+}
+
+/* Tag chips were uniform grey on every card. Tinting the border and
+   warming the text keeps them legible at 0.74rem while letting the
+   card's domain colour carry through. */
+.tags li {
+  color: color-mix(in srgb, var(--accent) 38%, var(--text));
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--line));
+  background: rgba(var(--accent-rgb), 0.05);
+}
+
+/* Section headings get a short colour rule, so the eye finds the
+   structure of a long case study without extra chrome. */
+.case-body h2 {
+  position: relative;
+  padding-left: 0.85rem;
+}
+.case-body h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+  bottom: 0.18em;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* The case-study stat band sat on the page background. A faint wash
+   in the page's own hue ties it to the project it belongs to. */
+.case-strip {
+  background:
+    linear-gradient(180deg, rgba(var(--accent-rgb), 0.06), transparent 85%);
+  border-top: 1px solid color-mix(in srgb, var(--accent) 16%, var(--line));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 16%, var(--line));
+}
+
+/* Case-study titles pick up a tint so each project page feels like
+   its own place rather than a template. */
+.page-header h1 {
+  background: linear-gradient(
+    180deg, var(--text) 55%, color-mix(in srgb, var(--accent) 45%, var(--text)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* script.js splits these headings into .h-word spans, and those spans are
+   inline-block + transformed, so their glyphs are painted outside the h1's
+   own text-clip - the title above would come out invisible. Re-apply the
+   inherited gradient on each span so the clip has glyphs to bite on. The
+   gradient is vertical and every word shares a baseline, so the words stay
+   visually identical to one uninterrupted fill. */
+.page-header h1 .h-word {
+  background-image: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* The homepage credibility row was monochrome. Give each item its
+   own hue so the strip reads as four distinct things. */
+.proof-item:nth-child(1) { --accent: var(--hue-agent);   --accent-rgb: var(--hue-agent-rgb); }
+.proof-item:nth-child(2) { --accent: var(--hue-llm);     --accent-rgb: var(--hue-llm-rgb); }
+.proof-item:nth-child(3) { --accent: var(--hue-vision);  --accent-rgb: var(--hue-vision-rgb); }
+.proof-item:nth-child(4) { --accent: var(--hue-product); --accent-rgb: var(--hue-product-rgb); }
+.proof-item strong {
+  color: var(--accent);
+}
+.proof-item {
+  padding-left: 0.8rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+/* Footer and nav links pick up the accent on hover for consistency
+   with the rest of the interaction language. */
+.footer-links a:hover,
+.more-link:hover { color: var(--accent); }
+
+/* Respect the same reduced-motion / contrast contract the site
+   already honours elsewhere. */
+@media (prefers-contrast: more) {
+  .tags li { color: var(--text); background: none; }
+  .page-header h1,
+  .page-header h1 .h-word { color: var(--text); background: none;
+    -webkit-text-fill-color: currentColor; }
+}

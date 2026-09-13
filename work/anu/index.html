@@ -60,7 +60,7 @@
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
       <p data-reveal>Most assistants are a thin client over someone else&rsquo;s inference. Anu inverts the default: the model lives on the phone, the cloud is opt-in, and every message is classified locally before a single token is generated.</p>
-      <p data-reveal>It was built in a two-week sprint for the Apple Swift Student Challenge, which it won. The constraint that shaped it was not the deadline but the privacy posture &mdash; once you decide memory never leaves the device, a lot of convenient architecture stops being available.</p>
+      <p data-reveal>It was built in a two-week sprint for the Apple Swift Student Challenge, which it won. The constraint that shaped it was not the deadline but the privacy posture. Once you decide memory never leaves the device, a lot of convenient architecture stops being available.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
         <li><strong>On-device brain.</strong> Gemma 4 E4B runs through Google&rsquo;s LiteRT engine from a <code>.litertlm</code> bundle, loading in roughly a second with KV-cache reuse across turns. Core ML Gemma 3 4B is a secondary fallback.</li>
@@ -74,7 +74,7 @@
       <ul class="case-list" data-reveal>
         <li>API keys live in the Keychain; speech recognition is pinned to on-device.</li>
         <li>A two-layer PII scrub runs before any cloud call is permitted.</li>
-        <li>Memory never leaves the device at all &mdash; there is no sync path for it.</li>
+        <li>Memory never leaves the device at all; there is no sync path for it.</li>
       </ul>
       <h2 data-reveal>Production posture</h2>
       <p data-reveal>There is no mock in the product: a missing model surfaces as an explicit error rather than a silent fallback to canned text. Tool calls have timeouts, in-flight work is cancellable, conversations persist, and Siri and Shortcuts integration runs through App Intents. Continuous integration keeps 300+ unit and UI tests green, and the app builds and runs across iOS 17 through 26.5.</p>

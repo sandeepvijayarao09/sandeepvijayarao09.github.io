@@ -60,7 +60,7 @@
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
       <p data-reveal>Every cloud notetaker has the same architecture: your microphone uploads to someone else&rsquo;s server. Notova inverts that. Audio is captured, transcribed and summarized on the device, and the backend is scoped so tightly that it has no capability to receive audio even if it wanted to.</p>
-      <p data-reveal>That constraint drives the whole design. If the server cannot do the AI work, the client has to &mdash; on three platforms, without writing the pipeline three times.</p>
+      <p data-reveal>That constraint drives the whole design. If the server cannot do the AI work, the client has to do it, on three platforms, without writing the pipeline three times.</p>
       <h2 data-reveal>Architecture</h2>
       <ul class="case-list" data-reveal>
         <li><strong>One shared core, three shells.</strong> Domain models, the <code>PipelineService</code>, and the on-device <code>Transcriber</code>/<code>Summarizer</code> seams live in local Swift packages. iOS (SwiftUI) and macOS (a <code>NavigationSplitView</code> app) both depend on that core; only the platform plumbing differs, such as <code>MacAudioRecorder</code> wrapping AVAudioEngine for capture and file import.</li>
@@ -84,7 +84,7 @@
         <li>A model upgrade path that costs nothing at the call sites, since the engines sit behind protocol seams.</li>
       </ul>
       <h2 data-reveal>Honest status</h2>
-      <p data-reveal>The iOS, macOS and Android shells, the shared core, and the backend are working. The transcription and summarization engines are still stubs behind their protocols &mdash; the seams are real and tested, the models are not yet dropped in. Meeting Bot, below, is where the on-device Whisper pipeline actually runs today.</p>
+      <p data-reveal>The iOS, macOS and Android shells, the shared core, and the backend are working. The transcription and summarization engines are still stubs behind their protocols: the seams are real and tested, the models are not yet dropped in. Meeting Bot, below, is where the on-device Whisper pipeline actually runs today.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>swift 6</li>

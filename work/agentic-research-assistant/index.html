@@ -64,12 +64,12 @@
       <ul class="case-list" data-reveal>
         <li><strong>Orchestrator</strong> decomposes the incoming query and routes each part to a specialist rather than answering it directly.</li>
         <li><strong>Research and Reasoning specialists</strong> handle retrieval-shaped and inference-shaped subtasks respectively, then hand results back for synthesis.</li>
-        <li><strong>Dual-layer memory</strong> &mdash; ChromaDB provides semantic long-term recall; a sliding working-memory window with pruning keeps the active context bounded.</li>
+        <li><strong>Dual-layer memory</strong>: ChromaDB provides semantic long-term recall; a sliding working-memory window with pruning keeps the active context bounded.</li>
         <li><strong>Tool registry</strong> exposing Calculator, ArXiv and Search through OpenAI-compatible function calling, so tools are declared once and callable by any agent.</li>
         <li><strong>Fully async</strong> on asyncio, so agent operations run concurrently instead of serializing behind each other.</li>
       </ul>
       <h2 data-reveal>Interface</h2>
-      <p data-reveal>It runs as an interactive CLI with explicit verbs &mdash; <code>search</code> for research, <code>reason</code> for analysis, <code>stats</code> to inspect memory and system state. Making the agent&rsquo;s mode an explicit command rather than an inferred intent keeps the system debuggable: when a result is wrong, you know which path produced it.</p>
+      <p data-reveal>It runs as an interactive CLI with explicit verbs: <code>search</code> for research, <code>reason</code> for analysis, <code>stats</code> to inspect memory and system state. Making the agent&rsquo;s mode an explicit command rather than an inferred intent keeps the system debuggable: when a result is wrong, you know which path produced it.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>

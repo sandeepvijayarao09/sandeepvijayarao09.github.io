@@ -62,10 +62,10 @@
       <p data-reveal>Vision-language models are usually consumed as a black box: text in, similarity out. This pipeline opens the box in four directions at once, because the interesting failures live between the parts rather than inside any one of them.</p>
       <h2 data-reveal>The four pipelines</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Image-text grounding</strong> &mdash; zero-shot matching of images to prompts with OpenCLIP ViT-B/32.</li>
-        <li><strong>Attention visualization</strong> &mdash; custom hooks extract multi-head attention from the Vision Transformer, overlaid as heatmaps so you can see which patches carried a match.</li>
-        <li><strong>Image generation</strong> &mdash; Stable Diffusion v1.5 through <code>diffusers</code>, with configurable conditioning, to probe the same semantics from the generative side.</li>
-        <li><strong>Embedding analysis</strong> &mdash; cosine similarity matrices plus t-SNE and UMAP projections to inspect how well the two modalities actually align.</li>
+        <li><strong>Image-text grounding</strong>: zero-shot matching of images to prompts with OpenCLIP ViT-B/32.</li>
+        <li><strong>Attention visualization</strong>: custom hooks extract multi-head attention from the Vision Transformer, overlaid as heatmaps so you can see which patches carried a match.</li>
+        <li><strong>Image generation</strong>: Stable Diffusion v1.5 through <code>diffusers</code>, with configurable conditioning, to probe the same semantics from the generative side.</li>
+        <li><strong>Embedding analysis</strong>: cosine similarity matrices plus t-SNE and UMAP projections to inspect how well the two modalities actually align.</li>
       </ul>
       <h2 data-reveal>Why the combination matters</h2>
       <p data-reveal>Grounding scores tell you <em>that</em> a match happened; attention maps tell you <em>where</em>; the embedding analysis tells you whether the space is separable at all or whether a good score was luck. Running all four over the same inputs is what makes a VLM result interpretable rather than merely reported.</p>

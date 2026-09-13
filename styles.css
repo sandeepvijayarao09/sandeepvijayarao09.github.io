@@ -911,7 +911,7 @@ article.card { cursor: default; }
 }
 
 /* ============================================================
-   Colour pass — bring the existing domain hues forward.
+   Colour pass: bring the existing domain hues forward.
 
    The five hues already existed and were re-pointed per [data-hue];
    they were just barely spent. Nothing new is invented here, the

@@ -63,12 +63,12 @@
       <p data-reveal>This system decides per query, through a three-layer cascade, and was evaluated on 1,500 labeled cases across two eval sets. At Google I/O 2026, DeepMind product and AI researchers independently recognized the routing architecture as parallel to Google Omni.</p>
       <h2 data-reveal>The three layers</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Layer 1 &mdash; local ML router.</strong> TF-IDF over a tag-augmented encoding of the query, classified by logistic regression. No network call, no added latency, and it resolves 85.3% of traffic by itself.</li>
-        <li><strong>Layer 2 &mdash; LLM fallback classifier.</strong> Only low-confidence queries reach a GPT-4o-mini JSON classifier, and they reach it <em>before</em> any answer is generated, so the routing decision never costs a wasted completion.</li>
-        <li><strong>Layer 3 &mdash; answer.</strong> Simple queries are answered by GPT-4o-mini; only genuinely complex ones escalate to GPT-4o.</li>
+        <li><strong>Layer 1: local ML router.</strong> TF-IDF over a tag-augmented encoding of the query, classified by logistic regression. No network call, no added latency, and it resolves 85.3% of traffic by itself.</li>
+        <li><strong>Layer 2: LLM fallback classifier.</strong> Only low-confidence queries reach a GPT-4o-mini JSON classifier, and they reach it <em>before</em> any answer is generated, so the routing decision never costs a wasted completion.</li>
+        <li><strong>Layer 3: answer.</strong> Simple queries are answered by GPT-4o-mini; only genuinely complex ones escalate to GPT-4o.</li>
       </ul>
       <h2 data-reveal>Feature engineering</h2>
-      <p data-reveal>The router does not embed the raw query. Each query is rewritten into a tag-augmented string before vectorization &mdash; length bands (<code>LEN_SHORT</code> at &le;8 words, <code>LEN_MEDIUM</code>, <code>LEN_LONG</code> above 40), a code-presence flag, and related signals. Giving the linear model explicit categorical features is what lets something as small as TF-IDF plus logistic regression hold 92.6%: the hard part of the decision is encoded rather than learned.</p>
+      <p data-reveal>The router does not embed the raw query. Each query is rewritten into a tag-augmented string before vectorization: length bands (<code>LEN_SHORT</code> at &le;8 words, <code>LEN_MEDIUM</code>, <code>LEN_LONG</code> above 40), a code-presence flag, and related signals. Giving the linear model explicit categorical features is what lets something as small as TF-IDF plus logistic regression hold 92.6%: the hard part of the decision is encoded rather than learned.</p>
       <h2 data-reveal>Personalization on both paths</h2>
       <ul class="case-list" data-reveal>
         <li><strong>Persistent user profiles</strong> in SQLite carry expertise level, tone, domain, interests, topics already discussed, and preferred response format.</li>

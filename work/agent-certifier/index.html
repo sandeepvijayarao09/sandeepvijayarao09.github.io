@@ -63,12 +63,12 @@
       <p data-reveal>Agent Certifier turns the review into a graded, repeatable artifact. It reads a codebase it did not author and returns a weighted score, a certification level, and a report naming what failed and why.</p>
       <h2 data-reveal>The scoring model</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Security, 30%</strong> &mdash; injection, hardcoded secrets, prompt injection, data exfiltration, auth, input validation, dependencies, privilege escalation, information disclosure, LLM code injection.</li>
-        <li><strong>Stability, 20%</strong> &mdash; error handling, infinite loops, unbounded recursion, resource leaks, timeouts, graceful degradation, state management, memory, concurrency, exception specificity.</li>
-        <li><strong>Performance, 15%</strong> &mdash; caching, async I/O, batching, connection pooling, lazy loading, algorithmic complexity, streaming, rate limiting, resource cleanup, token optimization.</li>
-        <li><strong>Informatics, 15%</strong> &mdash; complexity, documentation, modularity, type annotations, response format, logging, config externalization, API contracts, naming, duplication.</li>
-        <li><strong>Compliance, 10%</strong> &mdash; PII handling, retention, audit logging, GDPR, licensing, terms of service, output filtering, consent, data minimization, regulatory awareness.</li>
-        <li><strong>Ethics, 10%</strong> &mdash; bias detection, transparency, human oversight, refusal mechanisms, fairness, explainability, harm prevention, misinformation, manipulation, accountability.</li>
+        <li><strong>Security, 30%</strong>: injection, hardcoded secrets, prompt injection, data exfiltration, auth, input validation, dependencies, privilege escalation, information disclosure, LLM code injection.</li>
+        <li><strong>Stability, 20%</strong>: error handling, infinite loops, unbounded recursion, resource leaks, timeouts, graceful degradation, state management, memory, concurrency, exception specificity.</li>
+        <li><strong>Performance, 15%</strong>: caching, async I/O, batching, connection pooling, lazy loading, algorithmic complexity, streaming, rate limiting, resource cleanup, token optimization.</li>
+        <li><strong>Informatics, 15%</strong>: complexity, documentation, modularity, type annotations, response format, logging, config externalization, API contracts, naming, duplication.</li>
+        <li><strong>Compliance, 10%</strong>: PII handling, retention, audit logging, GDPR, licensing, terms of service, output filtering, consent, data minimization, regulatory awareness.</li>
+        <li><strong>Ethics, 10%</strong>: bias detection, transparency, human oversight, refusal mechanisms, fairness, explainability, harm prevention, misinformation, manipulation, accountability.</li>
       </ul>
       <h2 data-reveal>Why static analysis</h2>
       <p data-reveal>Nothing is executed. Running untrusted agent code to grade it would reproduce the exact class of risk the tool is looking for, so the analysis is pattern and heuristic based instead. That trades some recall for a guarantee that the grader cannot be turned into an attack surface, which is the right trade for a tool meant to be pointed at code you do not trust.</p>
@@ -77,7 +77,7 @@
         <li><strong>Backend</strong>: FastAPI with async SQLAlchemy over SQLite, exposing OpenAPI docs.</li>
         <li><strong>Frontend</strong>: Next.js 14 with TypeScript and Tailwind, polling live test progress as a run proceeds.</li>
         <li><strong>Output</strong>: certification level from PLATINUM (90+) down through GOLD, SILVER and BRONZE to NOT_CERTIFIED, with a downloadable JSON report and a printable view.</li>
-        <li><strong>Reach</strong>: ten languages &mdash; Python, JavaScript, TypeScript, Go, Java, Ruby, Rust, C++, C# and PHP.</li>
+        <li><strong>Reach</strong>: ten languages: Python, JavaScript, TypeScript, Go, Java, Ruby, Rust, C++, C# and PHP.</li>
         <li><strong>Deployment</strong>: one <code>docker compose up</code> brings up both services.</li>
       </ul>
       <h2 data-reveal>Stack</h2>

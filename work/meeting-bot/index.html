@@ -60,12 +60,12 @@
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
       <p data-reveal>Cloud notetakers solve the problem by uploading your meeting. That is a reasonable engineering choice and an unreasonable privacy one, and it also means the tool only works where a bot can be invited.</p>
-      <p data-reveal>Meeting Bot takes the other path. It captures the audio already playing on the Mac &mdash; Zoom, Meet, Teams, FaceTime, or a browser tab &mdash; so it needs no meeting-platform integration and works everywhere by construction. Transcription runs locally through Whisper. The only optional network call sends finished transcript <em>text</em> for summarization, and that endpoint can be pointed at a local model instead.</p>
+      <p data-reveal>Meeting Bot takes the other path. It captures the audio already playing on the Mac (Zoom, Meet, Teams, FaceTime, or a browser tab), so it needs no meeting-platform integration and works everywhere by construction. Transcription runs locally through Whisper. The only optional network call sends finished transcript <em>text</em> for summarization, and that endpoint can be pointed at a local model instead.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
         <li><strong>System-audio capture</strong> through a small Swift helper (<code>audiocap</code>), riding the macOS screen-recording permission that system audio sits behind.</li>
         <li><strong>Speaker attribution</strong> without diarization in the common case: your microphone is &ldquo;Me&rdquo; and system audio is &ldquo;Them&rdquo;, with optional Speaker A/B/C diarization layered on top.</li>
-        <li><strong>Structured output per meeting</strong> &mdash; summary, decisions, action items, and the full transcript &mdash; rather than an undifferentiated wall of text.</li>
+        <li><strong>Structured output per meeting</strong>: summary, decisions, action items, and the full transcript, rather than an undifferentiated wall of text.</li>
         <li><strong>Templates</strong> for general, standup, 1:1, interview and sales-call shapes, so the summary prompt matches the meeting type.</li>
         <li><strong>On-device transcript cleanup</strong> that strips filler, stutters and false starts, plus on-demand rewrites: key points, formal, short, long.</li>
         <li><strong>Talk-time analytics</strong> per note: Me/Them ratio, word counts, turn counts, longest monologue.</li>

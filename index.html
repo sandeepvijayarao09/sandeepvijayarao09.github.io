@@ -53,7 +53,7 @@
     <section class="hero container">
       <div class="hero-copy">
         <h1>I build AI systems<br>that ship.</h1>
-        <p class="hero-sub">MS CS at Northeastern. Swift Student Challenge 2026 winner. I work on multi-agent systems, vision pipelines, and full-stack products.</p>
+        <p class="hero-sub">MS CS at Northeastern. Swift Student Challenge 2026 winner. I work on multi-agent systems, on-device inference, vision pipelines, and full-stack products — thirteen of them written up in full.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/work/">View work</a>
           <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
@@ -134,6 +134,51 @@
           <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
         </div>
       </a>
+
+      <a class="card card-featured" data-hue="product" href="/work/notova/" data-reveal>
+        <div class="card-featured-copy">
+          <h3>Notova</h3>
+          <p class="card-context">Three platforms, one shared core, zero audio server-side</p>
+          <p>Privacy-first voice notes on iOS, Android and macOS from a single Swift core, with a backend scoped so tightly it has no code path to receive audio at all.</p>
+          <ul class="tags" aria-label="Built with">
+            <li>swift 6</li><li>kotlin</li><li>typescript</li><li>oauth2</li>
+          </ul>
+          <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
+        </div>
+        <div class="card-featured-stats">
+          <div class="stat">
+            <span class="stat-num">3</span>
+            <span class="stat-label">platforms from one core</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">0</span>
+            <span class="stat-label">bytes of audio the server sees</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card card-featured card-featured-alt" data-hue="product" href="/work/meeting-bot/" data-reveal>
+        <div class="card-featured-stats">
+          <div class="stat">
+            <span class="stat-num">3</span>
+            <span class="stat-label">front-ends over one engine</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">$0</span>
+            <span class="stat-label">running cost</span>
+          </div>
+        </div>
+        <div class="card-featured-copy">
+          <h3>Meeting Bot</h3>
+          <p class="card-context">No bot joins the call, and the audio never leaves the Mac</p>
+          <p>Captures whatever audio is already playing on macOS, transcribes it locally with Whisper, and ships a native app, a CLI and a Chrome extension over one engine.</p>
+          <ul class="tags" aria-label="Built with">
+            <li>python</li><li>whisper</li><li>swiftui</li><li>chrome extension</li>
+          </ul>
+          <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
+        </div>
+      </a>
+
     </section>
 
     <section class="next container" aria-label="Explore">

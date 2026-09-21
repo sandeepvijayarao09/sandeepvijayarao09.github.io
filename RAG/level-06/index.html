@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid retrieval | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 6 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-06/">
+  <meta property="og:title" content="Hybrid retrieval | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 6 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-06/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 6</p>
+      <h1>Hybrid retrieval</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li class="is-here"><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Core retrieval</strong> · prerequisite: Stage 5</p>
+<p>Hybrid is the most-recommended upgrade in RAG, so I wanted to know whether it
+earns that on SciFact. The answer turned out more interesting than yes.</p>
+<h2 id="6a-measure-the-ceiling-first">6a, Measure the ceiling first</h2>
+<p>Hybrid only pays if dense and sparse fail on <em>different</em> queries. So decompose
+the 300 queries by which retriever found the gold document in its top 10:</p>
+<div class="codehilite"><pre><span></span><code>  both         233   77.7%  #######################################
+  dense only    34   11.3%  ######
+  bm25 only      9    3.0%  ##
+  neither       24    8.0%  ####
+
+  dense alone recall@10 : 0.890
+  perfect-fusion ceiling: 0.920   (+0.030 from 9 bm25-only queries)
+  unreachable by fusion : 0.080
+</code></pre></div>
+
+<p><strong><code>bm25 only</code> is the entire headroom: 9 queries, +0.030 recall@10.</strong> No fusion
+scheme can beat that, and a real one will capture less.</p>
+<p>The mechanism is visible in those 9 queries:</p>
+<blockquote>
+<p>"Recurrent mutations occur frequently within <strong>CTCF anchor sites</strong> adjacent to oncogenes."
+"<strong>De novo assembly</strong> of sequence data has more specific <strong>contigs</strong>…"
+"<strong>Statins</strong> increase blood cholesterol."</p>
+</blockquote>
+<p>Rare technical terms. Exactly dense retrieval's predicted failure mode, and
+exactly what idf is built to exploit. The theory and the data agree.</p>
+<p><strong>The habit worth stealing:</strong> measuring the ceiling took one script and told us
+hybrid was worth at most +0.03 here. That is the difference between an
+informed build and a hopeful one.</p>
+<h2 id="6b-what-fusion-actually-captured">6b, What fusion actually captured</h2>
+<div class="codehilite"><pre><span></span><code>config                 nDCG@10   vs dense     R@10      MRR
+dense only              0.7588              0.8802   0.7246
+bm25 only               0.6652    -0.0936   0.7833   0.6349
+RRF k=60                0.7347    -0.0241   0.8394   0.7082
+RRF k=10                0.7499    -0.0089   0.8772   0.7164
+RRF k=60 w=2:1          0.7464    -0.0123   0.8567   0.7179
+weighted 0.5/0.5        0.7528    -0.0060   0.8879   0.7164
+weighted 0.7/0.3        0.7689    +0.0101   0.8899   0.7358
+weighted 0.9/0.1        0.7663    +0.0075   0.8852   0.7323
+</code></pre></div>
+
+<p><strong>RRF, the universally recommended default, made things worse.</strong> -0.024 at
+k=60, -0.009 at k=10, negative in every variant tried.</p>
+<p>The reason is structural. RRF throws scores away and uses only rank, which makes
+it robust when two retrievers are <em>comparably strong</em>. Here they are not: dense
+is 0.759, BM25 is 0.665. RRF treats "BM25's rank 1" as just as credible as
+"dense's rank 1", so BM25's wrong answers get promoted over dense's right ones.
+The 9 queries it rescues cost more than they buy.</p>
+<p><strong>Weighted fusion at 0.7/0.3 won</strong>, +0.0101 nDCG and +0.0097 recall@10. Keeping
+score magnitude <em>and</em> down-weighting the weaker retriever preserves dense's
+advantage while still picking up rare-term hits.</p>
+<p>Recall@10 went 0.8802 → 0.8899 against a ceiling of 0.920, so fusion captured
+about a third of the available headroom.</p>
+<p><strong>Caveat, same as Stage 3:</strong> +0.010 nDCG at n=300 is within sampling noise for a
+single comparison. The RRF <em>deficit</em> is larger and consistent across four
+variants, so that finding is stronger than the weighted-fusion win.</p>
+<h2 id="so-when-should-you-use-rrf">So when should you use RRF</h2>
+<p>"Use RRF, it needs no tuning" is good advice when your retrievers are close in
+strength. When one clearly dominates, unweighted RRF drags it down. Neither
+choice is universal, and the only way to know which regime you are in is to
+measure both retrievers separately first.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-07/" data-reveal><div><strong>Level 7, Cross-encoder reranking</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

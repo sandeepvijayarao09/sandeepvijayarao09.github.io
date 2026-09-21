@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab notebook | Sandeep Vijayarao</title>
+  <meta name="description" content="Lab notebook. What broke and what I got wrong.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/notes/">
+  <meta property="og:title" content="Lab notebook | Sandeep Vijayarao">
+  <meta property="og:description" content="Lab notebook. What broke and what I got wrong.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/notes/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Lab notebook</p>
+      <h1>Lab notebook</h1>
+    </header>
+
+    <div class="container rag-shell">
+      <nav class="rag-levelnav" aria-label="Contents"><p>On this page</p><div class="toc">
+<ul>
+<li><a href="#lab-notebook">Lab notebook</a><ul>
+<li><a href="#open-questions">Open questions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+      <article class="case-body rag-prose">
+
+<p>Running log of what broke, what I got wrong, and things I want to remember.
+Not organised. Newest at the bottom.</p>
+<p>All of this was built in a small number of long sessions rather than spread over
+weeks, which is why the commit dates all land on the same day. The commits are
+grouped by stage, not by hour.</p>
+<hr />
+<p><strong>Ollama died mid-sweep.</strong></p>
+<p>Chunking sweep blew up on config 2 of 4 with <code>ConnectionError: Failed to connect
+to Ollama</code>. Config 1 had passed, which confused me for a minute until I realised
+config 1 was entirely cache hits and never touched the server at all. The daemon
+had been killed earlier when I cleaned up some background jobs. Restarted it,
+reran, fine.</p>
+<p>Mildly annoying that the failure surfaced two minutes into a run rather than at
+startup. A health check before a long job would have caught it. Not adding one
+yet; noting it.</p>
+<hr />
+<p><strong>Killed my own eval-set generation with <code>head -4</code>.</strong></p>
+<p>Piped a 20-minute generation script through <code>head -4</code> to peek at the output. head
+exits after 4 lines, the write side gets SIGPIPE, python dies. Got 30 of 150
+question pairs before it went down.</p>
+<p>Cost me nothing because the script checkpoints every 10 items and resumes, which
+I had written in for a completely different reason (I expected to interrupt it
+manually, not to shoot it). Resumable-by-default earned its keep the first time
+it was tested.</p>
+<hr />
+<p><strong>Sized a job by guessing. It took 2.7x the budget.</strong></p>
+<p>Queued the reranker sweep at four depths across two models and it blew through a
+10-minute limit. Only then did I benchmark the cross-encoder: 264 pairs/sec for
+MiniLM, 47.6 for bge-base. The sweep was asking for 132,000 forward passes.</p>
+<p>The real fix was not a longer timeout. Reranking the top 20 uses a <em>subset</em> of
+the scores from reranking the top 100, so scoring every pair once and slicing
+gives every depth for free. 27 minutes down to 13, and all four depths instead of
+one.</p>
+<p>Same idea as the embedding cache from Stage 2. I had already written that cache
+and still did not think to apply the pattern one layer up. Benchmark before you
+queue.</p>
+<hr />
+<p><strong>bge query prefix made things worse.</strong></p>
+<p>Did not expect this. The BGE model card says to prefix queries with "Represent
+this sentence for searching relevant passages:" and every tutorial repeats it.
+On SciFact it costs 0.014 nDCG@10, consistently, in both title conditions.</p>
+<p>Best guess: SciFact queries are declarative claims, not questions, and the
+instruction was tuned for question-shaped input. Not certain. The delta is small
+enough relative to n=300 that I would want a paired test before making a strong
+claim, and I have not run one.</p>
+<p>Left it in the README as a caveat rather than a finding.</p>
+<hr />
+<p><strong>Chunking lost six times out of six.</strong></p>
+<p>I checked the token distribution first and only 2.8% of abstracts exceed the
+512-token window, so I expected chunking to do roughly nothing. It did worse than
+nothing. Every configuration lost.</p>
+<p>The part I did not predict: at size 200 the three strategies (fixed, sentence,
+recursive) land within 0.0026 of each other, while the penalty for chunking at
+all is 0.011. I have read a lot of arguments about which splitter to use. On this
+corpus that argument was worth about a fifth of the decision nobody argues about.</p>
+<hr />
+<p><strong>Two wrong hypotheses about reranking.</strong></p>
+<p>Both rerankers hurt the dense first stage, monotonically worse with depth. First
+thought was a bug, so I checked: gold documents score +0.575 against +0.055 for
+everything else. The reranker works fine. It just moves the gold document up as
+often as down.</p>
+<p>Guess 1: rerankers repair weak orderings. Tested it against multi-query, whose
+ordering is weak. Predicted a gain, got -0.011. Wrong.</p>
+<p>Guess 2: rerankers help when their signal is decorrelated from the first stage.
+Measured Spearman correlation. BM25 correlated <em>most</em> with the reranker (0.442)
+and was the only stage that gained. Wrong, and backwards.</p>
+<p>What actually holds is duller than either. Reranking overwrites the ordering, so
+you end up with the reranker's ranking quality bounded by candidate recall.
+Three first stages spanning 0.050 nDCG collapse to 0.017 after reranking.</p>
+<p>Kept both dead ends in the repo. The sequence is more useful than the conclusion,
+and deleting failed hypotheses is how you end up with a repo that looks like
+everything worked the first time.</p>
+<hr />
+<p><strong>HyDE hallucinated numbers that contradicted the query.</strong></p>
+<p>Claim was "1/2000 in UK have abnormal PrP positivity". HyDE generated a passage
+asserting prevalence of "4 ± 1 per million", plus some stray LaTeX. Off by a
+factor of 250 and pointed the embedding somewhere unhelpful.</p>
+<p>The premise of HyDE is that queries and documents live in different regions of
+embedding space. SciFact claims are already written like abstract sentences, so
+there is no gap to close and the fabrication is all you get. -0.048.</p>
+<hr />
+<p><strong>Format bug survived a whole refactor.</strong></p>
+<p>Changed <code>Chunk.id</code> from int to str back in Stage 4 to match BEIR's document ids.
+<code>01_fast_loop.py</code> still had <code>f"{chunk.id:3d}"</code> and crashed. It sat broken for
+several stages because I never reran the earlier scripts.</p>
+<p>Found it only because I ran everything after renaming the folders. Renaming did
+not find the bug; running everything afterwards did. Worth doing periodically
+rather than assuming untouched code still works.</p>
+<hr />
+<p><strong>Cache was 240MB before I looked.</strong></p>
+<p><code>cache/embeddings.npz</code> holds every embedding across every chunking config, which
+adds up faster than expected. Gitignored. Split the small result JSONs out into
+<code>results/</code> so the actual findings are version controlled and the derived blobs
+are not.</p>
+<hr />
+<p><strong>Piped a long job through <code>tail</code> and blinded myself.</strong></p>
+<p>Ran the CRAG eval as <code>python ... | tail -24</code>. tail holds everything until stdin
+closes, so a twelve-minute job shows nothing at all until it finishes. Ten
+minutes in I assumed it had hung.</p>
+<p>Then made it worse. Checked for the worker with <code>ps aux | grep myenv/bin/python</code>
+and got one hit at 0% CPU and 1MB RSS, concluded the process had died, and
+killed it. That hit was the <strong>zsh wrapper</strong>, whose command line happens to
+contain the string "myenv/bin/python". The real worker was almost certainly
+running fine underneath. Exit code 144 was SIGTERM, from me.</p>
+<p>Two rules out of one mistake. Do not pipe a job you intend to watch through
+<code>tail</code> or <code>head</code>; write to a file and tail the file. And do not grep process
+lists by script path, because the shell wrapper carries the same string as the
+process you are looking for. <code>pgrep -f</code> has the identical problem.</p>
+<p>Cost: ten minutes and a job I had to rerun from scratch.</p>
+<hr />
+<h2 id="open-questions">Open questions</h2>
+<ul>
+<li>The prefix and hybrid deltas (0.010 to 0.014) are inside the noise floor at
+  n=300. Want a paired bootstrap over per-query scores before treating either as
+  real. Not done.</li>
+<li>Every negative result here is on one corpus with a well-matched embedding
+  model. SciFact abstracts are short, single-topic and written in the same
+  register as the queries. I would expect chunking and query rewriting to flip
+  sign on long multi-topic documents, and I have not tested that.</li>
+<li>Multi-query raised recall 0.040 while nDCG stayed flat. Something should be
+  able to convert that extra recall into ranking. Reranking did not. Unresolved.</li>
+</ul>
+      </article>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

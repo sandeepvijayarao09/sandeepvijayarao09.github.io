@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self-correction (CRAG, Self-RAG) | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 12 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-12/">
+  <meta property="og:title" content="Self-correction (CRAG, Self-RAG) | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 12 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-12/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 12</p>
+      <h1>Self-correction (CRAG, Self-RAG)</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li class="is-here"><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Pro</strong> · prerequisite: Stage 11</p>
+<p>Every pipeline up to here runs identically for every query and has no way to
+notice it has failed. If retrieval returns noise, generation answers from noise.
+CRAG grades what came back; Self-RAG decides whether to retrieve at all.</p>
+<p>Both add LLM calls to the query path, so they are only worth it if the
+judgements are accurate. That is what this stage measures, and the two
+mechanisms came out at opposite ends.</p>
+<h2 id="crag-framed-as-detection">CRAG, framed as detection</h2>
+<p>The useful question is not "can an LLM grade a document" but "does grading
+catch the cases where retrieval missed?" So split the queries by ground truth
+first, then grade both groups and see whether the grader can tell them apart.</p>
+<div class="codehilite"><pre><span></span><code>ground truth             correct   ambiguous   incorrect     detected
+retrieval SUCCEEDED            2           8           6        0.12  (want correct)
+retrieval FAILED               1           0           7        0.88  (want flagged)
+
+flag rate | retrieval SUCCEEDED    0.875
+flag rate | retrieval FAILED       0.875
+separation                         +0.000
+balanced accuracy                  0.500
+</code></pre></div>
+
+<p>Read the headline number on its own and CRAG looks excellent: <strong>0.88 failure
+detection</strong>. Read it next to the other row and it evaporates. The grader flags
+87.5% of documents as unusable <em>whether or not retrieval actually worked</em>. The
+separation is zero and balanced accuracy is exactly chance.</p>
+<p>A grader that always says "bad" scores 1.00 on failure detection for free. This
+one is not quite that, but statistically it may as well be. Acting on its
+verdict would discard 14 of 16 good retrievals to catch 7 of 8 bad ones.</p>
+<p>This is the same trap as Stage 11's faithfulness score, which read 1.00 only
+because the model answered on a third of cases. <strong>A conditional metric is
+meaningless without its base rate.</strong> Both stages produced an impressive-looking
+number that dissolved the moment the other half was measured.</p>
+<h2 id="self-rag-routing-which-works">Self-RAG routing, which works</h2>
+<div class="codehilite"><pre><span></span><code>query type                 routed correctly
+SciFact claims           8/8 =      1.00  (want retrieve)
+no-lookup prompts        8/8 =      1.00  (want skip)
+</code></pre></div>
+
+<p>Sixteen for sixteen. Given claims that need the corpus and prompts that do not
+("what is 17 percent of 4,200", "convert this list into a markdown table"), the
+router separates them perfectly.</p>
+<h2 id="why-the-same-model-aces-one-and-fails-the-other">Why the same model aces one and fails the other</h2>
+<p>Routing asks: <em>is this the kind of question that needs a lookup?</em> That is
+surface classification. The signal is in the form of the query and a 4B model
+reads it easily.</p>
+<p>Grading asks: <em>does this abstract settle this specific claim?</em> That is the
+identical expert inference Stage 11 found <code>gemma4:e4b</code> could not do, where it
+declined to give a verdict on 60% of correct documents. Two stages hit that
+ceiling independently, by different routes.</p>
+<p>The practical version: <strong>spend your LLM calls where the task is classification,
+not where it is expertise.</strong> Routing is cheap and reliable. Relevance grading on
+technical content needs a model that can actually read the technical content,
+and if you had that model you would likely not need the grader.</p>
+<h2 id="caveats">Caveats</h2>
+<p>n=24 for the CRAG split (16 succeeded, 8 failed), which is small. A separation of
+exactly 0.000 does not prove the grader has literally zero signal; the
+confidence interval at this sample size is wide. What it does rule out is the
+<em>strong</em> signal CRAG needs in order to be worth an extra LLM call per document
+on every query.</p>
+<p>All of this is <code>gemma4:e4b</code> on biomedical abstracts. A larger model, or a corpus
+where relevance is judgeable from surface features, would plausibly invert the
+grading result. The routing result seems likely to hold anywhere.</p>
+<h2 id="files">Files</h2>
+<p><code>01_crag_detection.py</code>, both tests, checkpointed. Judgements are cached per
+query, so an interrupted run resumes and re-running to change a printed metric
+costs nothing.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-13/" data-reveal><div><strong>Level 13, Agentic / multi-hop retrieval</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

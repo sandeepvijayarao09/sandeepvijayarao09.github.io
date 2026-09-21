@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Context enrichment | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 9 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-09/">
+  <meta property="og:title" content="Context enrichment | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 9 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-09/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 9</p>
+      <h1>Context enrichment</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li class="is-here"><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Advanced</strong> · prerequisite: Stage 8</p>
+<p>Stage 4 showed chunking costs you context. Contextual retrieval (Anthropic,
+2024) is the fix: before embedding, ask an LLM to write a short blurb situating
+each chunk inside its parent document, and prepend it.</p>
+<p>The problem it targets is real and unfixable by any retrieval technique:</p>
+<blockquote>
+<p>"The company's revenue grew by 3% over the previous quarter."</p>
+</blockquote>
+<p>Which company? Which quarter? Unfindable by any query naming either, because
+neither appears in the chunk. The information is not in the indexed text.</p>
+<h2 id="the-model-choice-is-the-whole-implementation">The model choice is the whole implementation</h2>
+<p>One LLM call per chunk is the expensive shape, so the generator matters more
+here than anywhere else in this repo. I benchmarked before running:</p>
+<div class="codehilite"><pre><span></span><code>Llama-3.2-1B     0.4s/chunk
+gemma4:e4b       9.2s/chunk      23x slower, comparable blurbs
+</code></pre></div>
+
+<p>At 9.2s the full corpus is 11 hours. At 0.4s it is minutes. Most write-ups of
+this technique mention prompt caching and skip the model-size decision, which
+is the larger lever by a wide margin. The 1B model's blurbs were if anything
+more specific, naming "preterm infants compared to full-term infants" where the
+larger model wrote "a study using diffusion tensor MRI".</p>
+<h2 id="results">Results</h2>
+<p>600 document subset (every gold document plus distractors), 300 queries,
+doc-level max pooling.</p>
+<div class="codehilite"><pre><span></span><code>arm                         units   nDCG@10   vs whole     R@10      MRR
+whole (no chunking)           600    0.8961              0.9593   0.8769
+chunked 100/20               1784    0.8966    +0.0005   0.9660   0.8765
+contextualised               1784    0.8898    -0.0063   0.9527   0.8715
+</code></pre></div>
+
+<p><strong>Contextualising made it worse</strong>, both against plain chunks (-0.0068) and
+against not chunking at all (-0.0063).</p>
+<h2 id="why-and-when-it-would-not">Why, and when it would not</h2>
+<p>I predicted a small or zero effect, because Stage 4 established that SciFact
+abstracts are short (p50 = 204 words), single-topic, and only 2.8% exceed the
+encoder window. There was very little lost context to restore.</p>
+<p>The result was worse than "no effect", and the likely mechanism is dilution.
+The blurb adds roughly 50 words of generic framing to a 100-word chunk. On a
+corpus where chunks are already self-describing, that framing carries no new
+retrievable signal and shrinks the share of the embedding held by the chunk's
+distinctive terms. You are paying an LLM call per chunk to make each vector
+slightly blurrier.</p>
+<p>The sharper statement of the technique, then, is this. <strong>Contextual retrieval
+restores context that chunking destroyed.</strong> If chunking did not destroy any,
+there is nothing to restore and the blurb is noise.</p>
+<p>Where it should pay: long multi-topic documents where chunks genuinely lose
+their referents. Contracts, manuals, transcripts, filings. SciFact abstracts
+are the opposite of all three, which makes this close to a worst case rather
+than a fair test of the idea.</p>
+<h2 id="what-is-worth-copying-regardless">What is worth copying regardless</h2>
+<p>It is an <strong>index-time</strong> cost, paid once. Compare Stage 8's query rewriting,
+which pays an LLM call on every query forever. When contextual retrieval does
+apply, its cost model is far friendlier than it first appears, and prompt
+caching plus a small model makes it cheaper still.</p>
+<p>Blurbs are cached to disk by (model, document, chunk), so an interrupted run
+resumes and re-running is free.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-10/" data-reveal><div><strong>Level 10, Multi-vector / late interaction</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

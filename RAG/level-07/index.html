@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-encoder reranking | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 7 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-07/">
+  <meta property="og:title" content="Cross-encoder reranking | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 7 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-07/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 7</p>
+      <h1>Cross-encoder reranking</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li class="is-here"><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Intermediate</strong> · prerequisite: Stage 6</p>
+<p>Reranking is the second-most-recommended upgrade in RAG. On SciFact it made
+things worse. Chasing down why took two wrong guesses and produced the most
+useful rule in this repo.</p>
+<h2 id="the-architecture">The architecture</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>interaction</th>
+<th>precompute?</th>
+<th>cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bi-encoder</strong> (Stages 2-6)</td>
+<td>after encoding, one dot product</td>
+<td>whole corpus, once</td>
+<td>~0ms/query</td>
+</tr>
+<tr>
+<td><strong>Cross-encoder</strong> (this)</td>
+<td>query + doc through the transformer <em>together</em></td>
+<td>impossible</td>
+<td>one forward pass per pair</td>
+</tr>
+</tbody>
+</table>
+<p>A bi-encoder compresses a whole abstract into 768 numbers before it has ever
+seen the query. A cross-encoder lets self-attention compare individual terms
+across both. Strictly more expressive, and strictly not precomputable, which is
+why it can only ever be a <em>second</em> stage over a shortlist.</p>
+<h2 id="7a-both-rerankers-hurt">7a, Both rerankers hurt</h2>
+<div class="codehilite"><pre><span></span><code>config                        nDCG@10   vs dense    R@10     ms/q
+hybrid 0.7/0.3                 0.7689    +0.0101   0.8899       0
+dense                          0.7588              0.8802       0
+dense top-10  -&gt; bge-base      0.7474    -0.0114   0.8802     303
+dense top-20  -&gt; bge-base      0.7383    -0.0205   0.8734     606
+dense top-50  -&gt; bge-base      0.7256    -0.0332   0.8544    1515
+dense top-100 -&gt; bge-base      0.7172    -0.0416   0.8444    3030
+dense top-10  -&gt; MiniLM-L6     0.7276    -0.0312   0.8802      39
+dense top-100 -&gt; MiniLM-L6     0.6908    -0.0680   0.8122     389
+</code></pre></div>
+
+<p>Two models, four depths, monotonically worse. <strong>The monotonic decline is the
+diagnostic.</strong> A reranker that helps gets <em>better</em> with depth, because deeper
+candidates raise the ceiling it can reach into. A reranker worse than the
+ordering it replaces gets <em>steadily worse</em>, because every extra candidate is
+another chance to promote something wrong.</p>
+<p>Note <code>dense top-10 -&gt; rerank</code> leaves recall@10 at exactly 0.8802, unchanged. A
+reranker can only reorder what stage one handed it. <code>recall@depth</code> is a hard
+cap and belongs printed next to every rerank result.</p>
+<h2 id="the-sanity-check-before-believing-it">The sanity check, before believing it</h2>
+<div class="codehilite"><pre><span></span><code>mean reranker score, GOLD docs : +0.575
+mean reranker score, non-gold  : +0.055
+separation                     : +0.520
+
+gold mean rank BEFORE rerank   : 2.33
+gold mean rank AFTER  rerank   : 2.51
+gold moved UP: 10   DOWN: 10   same: 37
+</code></pre></div>
+
+<p>Not a bug. The reranker discriminates cleanly. It just moves documents up as
+often as down.</p>
+<p><strong>Why:</strong> dense already places gold at rank 2.33 out of 20. There is almost
+nothing left to repair, and both models are BGE trained on similar data, so the
+reranker's judgement is <em>correlated with</em> the bi-encoder's rather than superior
+to it. A second correlated opinion adds variance, not accuracy.</p>
+<h2 id="7b-the-prediction-and-the-rule">7b, The prediction, and the rule</h2>
+<p>That explanation is falsifiable: give the reranker a <em>weak</em> first stage and it
+should help. BM25 scores 0.665, fails on different queries (Stage 6), and its
+ordering is far less correlated with the reranker's.</p>
+<div class="codehilite"><pre><span></span><code>first stage             before     after      delta    MRR delta
+BM25 (weak)             0.6652    0.7058    +0.0406      +0.0435
+dense (strong)          0.7588    0.7256    -0.0332      -0.0326
+</code></pre></div>
+
+<p>Same reranker, same depth, same 300 queries. <strong>Opposite signs.</strong></p>
+<blockquote>
+<p><strong>Rerankers repair weak orderings, not strong ones.</strong></p>
+</blockquote>
+<p>That rule is <em>directionally</em> right and turns out to be a proxy for something
+simpler. See 7c/7d below, where it gets falsified and replaced.</p>
+<h2 id="7c7d-two-failed-hypotheses-then-the-real-answer">7c/7d, Two failed hypotheses, then the real answer</h2>
+<p>The 7b rule was tested against multi-query in Stage 8b, whose ordering is also
+weak (MRR 0.662 vs dense 0.668) but with higher recall. The rule predicted a
+gain. <strong>It lost 0.011.</strong> Hypothesis one falsified.</p>
+<p>Next candidate: DECORRELATION. Maybe a reranker helps when its judgement is
+independent of the first stage, and BM25 is the only stage built on a different
+signal (lexical, not the same bi-encoder). Measured with Spearman rank
+correlation between each stage's ordering and the reranker's:</p>
+<div class="codehilite"><pre><span></span><code>first stage        Spearman vs reranker     rerank delta
+BM25                              0.442          +0.0406
+dense                             0.384          -0.0332
+multi-query                       0.362          -0.0109
+</code></pre></div>
+
+<p><strong>Backwards.</strong> BM25 correlates MOST with the reranker and is the only stage that
+gained. Hypothesis two falsified.</p>
+<p>Both hypotheses were looking at the inputs. The pattern was in the outputs:</p>
+<div class="codehilite"><pre><span></span><code>first stage     stage nDCG   cand recall@50  reranked nDCG      delta
+BM25                0.6518           0.8833         0.6738    +0.0221
+dense               0.7007           0.9600         0.6844    -0.0163
+multi-query         0.7018           0.9600         0.6909    -0.0109
+
+first-stage nDCG spread : 0.0501
+reranked  nDCG spread   : 0.0171
+</code></pre></div>
+
+<p>Three first stages spanning 0.050 nDCG collapse to a 0.017 spread after
+reranking, a 3x compression. The two stages with IDENTICAL candidate recall
+(0.9600) land at nearly identical reranked scores; BM25, with lower recall
+(0.8833), lands lower.</p>
+<blockquote>
+<p><strong>Reranking OVERWRITES the first stage's ordering with the reranker's own.</strong>
+The result is the reranker's ranking quality, bounded by what the candidate
+set contains. The first stage stops mattering as an ordering and matters only
+as a recall filter.</p>
+</blockquote>
+<p>Both earlier hypotheses were proxies for this. BM25's ordering was weak, so
+overwriting it helped. Dense's was strong, so overwriting it hurt. Correlation
+was a red herring.</p>
+<h2 id="two-rules-i-would-actually-use">Two rules I would actually use</h2>
+<p><strong>Two rules, both actionable:</strong></p>
+<ol>
+<li>
+<p><strong>Rerank only if the reranker ranks better than your first stage.</strong> Since
+   reranking replaces your ordering, the outcome is the reranker's quality. A
+   great leaderboard score is irrelevant if your retriever is already better on
+   your data. Test it directly: rerank a sample and compare, before committing
+   to the latency.</p>
+</li>
+<li>
+<p><strong>Under reranking, optimise your first stage for RECALL, not ordering.</strong> Its
+   ordering is about to be discarded. This inverts the usual instinct: the
+   first stage should cast a wide, cheap net, and BM25 or a fast bi-encoder at
+   high depth may beat a better-ranked but narrower candidate set.</p>
+</li>
+</ol>
+<p><strong>On method:</strong> two hypotheses were stated, tested, and falsified before the
+third held. Both wrong guesses were published in the repo rather than quietly
+deleted, because the sequence is the lesson. A rule that survives one experiment
+is a guess; the falsification is what turns it into knowledge.</p>
+<p>Latency is the other half. bge-base at depth 50 costs 1,515ms/query against
+~0ms for the bi-encoder. On SciFact that buys -0.033 nDCG. Even where reranking
+helps, depth is a latency dial you should set deliberately.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-08/" data-reveal><div><strong>Level 8, Query rewriting</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

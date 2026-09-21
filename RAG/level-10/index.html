@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi-vector / late interaction | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 10 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-10/">
+  <meta property="og:title" content="Multi-vector / late interaction | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 10 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-10/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 10</p>
+      <h1>Multi-vector / late interaction</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li class="is-here"><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Advanced</strong> · prerequisite: Stage 9</p>
+<p>The third point on a spectrum whose other two ends are already in this repo.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>interaction happens</th>
+<th>precomputable</th>
+<th>index per doc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bi-encoder (Stages 2-6)</td>
+<td>after encoding, one dot product</td>
+<td>yes, whole corpus</td>
+<td>~3 KB</td>
+</tr>
+<tr>
+<td>Cross-encoder (Stage 7)</td>
+<td>inside the transformer, jointly</td>
+<td>no</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Late interaction (here)</td>
+<td>at query time, over stored vectors</td>
+<td>yes</td>
+<td>~768 KB</td>
+</tr>
+</tbody>
+</table>
+<div class="codehilite"><pre><span></span><code>MaxSim(q, d) = SUM over query tokens qi:  MAX over doc tokens dj: qi · dj
+</code></pre></div>
+
+<p>Every query token finds its single best match anywhere in the document, and
+those maxima are summed. A rare term that appears once in a long abstract still
+contributes fully, which is exactly what mean-pooling into one vector destroys.</p>
+<h2 id="results">Results</h2>
+<p>800-document subset (every gold document plus random distractors), 300 queries.
+Both methods scored on the same subset, so the comparison is fair even though
+the absolute numbers are higher than the full-corpus tables elsewhere.</p>
+<div class="codehilite"><pre><span></span><code>                     nDCG@10     R@10   index MB   ms/query
+single-vector         0.8804   0.9516        2.5         &lt;1
+late interaction      0.8911   0.9667      592.5         28
+</code></pre></div>
+
+<p>It wins: +0.011 nDCG@10 and +0.015 recall@10.</p>
+<p>It also costs a <strong>241x larger index</strong> and roughly 28x the query latency.
+Extrapolated to the full 5,183 abstracts that is 3.84 GB against 16 MB.</p>
+<h2 id="putting-that-next-to-the-other-two-things-that-worked">Putting that next to the other two things that worked</h2>
+<p>Three techniques in this repo improved retrieval. Two of them bought about the
+same amount:</p>
+<table>
+<thead>
+<tr>
+<th>Technique</th>
+<th>Δ nDCG@10</th>
+<th>What it costs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weighted hybrid (Stage 6)</td>
+<td>+0.010</td>
+<td>one BM25 index: 0.21s build, 0.7ms/query</td>
+</tr>
+<tr>
+<td>Late interaction (Stage 10)</td>
+<td>+0.011</td>
+<td>241x index size, 28ms/query</td>
+</tr>
+<tr>
+<td>Reranking on BM25 (Stage 7)</td>
+<td>+0.041</td>
+<td>1,515ms/query</td>
+</tr>
+</tbody>
+</table>
+<p>Hybrid and late interaction deliver an indistinguishable gain, and one of them
+is essentially free while the other needs three orders of magnitude more
+storage. If you only read the accuracy column you would never see that.</p>
+<p>This is the argument for reporting cost alongside every delta. A leaderboard
+sorted by nDCG puts these two techniques next to each other and tells you
+nothing about which one you should build.</p>
+<h2 id="an-honest-surprise">An honest surprise</h2>
+<p>I expected this to underperform, because these token vectors come from
+<code>bge-base</code>, which was trained for single-vector retrieval with CLS pooling.
+Real ColBERT checkpoints are trained end-to-end under the MaxSim objective, so
+their token vectors are shaped for exactly this operation. Borrowing the
+architecture without its training objective should have cost something.</p>
+<p>It won anyway. Token-level matching is apparently robust enough to help even
+with representations that were not optimised for it. A trained ColBERT would
+presumably do better still, and I have not tested one.</p>
+<h2 id="why-the-subset">Why the subset</h2>
+<p>Full-corpus late interaction needs ~3.84 GB of float32 in RAM. The subset keeps
+every gold document so no query becomes unanswerable, then pads with random
+distractors. Real ColBERTv2 attacks the memory problem with residual
+quantization at roughly 2 bits per dimension plus centroid pruning, which gets
+the blowup down to about 20x rather than 241x. That compression is most of what
+makes the approach practical, and it is not implemented here.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-11/" data-reveal><div><strong>Level 11, Grounded generation</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

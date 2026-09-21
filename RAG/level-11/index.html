@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grounded generation | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 11 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-11/">
+  <meta property="og:title" content="Grounded generation | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 11 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-11/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 11</p>
+      <h1>Grounded generation</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li class="is-here"><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Advanced</strong> · prerequisite: Stage 10</p>
+<p>Every stage before this measured retrieval. This one measures what the model
+does with what retrieval handed it, and it needs a separate scoreboard because
+the two fail independently. An answer can be perfectly faithful to documents
+that were the wrong ones.</p>
+<h2 id="the-test">The test</h2>
+<p>Three context conditions per claim:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Context</th>
+<th>Correct behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gold</td>
+<td>the document SciFact labels as relevant</td>
+<td>give a verdict</td>
+</tr>
+<tr>
+<td>distractor</td>
+<td>top-ranked documents with the gold one removed</td>
+<td>say NOT_ENOUGH</td>
+</tr>
+<tr>
+<td>empty</td>
+<td>nothing</td>
+<td>say NOT_ENOUGH</td>
+</tr>
+</tbody>
+</table>
+<p>The distractor condition is the one that matters. It is topically plausible and
+does not settle the claim. A system that returns confident verdicts there fails
+invisibly, because no retrieval metric in this repo can see it.</p>
+<h2 id="results">Results</h2>
+<div class="codehilite"><pre><span></span><code>context         gave verdict   NOT_ENOUGH            correct
+gold                      12           18    12/30 = 0.40  (want verdict)
+distractor                 5           25    25/30 = 0.83  (want not_enough)
+empty                      0           30    30/30 = 1.00  (want not_enough)
+
+citation present on gold verdicts: 12/12 = 1.00
+</code></pre></div>
+
+<p>n=30, seed 0, <code>gemma4:e4b</code>.</p>
+<h2 id="the-part-that-took-three-attempts">The part that took three attempts</h2>
+<p><strong>11a.</strong> I first framed this as question answering: answer the claim from
+context, abstain if the context is insufficient. Gold scored 0.33. The model
+abstained on twenty of thirty documents that were labelled relevant, which
+looked like catastrophic over-refusal.</p>
+<p>Before writing that up I printed the actual outputs. One of the abstentions was
+the claim "high cardiopulmonary fitness causes increased mortality rate", whose
+gold document <em>refutes</em> it. Under a question-answering prompt a refuting
+document does not answer anything, so INSUFFICIENT_CONTEXT was defensible. My
+eval could not represent the dataset: SciFact is claim verification, and gold
+documents may support or refute.</p>
+<p><strong>11b.</strong> Rewrote it as the three-way task the corpus actually encodes
+(SUPPORTED / REFUTED / NOT_ENOUGH). Gold went 0.33 to 0.40. Better, and nowhere
+near fixed, so my diagnosis was partly right and mostly wrong.</p>
+<p><strong>11c.</strong> Two candidates left. Either the prompt was too strict (11b told the
+model "topically related is NOT the same as settling the claim" at temperature
+0), or the model cannot make the inference. Those are distinguishable, so I ran
+the same claims and same gold documents under a relaxed prompt:</p>
+<div class="codehilite"><pre><span></span><code>prompt             verdict rate on gold
+strict (11b)     12/30 =           0.40
+relaxed          14/30 =           0.47
+</code></pre></div>
+
+<p>Prompt work bought 0.07, then 0.07 again, then stopped. Roughly 0.53 of gold
+cases still get no verdict.</p>
+<h2 id="what-this-actually-measures">What this actually measures</h2>
+<p>The generator is the ceiling here, not the retrieval and not the prompt.
+SciFact claims are technical inferences from scientific abstracts. Connecting
+"cells lacking clpC have a defect in sporulation efficiency in Bacillus
+subtilis" to a high-throughput genetic screen is expert reading, and
+<code>gemma4:e4b</code> mostly will not commit to it.</p>
+<p>That is worth stating precisely, because it decomposes a number people usually
+report as one thing. A RAG system with <em>perfect</em> retrieval and this generator
+would still fail on more than half of SciFact. Retrieval work cannot fix that
+and no amount of prompt engineering moved it much either. The fix is a better
+generator, or a domain-tuned one.</p>
+<p>This is Method Rule 2 in the README paying off. If I had only measured
+end-to-end accuracy I would have seen a bad number and started tuning
+retrieval, which was never the problem.</p>
+<h2 id="the-failure-mode-was-the-opposite-of-the-warning">The failure mode was the opposite of the warning</h2>
+<p>Every RAG guide warns that models answer confidently from irrelevant context.
+Here the model returned NOT_ENOUGH on 83% of distractor contexts and 100% of
+empty ones, and every verdict it did give on gold context carried a citation.</p>
+<p>It is not reckless. It is <em>too</em> conservative, and the cost shows up as useful
+answers withheld rather than as hallucinations. Both are failures; they need
+opposite fixes; and only the second one gets written about.</p>
+<p>I would not generalise this past <code>gemma4:e4b</code> on a biomedical corpus. A larger
+model, or a corpus where the inference step is shorter, could easily invert it.</p>
+<h2 id="files">Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01_citation_abstention.py</code></td>
+<td>The first, wrongly framed attempt. Kept deliberately.</td>
+</tr>
+<tr>
+<td><code>02_claim_verification.py</code></td>
+<td>Three-way SUPPORTED / REFUTED / NOT_ENOUGH</td>
+</tr>
+<tr>
+<td><code>03_strictness_ablation.py</code></td>
+<td>Strict vs relaxed prompt on gold context</td>
+</tr>
+</tbody>
+</table>
+<p><code>01</code> is still here because the sequence is the useful part. Deleting a flawed
+first attempt is how you end up with a repo where everything appears to have
+worked immediately.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-12/" data-reveal><div><strong>Level 12, Self-correction (CRAG, Self-RAG)</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

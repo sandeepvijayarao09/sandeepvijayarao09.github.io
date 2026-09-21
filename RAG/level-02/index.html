@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Measure first | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 2 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-02/">
+  <meta property="og:title" content="Measure first | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 2 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-02/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 2</p>
+      <h1>Measure first</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li class="is-here"><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Beginner</strong> · prerequisite: Stage 1</p>
+<p>The stage that makes every other stage possible. Two problems with Stage 1:
+it was too slow to experiment in, and it produced no number you could argue with.</p>
+<h2 id="files">Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Concept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01_fast_loop.py</code></td>
+<td>Batching, caching, and vectorized similarity</td>
+</tr>
+<tr>
+<td><code>02_generate_evalset.py</code></td>
+<td>Building labelled eval data, and its bias</td>
+</tr>
+<tr>
+<td><code>03_measure_baseline.py</code></td>
+<td>recall@k / MRR, and the leakage gap</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2a-the-loop">2a, The loop</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Stage 1</th>
+<th>Stage 2a</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Index, cold</td>
+<td>2.631s</td>
+<td>1.144s</td>
+<td>Batched embedding, one HTTP round-trip per 32 chunks, not per chunk</td>
+</tr>
+<tr>
+<td>Index, re-run</td>
+<td>2.631s</td>
+<td>0.000s</td>
+<td>Content-hash cache, embeddings are a pure function of (model, text)</td>
+</tr>
+<tr>
+<td>100 queries</td>
+<td>0.565s</td>
+<td>0.003s</td>
+<td>Normalize once at index time; cosine collapses to one matmul</td>
+</tr>
+</tbody>
+</table>
+<p>Stage 1 recomputed every chunk's vector norm on every query, work whose
+answer can never change. At 150 chunks none of these absolute numbers matter.
+The <strong>ratios</strong> are what survive to 10⁶, and the 0.000s re-index is what makes
+Stages 5-8 possible: you'll re-run the pipeline dozens of times comparing
+retrieval techniques, and re-embedding the corpus each time would stop you.</p>
+<p>Exact brute-force search stays viable much further than people assume, a few
+hundred thousand vectors is still tens of milliseconds. Stage 15 measures
+exactly where it breaks, rather than guessing.</p>
+<h2 id="2b2c-the-scoreboard-and-why-one-number-lies">2b/2c, The scoreboard, and why one number lies</h2>
+<p>For each fact, gemma4 writes two questions: a <code>direct</code> one phrased as someone
+who just read the fact would, and a <code>paraphrased</code> one that deliberately avoids
+the fact's distinctive vocabulary. The gold label is free, the question was
+generated <em>from</em> chunk <code>i</code>, so chunk <code>i</code> is the correct retrieval.</p>
+<p>Same retriever, same corpus, both question sets:</p>
+<div class="codehilite"><pre><span></span><code>direct       n=150  r@1=0.927  r@3=0.987  r@5=0.987  MRR@10=0.955  nDCG@10=0.965
+paraphrased  n=150  r@1=0.680  r@3=0.947  r@5=0.960  MRR@10=0.809  nDCG@10=0.853
+                        ^^^^^
+                    leakage gap @1: +0.247
+</code></pre></div>
+
+<p><strong>A quarter of the "accuracy" was vocabulary leakage.</strong> The direct questions
+inherit rare words from their source chunk, "bezoar", "clowder", so cosine
+similarity is handed the answer. Strip those words and top-1 retrieval falls
+off a cliff.</p>
+<p>This is the most common way RAG evaluations lie, and it is almost always
+unintentional: generate questions from chunks, report 98%, ship, watch it fail
+on real users who don't know your corpus's vocabulary.</p>
+<p>Two things worth noticing beyond the headline:</p>
+<ul>
+<li><strong>r@1 collapsed but r@5 barely moved</strong> (0.98 → 0.96). The right chunk is
+  usually still <em>retrieved</em>, just not ranked first. That's a ranking problem,
+  not a recall problem, which is precisely the failure a reranker fixes, and
+  why Stage 7 will watch MRR rather than recall@5.</li>
+<li><strong>MRR fell 0.983 → 0.798</strong>, tracking that reordering. Recall@5 alone would
+  have told you nothing was wrong.</li>
+</ul>
+<p><code>paraphrased</code> is the honest baseline. Every later stage optimizes against
+that row.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-03/" data-reveal><div><strong>Level 3, Move to a real benchmark</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

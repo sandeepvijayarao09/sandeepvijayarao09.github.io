@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic / multi-hop retrieval | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 13 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-13/">
+  <meta property="og:title" content="Agentic / multi-hop retrieval | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 13 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-13/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 13</p>
+      <h1>Agentic / multi-hop retrieval</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li class="is-here"><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Pro</strong> · prerequisite: Stage 12 · status: code written, not yet run</p>
+<p>Some questions need chaining: find A, use A to find B. <strong>One retrieval pass
+structurally cannot answer them</strong>, no matter how good the retriever is. This is
+not a quality problem you can fix with a better embedding model.</p>
+<div class="codehilite"><pre><span></span><code>loop:
+  retrieve(current_query)
+  ask the model: do I have enough? if not, what is the next query?
+  stop when satisfied, or when the hop budget runs out
+</code></pre></div>
+
+<h2 id="what-to-actually-look-at">What to actually look at</h2>
+<p>The <strong>trace</strong> is the output worth studying, more than the metric. It shows the
+query the system <em>invented</em> at each hop, which is where you see whether it is
+reasoning or drifting. A common failure is hop 2 restating hop 1 in different
+words, burning a call to retrieve the same documents.</p>
+<h2 id="honest-expectation-for-scifact">Honest expectation for SciFact</h2>
+<p>SciFact claims are single-hop by construction: one abstract supports or refutes
+one claim. <strong>Multi-hop should not help here</strong>, and if it appears to, be
+suspicious of the eval rather than pleased with the technique.</p>
+<p>The right corpora for this are HotpotQA, MuSiQue, or 2WikiMultiHopQA, built
+specifically so that no single document contains the answer. Running it here
+demonstrates the mechanism and its cost, not its benefit.</p>
+<h2 id="cost">Cost</h2>
+<p>One LLM call per hop plus a final answer, all on the latency path. A 3-hop query
+against a local model is tens of seconds. Agentic retrieval is the most
+expensive system in this repo per query, and the most frequently adopted before
+anyone measured whether the questions are actually multi-hop.</p>
+<p>Code: <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/rag/adaptive.py"><code>../../rag/adaptive.py</code></a> → <code>multi_hop_retrieve</code></p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-14/" data-reveal><div><strong>Level 14, GraphRAG</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

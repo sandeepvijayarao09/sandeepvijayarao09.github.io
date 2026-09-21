@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Production scale | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 15 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-15/">
+  <meta property="og:title" content="Production scale | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 15 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-15/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 15</p>
+      <h1>Production scale</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li class="is-here"><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Pro</strong> · prerequisite: Stage 14 · status: planned</p>
+<p>Orthogonal to every technique above. These do not change <em>what</em> you retrieve,
+they change whether the system survives contact with real traffic and real data.</p>
+<h2 id="the-scale-ladder">The scale ladder</h2>
+<table>
+<thead>
+<tr>
+<th>Corpus</th>
+<th>What you need</th>
+<th>What breaks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10²-10⁴</td>
+<td>numpy brute force, in-process</td>
+<td>Nothing. <strong>Most real products live here</strong></td>
+</tr>
+<tr>
+<td>10⁴-10⁶</td>
+<td>HNSW / FAISS, or pgvector</td>
+<td>Latency; you accept <em>approximate</em> recall for the first time</td>
+</tr>
+<tr>
+<td>10⁶-10⁸</td>
+<td>Qdrant / Vespa / Turbopuffer, int8 or PQ</td>
+<td>Memory, index build time, reindexing becomes an ops problem</td>
+</tr>
+<tr>
+<td>Beyond</td>
+<td>Sharding, multi-stage retrieval, streaming ingest</td>
+<td>Freshness and consistency, not similarity search</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The non-obvious lesson</strong>, and this repo has the measurement to back it: exact
+brute force in numpy searched 5,183 documents in well under a millisecond, and
+scales to a few hundred thousand vectors in tens of milliseconds. People reach
+for a vector database one to two orders of magnitude before they need one.</p>
+<h2 id="topics">Topics</h2>
+<ul>
+<li><strong>ANN indexing</strong>, HNSW vs IVF-PQ. Every ANN index trades exact recall for
+  latency, and the first thing to measure is <em>what you lost</em>, not how fast it got</li>
+<li><strong>Quantization</strong>, int8, binary, Matryoshka. 4-32× memory reduction for a
+  measurable recall cost. Relevant immediately if you took Stage 10 seriously</li>
+<li><strong>Incremental ingestion</strong>, corpora change. Index builds, freshness lag,
+  deletes, reindex cost</li>
+<li><strong>Caching</strong>, query, embedding, generation. Stage 2's embedding cache is the
+  cheapest version of this and it already saved hours</li>
+<li><strong>Observability</strong>, per-query retrieval traces. Without them, production
+  failures are unfixable, because you cannot tell a retrieval miss from a
+  generation failure after the fact</li>
+<li><strong>Guardrails</strong>, Stage 11's citation and abstention machinery, wired to alerts</li>
+</ul>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

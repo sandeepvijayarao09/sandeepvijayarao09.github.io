@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chunking | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 4 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-04/">
+  <meta property="og:title" content="Chunking | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 4 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-04/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 4</p>
+      <h1>Chunking</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li class="is-here"><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Core retrieval</strong> · prerequisite: Stage 3</p>
+<p>Chunking is the most cargo-culted step in RAG. This stage measures whether it
+earns its place, and the answer here is a clean no, predicted in advance.</p>
+<h2 id="4a-run-the-cheap-diagnostic-first">4a, Run the cheap diagnostic first</h2>
+<div class="codehilite"><pre><span></span><code>SciFact: 5183 documents
+  words     min=33   p50=204   p90=309   p99=473   max=1541
+  ~tokens            p90=402   p99=615   max=2003
+
+  over the 512-token limit: 145/5183 (2.8%) - silently truncated
+  estimated tokens never embedded: 20,688 (1.4% of corpus)
+</code></pre></div>
+
+<p><strong>Mechanism worth knowing:</strong> <code>bge-base</code> has a 512-token window, and longer input
+is not rejected, it is <strong>silently truncated</strong>. You get a vector back, it looks
+fine, and it was built from a prefix of your text. No error, no warning. 145
+abstracts are being quietly cut off.</p>
+<p><strong>The finding is negative, and that is what makes it useful.</strong> Only 2.8% of
+documents overflow and 1.4% of tokens are lost. On this corpus chunking has
+almost nothing to rescue.</p>
+<p>So before running 4b I wrote down the prediction: chunking does nothing here,
+or hurts by fragmenting the context that made an abstract matchable.</p>
+<h2 id="4b-the-sweep-and-the-prediction-confirmed">4b, The sweep, and the prediction confirmed</h2>
+<div class="codehilite"><pre><span></span><code>strategy                 chunks   nDCG@10   vs whole     R@10      MRR
+whole                      5183    0.7588              0.8802   0.7246
+recursive 200/40           8091    0.7488    -0.0100   0.8592   0.7204
+fixed 200/40               8188    0.7477    -0.0111   0.8642   0.7152
+fixed 100/20              15209    0.7464    -0.0123   0.8598   0.7163
+sentence 200/1             8205    0.7462    -0.0126   0.8569   0.7168
+sentence 100/1            17643    0.7401    -0.0187   0.8509   0.7104
+recursive 100/20          14679    0.7384    -0.0204   0.8526   0.7081
+</code></pre></div>
+
+<p><strong>Six configurations, six losses.</strong></p>
+<p><strong>1. The strategy barely matters; the decision to chunk does.</strong> At size 200 the
+three strategies span 0.0026 nDCG. The penalty for chunking at all is 0.011, more than four times the spread between strategies. People spend enormous energy
+choosing fixed vs sentence vs recursive. Here that choice was worth a fifth as
+much as the choice not to chunk.</p>
+<p><strong>2. Smaller chunks are strictly worse.</strong> Every split discards surrounding
+context, and a SciFact claim is matched by the abstract as a whole: methods,
+results and conclusion together.</p>
+<p><strong>3. You pay for the privilege.</strong> <code>sentence 100/1</code> triples the index (17,643 vs
+5,183 chunks) and costs 0.019 nDCG. More storage, more embedding time, more
+query work, worse results.</p>
+<h2 id="the-pooling-problem-chunking-creates">The pooling problem chunking creates</h2>
+<p>The moment you chunk, your index returns <strong>chunks</strong> while your relevance
+judgements score <strong>documents</strong>. Something must pool one into the other, and that
+choice changes your score. See <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/rag/retrieve.py"><code>../../rag/retrieve.py</code></a>.</p>
+<ul>
+<li><code>max</code>, a doc scores as its best chunk. The right default.</li>
+<li><code>sum</code>, systematically favours long documents; they have more chunks and more
+  chances to accumulate score.</li>
+<li><code>mean</code>, dilutes one perfect passage with the rest of the document.</li>
+</ul>
+<p><strong>Overfetch trap:</strong> to rank k documents you must fetch more than k chunks,
+because several top chunks routinely come from the same document. Fetch exactly
+k and you silently return fewer than k docs, capping recall@k.</p>
+<h2 id="when-chunking-is-actually-worth-it">When chunking is actually worth it</h2>
+<p>Chunking is not a technique you apply, it is a <strong>response to a diagnosed
+problem</strong>. The diagnostic is cheap: measure your document length distribution
+against your encoder's window, and ask whether your documents mix unrelated
+topics. If both answers are no, chunking is pure cost.</p>
+<p>Where it genuinely pays: legal contracts, technical manuals, long reports,
+transcripts, long, multi-topic, answer-in-one-section documents. SciFact
+abstracts are the opposite of all three.</p>
+<p><strong>The habit:</strong> run the cheap diagnostic that predicts the result before running
+the expensive experiment. 4a took seconds and told us what 17 minutes of
+embedding would confirm.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-05/" data-reveal><div><strong>Level 5, Keyword search (BM25)</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

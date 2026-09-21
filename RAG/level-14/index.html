@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GraphRAG | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 14 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-14/">
+  <meta property="og:title" content="GraphRAG | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 14 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-14/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 14</p>
+      <h1>GraphRAG</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li class="is-here"><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Pro</strong> · prerequisite: Stage 13 · status: code written, not yet run</p>
+<p>Genuinely different from everything else in this repo.</p>
+<p>Vector retrieval answers <strong>local</strong> questions: <em>"what does document X say about
+Y?"</em> It finds the passage best matching the query. It structurally cannot answer
+<strong>global</strong> questions:</p>
+<blockquote>
+<p>"What are the main themes in this corpus?"
+"Which topics does this collection cover most?"</p>
+</blockquote>
+<p>No single passage contains that answer, so no top-k over passages can retrieve
+it. The answer is a property of the <em>collection</em>, not of any member of it.</p>
+<h2 id="pipeline">Pipeline</h2>
+<ol>
+<li><strong>Extract</strong>, LLM pulls (entity, relation, entity) triples per document</li>
+<li><strong>Build</strong>, entities become nodes, relations edges. Entities appearing across
+   many documents become hubs, encoding cross-document structure a flat chunk
+   list throws away</li>
+<li><strong>Cluster</strong>, detect communities of densely connected entities. Topics get
+   <em>discovered</em>, not declared</li>
+<li><strong>Summarise</strong>, LLM writes a summary per community. <strong>These</strong> are what get
+   retrieved for global questions</li>
+<li><strong>Query</strong>, local: match entities, walk the neighbourhood. Global: retrieve
+   community summaries</li>
+</ol>
+<p>Community detection here is <strong>label propagation</strong>, implemented directly (~20
+lines): every node starts in its own community, then repeatedly adopts whichever
+community is most common among its neighbours. Microsoft's GraphRAG uses Leiden,
+which is better but needs a dependency and obscures the idea.</p>
+<h2 id="cost">Cost</h2>
+<p>At least one LLM call per document for extraction, plus one per community for
+summarisation. <strong>The most expensive system here.</strong> Runs on a corpus subset, and
+the README says so rather than implying a full-corpus run.</p>
+<h2 id="honest-expectation">Honest expectation</h2>
+<p>SciFact's eval is claim→abstract, a purely local task with document-level
+qrels. <strong>GraphRAG's strength does not show up in nDCG@10 at all.</strong> The
+demonstration is the graph statistics and the community summaries, not a
+retrieval score, which is itself worth knowing: some techniques are not
+comparable on your benchmark, and pretending otherwise produces meaningless
+numbers.</p>
+<p>Code: <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/rag/graph.py"><code>../../rag/graph.py</code></a></p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-15/" data-reveal><div><strong>Level 15, Production scale</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

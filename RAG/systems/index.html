@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The RAG Taxonomy | Sandeep Vijayarao</title>
+  <meta name="description" content="Taxonomy of RAG systems, organised by the problem each solves.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/systems/">
+  <meta property="og:title" content="The RAG Taxonomy | Sandeep Vijayarao">
+  <meta property="og:description" content="Taxonomy of RAG systems, organised by the problem each solves.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/systems/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / The RAG Taxonomy</p>
+      <h1>The RAG Taxonomy</h1>
+    </header>
+
+    <div class="container rag-shell">
+      <nav class="rag-levelnav" aria-label="Contents"><p>On this page</p><div class="toc">
+<ul>
+<li><a href="#the-rag-taxonomy">The RAG Taxonomy</a><ul>
+<li><a href="#layer-0-baselines">Layer 0, Baselines</a></li>
+<li><a href="#layer-1-retrieval-quality-single-shot">Layer 1, Retrieval quality, single shot</a></li>
+<li><a href="#layer-2-indexing-and-representation">Layer 2, Indexing and representation</a></li>
+<li><a href="#layer-3-query-understanding">Layer 3, Query understanding</a></li>
+<li><a href="#layer-4-control-flow">Layer 4, Control flow</a></li>
+<li><a href="#layer-5-knowledge-structure">Layer 5, Knowledge structure</a></li>
+<li><a href="#layer-6-production-orthogonal-to-all-of-the-above">Layer 6, Production, orthogonal to all of the above</a></li>
+<li><a href="#ordering-of-impact-in-practice">Ordering of impact, in practice</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+      <article class="case-body rag-prose">
+
+<p>Every system below exists because a simpler one failed in a specific way.
+Organised by <em>what problem it solves</em>, not by how fashionable it is.</p>
+<p>The failure mode column is the useful one. Reach for a system when you have
+measured its failure mode, not because it appeared in a blog post.</p>
+<hr />
+<h2 id="layer-0-baselines">Layer 0, Baselines</h2>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>What it does</th>
+<th>When it is the right answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No-RAG (long context)</strong></td>
+<td>Stuff the entire corpus into the prompt</td>
+<td>Corpus fits in context and cost is acceptable. Always measure this first: it is often better than bad RAG and it bounds what retrieval can buy you</td>
+</tr>
+<tr>
+<td><strong>Naive RAG</strong></td>
+<td>Embed chunks, cosine top-k, stuff, generate</td>
+<td>Small, clean, single-topic corpus. The thing every tutorial builds</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Naive RAG fails when:</strong> queries use different vocabulary than documents, exact
+terms matter, documents are long or multi-topic, or the answer requires more
+than one document.</p>
+<hr />
+<h2 id="layer-1-retrieval-quality-single-shot">Layer 1, Retrieval quality, single shot</h2>
+<p>The query is taken at face value; only the matching improves.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Mechanism</th>
+<th>Fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sparse / BM25</strong></td>
+<td>Term frequency + inverse document frequency, no neural net</td>
+<td>Exact terms, IDs, error codes, rare proper nouns. Dense embeddings are systematically bad at these</td>
+</tr>
+<tr>
+<td><strong>Hybrid</strong></td>
+<td>Run dense and sparse, fuse the rankings (RRF or weighted)</td>
+<td>The union of both failure modes. Usually the single largest quality jump in real systems</td>
+</tr>
+<tr>
+<td><strong>Reranking (two-stage)</strong></td>
+<td>Cheap retriever gets top-50, a cross-encoder rescores them</td>
+<td>Ranking, not recall. A cross-encoder sees query and document <em>together</em> so it can judge relevance a bi-encoder cannot</td>
+</tr>
+<tr>
+<td><strong>Late interaction (ColBERT)</strong></td>
+<td>One vector per token, score by MaxSim over token pairs</td>
+<td>Precision without a rerank pass, at large index cost</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key distinction, and the one people get wrong:</strong> recall problems and ranking
+problems need different fixes. If the right doc is in your top-50 but not your
+top-3, a reranker helps and a better embedding model mostly does not.</p>
+<hr />
+<h2 id="layer-2-indexing-and-representation">Layer 2, Indexing and representation</h2>
+<p>Change <em>what you store</em>, not how you search it.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Mechanism</th>
+<th>Fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chunking strategies</strong></td>
+<td>Fixed / sentence / recursive / structural, with overlap</td>
+<td>Documents longer than the encoder window, or mixing topics</td>
+</tr>
+<tr>
+<td><strong>Small-to-big</strong></td>
+<td>Retrieve small precise units, return their larger parent for generation</td>
+<td>The precision/context tradeoff. Small chunks match better, large chunks answer better. You stop having to choose</td>
+</tr>
+<tr>
+<td><strong>Contextual retrieval</strong></td>
+<td>Prepend an LLM-written summary of the document to each chunk before embedding</td>
+<td>Chunks that are meaningless out of context ("This rose 3%" - what did?)</td>
+</tr>
+<tr>
+<td><strong>RAPTOR</strong></td>
+<td>Recursively cluster and summarise into a tree; retrieve at any level</td>
+<td>Questions needing whole-document or cross-document synthesis, not one passage</td>
+</tr>
+<tr>
+<td><strong>Metadata filtering</strong></td>
+<td>Structured predicates alongside the vector search</td>
+<td>Tenancy, recency, permissions, "only 2024 docs". Cheap and enormously useful</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="layer-3-query-understanding">Layer 3, Query understanding</h2>
+<p>The documents are fine. The query is the problem.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Mechanism</th>
+<th>Fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Query rewriting</strong></td>
+<td>LLM rewrites the raw query into a retrieval-friendly one</td>
+<td>Conversational, vague, or misspelled input</td>
+</tr>
+<tr>
+<td><strong>Multi-query</strong></td>
+<td>Generate N paraphrases, retrieve for each, fuse</td>
+<td>Vocabulary mismatch, by brute force. Directly attacks the leakage gap measured in Stage 1</td>
+</tr>
+<tr>
+<td><strong>HyDE</strong></td>
+<td>LLM writes a <em>hypothetical answer</em>, embed that instead of the query</td>
+<td>The asymmetry between short queries and long passages. You search answer-space with an answer</td>
+</tr>
+<tr>
+<td><strong>Step-back</strong></td>
+<td>Ask a more general question first, retrieve for both</td>
+<td>Narrow questions whose context lives in broader documents</td>
+</tr>
+<tr>
+<td><strong>Decomposition</strong></td>
+<td>Split a compound question into sub-questions</td>
+<td>"Compare X and Y" - one retrieval cannot serve both halves</td>
+</tr>
+<tr>
+<td><strong>Routing</strong></td>
+<td>Classify the query, send it to the right index or tool</td>
+<td>Mixed corpora, or when retrieval should not fire at all</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="layer-4-control-flow">Layer 4, Control flow</h2>
+<p>The model decides what to do, instead of a fixed pipeline.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Mechanism</th>
+<th>Fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Self-RAG</strong></td>
+<td>Model decides <em>whether</em> to retrieve, then critiques its own output</td>
+<td>Retrieval firing on questions that do not need it, and unsupported claims</td>
+</tr>
+<tr>
+<td><strong>CRAG (corrective)</strong></td>
+<td>Grade retrieved docs; if weak, re-retrieve or fall back</td>
+<td>Silent failure. Naive RAG answers confidently from irrelevant context</td>
+</tr>
+<tr>
+<td><strong>Agentic / multi-hop</strong></td>
+<td>Loop: retrieve, reason, retrieve again, until satisfied</td>
+<td>Questions whose answer requires chaining facts across documents</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The shared idea:</strong> a fixed <code>retrieve -&gt; stuff -&gt; generate</code> pipeline cannot
+recover from a bad retrieval. These add a feedback edge.</p>
+<hr />
+<h2 id="layer-5-knowledge-structure">Layer 5, Knowledge structure</h2>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Mechanism</th>
+<th>Fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GraphRAG</strong></td>
+<td>Extract entities and relations, build a graph, summarise communities</td>
+<td>Global questions ("what are the themes?") that no single passage answers</td>
+</tr>
+<tr>
+<td><strong>Conversational / memory RAG</strong></td>
+<td>Retrieve over dialogue history plus the corpus</td>
+<td>Follow-ups, pronouns, context carried across turns</td>
+</tr>
+<tr>
+<td><strong>Multi-modal RAG</strong></td>
+<td>Embed images, tables, audio into the same or linked space</td>
+<td>Corpora where the answer is in a figure or a table</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="layer-6-production-orthogonal-to-all-of-the-above">Layer 6, Production, orthogonal to all of the above</h2>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ANN indexing</strong></td>
+<td>HNSW / IVF-PQ. You trade exact recall for latency, and must measure what you lost</td>
+</tr>
+<tr>
+<td><strong>Quantization</strong></td>
+<td>int8 / binary / Matryoshka. 4-32x memory reduction for a measurable recall cost</td>
+</tr>
+<tr>
+<td><strong>Incremental ingestion</strong></td>
+<td>Corpora change. Index build, freshness lag, deletes, reindex cost</td>
+</tr>
+<tr>
+<td><strong>Caching</strong></td>
+<td>Query cache, embedding cache, generation cache</td>
+</tr>
+<tr>
+<td><strong>Guardrails</strong></td>
+<td>Citation, abstention, faithfulness scoring, hallucination detection</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>Per-query retrieval traces. Without them production failures are unfixable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ordering-of-impact-in-practice">Ordering of impact, in practice</h2>
+<p>Roughly, for a system that is already working but not good enough:</p>
+<ol>
+<li><strong>Hybrid retrieval</strong> - largest single jump, low complexity</li>
+<li><strong>Reranking</strong> - second largest, moderate cost per query</li>
+<li><strong>Better chunking / small-to-big</strong> - large if your documents are long</li>
+<li><strong>Query transformation</strong> - large when query and document vocabulary diverge</li>
+<li><strong>Contextual retrieval</strong> - large on fragmented corpora, expensive to index</li>
+<li><strong>Agentic / graph</strong> - only for genuinely multi-hop or global questions</li>
+</ol>
+<p>The first three are almost always worth doing. The last two are frequently
+adopted before the first three have been measured, which is how teams end up
+with an agentic pipeline that underperforms BM25.</p>
+      </article>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

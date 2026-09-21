@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keyword search (BM25) | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 5 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-05/">
+  <meta property="og:title" content="Keyword search (BM25) | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 5 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-05/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 5</p>
+      <h1>Keyword search (BM25)</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li class="is-here"><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Core retrieval</strong> · prerequisite: Stage 4</p>
+<p>No neural network, no GPU, no learned parameters. A 1994 algorithm in ~60 lines
+of Python.</p>
+<div class="codehilite"><pre><span></span><code>BM25 index: 5183 docs, 35,704 unique terms, 0.21s
+BM25        n=300  r@1=0.528  r@5=0.724  r@10=0.783  MRR@10=0.635  nDCG@10=0.665
+            0.7 ms/query
+</code></pre></div>
+
+<p>Published BM25 on SciFact lands right around 0.665 as well, so the
+implementation checks out.</p>
+<h2 id="the-comparison-that-matters">The comparison that matters</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>index</th>
+<th>per query</th>
+<th>nDCG@10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BM25</td>
+<td>0.21s</td>
+<td>0.7ms</td>
+<td>0.665</td>
+</tr>
+<tr>
+<td>bge-base dense</td>
+<td>83s</td>
+<td>~85ms</td>
+<td>0.759</td>
+</tr>
+</tbody>
+</table>
+<p>Dense wins by 0.094 nDCG. It also costs ~400x more to index and ~120x more per
+query. On a corpus where BM25 got you to 0.665 for free, that is the real
+tradeoff, and it is worth knowing before you provision a GPU.</p>
+<h2 id="the-three-ideas-inside-bm25">The three ideas inside BM25</h2>
+<div class="codehilite"><pre><span></span><code>                                tf(t,d) * (k1 + 1)
+    idf(t) * ------------------------------------------------
+             tf(t,d) + k1 * (1 - b + b * len(d) / avg_doc_len)
+</code></pre></div>
+
+<ul>
+<li><strong>idf</strong>, a term in 5 of 5,000 documents is far more informative than one in
+  4,000. This is precisely what dense embeddings are worst at. A rare gene name,
+  error code, or identifier carries enormous signal, and a 768-dim vector
+  trained on general text has no particular reason to preserve it.</li>
+<li><strong>k1 = 1.2</strong>, saturation. <code>tf/(tf + k1)</code> is concave, so the 10th occurrence
+  of a term adds much less than the 2nd. Without it, keyword spam wins.</li>
+<li><strong>b = 0.75</strong>, partial length normalisation. Long documents contain more of
+  everything. <code>b=1</code> normalises fully, <code>b=0</code> not at all.</li>
+</ul>
+<h2 id="why-an-inverted-index">Why an inverted index</h2>
+<p>A dense 5,183 x 35,704 term-document matrix would be 622MB of mostly zeros. The
+postings list (<code>term -&gt; [(doc, tf)]</code>) touches only documents that actually
+contain a query term, which is a handful. This is why lexical search scaled to
+the web decades before anyone had a GPU.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-06/" data-reveal><div><strong>Level 6, Hybrid retrieval</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

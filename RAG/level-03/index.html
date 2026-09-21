@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Move to a real benchmark | Sandeep Vijayarao</title>
+  <meta name="description" content="Level 3 of a measured guide to building RAG systems from scratch.">
+  <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/level-03/">
+  <meta property="og:title" content="Move to a real benchmark | Sandeep Vijayarao">
+  <meta property="og:description" content="Level 3 of a measured guide to building RAG systems from scratch.">
+  <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/level-03/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/RAG/rag.css">
+</head>
+<body data-hue="llm">
+  <a class="skip" href="#main">Skip to content</a>
+  <div id="top-sentinel" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="nav-name" href="/">Sandeep Vijayarao</a>
+      <nav aria-label="Primary">
+        <a href="/work/">Work</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-header container">
+      <p class="rag-crumb"><a href="/RAG/">RAG guide</a> / Level 3</p>
+      <h1>Move to a real benchmark</h1>
+    </header>
+
+    <div class="container rag-shell">
+<nav class="rag-levelnav" aria-label="Levels"><p>Levels</p><ul><li><a href="/RAG/level-01/"><span>1</span>Naive RAG</a></li><li><a href="/RAG/level-02/"><span>2</span>Measure first</a></li><li class="is-here"><a href="/RAG/level-03/"><span>3</span>Move to a real benchmark</a></li><li><a href="/RAG/level-04/"><span>4</span>Chunking</a></li><li><a href="/RAG/level-05/"><span>5</span>Keyword search (BM25)</a></li><li><a href="/RAG/level-06/"><span>6</span>Hybrid retrieval</a></li><li><a href="/RAG/level-07/"><span>7</span>Cross-encoder reranking</a></li><li><a href="/RAG/level-08/"><span>8</span>Query rewriting</a></li><li><a href="/RAG/level-09/"><span>9</span>Context enrichment</a></li><li><a href="/RAG/level-10/"><span>10</span>Multi-vector / late interaction</a></li><li><a href="/RAG/level-11/"><span>11</span>Grounded generation</a></li><li><a href="/RAG/level-12/"><span>12</span>Self-correction (CRAG, Self-RAG)</a></li><li><a href="/RAG/level-13/"><span>13</span>Agentic / multi-hop retrieval</a></li><li><a href="/RAG/level-14/"><span>14</span>GraphRAG</a></li><li><a href="/RAG/level-15/"><span>15</span>Production scale</a></li></ul></nav>
+      <article class="case-body rag-prose">
+
+<p><strong>Tier: Beginner</strong> · prerequisite: Stage 2</p>
+<p>Cat facts got you a working loop. It cannot tell you whether your loop is
+<em>correct</em>, because you invented the labels yourself.</p>
+<p>Corpus from here on: <strong>BEIR SciFact</strong>, 5,183 scientific abstracts, 300 test
+queries, 339 relevance judgements (1.13 relevant docs per query, up to 5).</p>
+<p>Chosen for one reason: <code>bge-base-en-v1.5</code> has <strong>published</strong> SciFact scores. That
+converts the eval from <em>"is this technique better?"</em> into <em>"is my pipeline even
+correct?"</em> Very few learning setups give you an external check on your own code.</p>
+<h2 id="result-the-pipeline-is-sound">Result: the pipeline is sound</h2>
+<div class="codehilite"><pre><span></span><code>config                              nDCG@10     R@10      MRR
+title, no prefix                     0.7588   0.8802   0.7246
+title + prefix  (BEIR convention)    0.7449   0.8709   0.7105   &lt;- published ~0.741
+no title, no prefix                  0.7416   0.8697   0.7042
+no title, prefix                     0.7346   0.8752   0.6961
+</code></pre></div>
+
+<p>The convention config scored <strong>0.745</strong> against a published <strong>~0.741</strong>. The
+embedding call, normalisation, top-k, and nDCG implementation all check out.
+Everything built on top inherits that confidence.</p>
+<h2 id="two-ablations-that-look-like-trivia-and-are-not">Two ablations that look like trivia and are not</h2>
+<p><strong>Titles help.</strong> +0.017 without the prefix, +0.010 with it. An abstract's title
+is a dense summary of it, and every published BEIR number indexes <code>"title. text"</code>,
+not text alone.</p>
+<p><strong>The query prefix hurt.</strong> −0.014 with title, −0.007 without. Consistent
+direction in both conditions.</p>
+<p>The BGE instruction prefix (<code>"Represent this sentence for searching relevant
+passages: "</code>) is treated as mandatory. On SciFact it costs points. Likely
+because SciFact queries are declarative <em>claims</em> ("0-dimensional biomaterials
+lack inductive properties"), not questions, while the prefix is tuned for
+question-shaped input.</p>
+<p><strong>Conventions are defaults, not laws. Ablate them.</strong></p>
+<h2 id="caveat-and-it-is-part-of-the-lesson">Caveat, and it is part of the lesson</h2>
+<p>With n=300, a 0.014 nDCG delta is small relative to sampling noise. Consistent
+direction across both title conditions is weak corroboration, not proof. The
+correct next move is a paired significance test over per-query scores, not a
+louder claim.</p>
+<p>Small eval sets produce noisy deltas, and a four-row table invites you to
+over-read the ordering.</p>
+<h2 id="also-worth-noticing">Also worth noticing</h2>
+<p>Queries are ~12 words; abstracts are ~250. That asymmetry is exactly the gap the
+query prefix was built to bridge, which is what made this ablation worth running
+and what Stage 8's HyDE will attack from the other side.</p>
+      </article>
+    </div>
+
+    <section class="next container"><a class="next-link" href="/RAG/level-04/" data-reveal><div><strong>Level 4, Chunking</strong><br><span>Next in the ladder</span></div><span class="ext" aria-hidden="true">&#8594;</span></a><a class="next-link" href="/RAG/" data-reveal style="--d:.07s"><div><strong>All levels</strong><br><span>The full ladder, fifteen levels from naive RAG to production scale</span></div><span class="ext" aria-hidden="true">&#8594;</span></a></section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span class="footer-links">
+        <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:sandeepvijayarao09@gmail.com">Email</a>
+      </span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

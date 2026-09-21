@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Building RAG from scratch | Sandeep Vijayarao</title>
-  <meta name="description" content="A measured, level by level guide to building RAG systems. Ten techniques tested on BEIR SciFact; eight made retrieval worse.">
+  <meta name="description" content="I built fifteen kinds of RAG system and measured each one. Eight of ten techniques made retrieval worse.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/">
   <meta property="og:title" content="Building RAG from scratch | Sandeep Vijayarao">
-  <meta property="og:description" content="A measured, level by level guide to building RAG systems. Ten techniques tested on BEIR SciFact; eight made retrieval worse.">
+  <meta property="og:description" content="I built fifteen kinds of RAG system and measured each one. Eight of ten techniques made retrieval worse.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,56 +36,40 @@
   <main id="main">
     <header class="page-header container">
       <h1>Building RAG from scratch</h1>
-      <p class="lede">I implemented ten recommended RAG techniques and measured each one
-      against the same benchmark. Eight made retrieval worse. This is the code, the numbers,
-      and the reasoning for why.</p>
+      <p class="lede">I built fifteen kinds of RAG system and measured each one on the same
+      benchmark. Eight of the ten techniques I tested made retrieval worse.</p>
+      <div class="case-actions">
+        <a class="btn btn-primary" href="/RAG/learn/">Read the guide</a>
+        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/rag-from-scratch" target="_blank" rel="noopener">Code</a>
+      </div>
     </header>
 
-    <section class="case-strip">
-      <div class="container case-strip-grid">
-        <div class="stat"><span class="stat-num">5,183</span><span class="stat-label">abstracts, BEIR SciFact</span></div>
-        <div class="stat"><span class="stat-num">300</span><span class="stat-label">labelled queries</span></div>
-        <div class="stat"><span class="stat-num">15</span><span class="stat-label">levels, naive to production</span></div>
-      </div>
-    </section>
-
     <article class="case-body rag-prose container">
-      <div class="case-actions">
-        <a class="btn btn-primary" href="/RAG/learn/">Start the guide</a>
-        <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/rag-from-scratch" target="_blank" rel="noopener">View the code</a>
+      <div class="rag-split">
+        <div>
+          <h3 class="rag-h">Made it worse</h3>
+          <ul class="rag-scores rag-lost"><li><span>Chunking</span><em>-0.010 to -0.020</em></li><li><span>RRF fusion</span><em>-0.009 to -0.024</em></li><li><span>Reranking on dense</span><em>-0.033</em></li><li><span>HyDE</span><em>-0.048</em></li><li><span>Step-back prompting</span><em>-0.066</em></li><li><span>Query decomposition</span><em>-0.095</em></li><li><span>CRAG relevance grading</span><em>chance</em></li><li><span>Contextual retrieval</span><em>-0.006</em></li></ul>
+        </div>
+        <div>
+          <h3 class="rag-h">Helped</h3>
+          <ul class="rag-scores rag-won"><li><span>Weighted hybrid 0.7/0.3</span><em>+0.010</em></li><li><span>Late interaction</span><em>+0.011</em></li><li><span>Reranking on BM25</span><em>+0.041</em></li></ul>
+        </div>
       </div>
 
-      <h2>What I measured</h2>
-      <table class="rag-results"><tbody><tr class="rag-bad"><td>Chunking <em>6 configs, every one</em></td><td>-0.010 to -0.020</td></tr><tr class="rag-bad"><td>RRF fusion <em>4 variants, every one</em></td><td>-0.009 to -0.024</td></tr><tr class="rag-bad"><td>Reranking on dense</td><td>-0.033</td></tr><tr class="rag-bad"><td>HyDE</td><td>-0.048</td></tr><tr class="rag-bad"><td>Step-back prompting</td><td>-0.066</td></tr><tr class="rag-bad"><td>Query decomposition</td><td>-0.095</td></tr><tr class="rag-bad"><td>CRAG relevance grading <em>balanced accuracy 0.500</em></td><td>chance</td></tr><tr class="rag-bad"><td>Contextual retrieval <em>on self-contained chunks</em></td><td>-0.006</td></tr><tr class="rag-good"><td>Weighted hybrid 0.7/0.3</td><td>+0.010</td></tr><tr class="rag-good"><td>Late interaction <em>at 241x the index</em></td><td>+0.011</td></tr><tr class="rag-good"><td>Reranking on BM25</td><td>+0.041</td></tr></tbody></table>
-      <p>The two clear wins are the two where I measured the gap before applying the technique.
-      None of this means these techniques are bad. It means they are conditional, and the
-      condition is almost always whether your pipeline is already good at the thing the
-      technique fixes. Reranking flipped sign inside this repo: -0.033 on a strong first stage,
-      +0.041 on a weak one.</p>
-      <p class="case-note">Baseline validated against a published bge-base-en-v1.5 score of
-      roughly 0.741 before anything was built on top of it. At n=300, deltas under about 0.02
-      sit inside the noise floor, and the write-ups say so.</p>
+      <p>Change in nDCG@10 against a 0.759 baseline on BEIR SciFact, 5,183 abstracts and
+      300 labelled queries. The two that helped are the two where I measured the gap before
+      applying the technique. None of these are bad techniques. They are conditional, and
+      the condition is whether your pipeline is already good at the thing they fix.
+      Reranking flipped sign inside this repo: -0.033 on a strong first stage, +0.041 on a
+      weak one.</p>
 
-      <h2>The levels</h2>
-      <p>Each level is a distinct kind of RAG system, ordered so every level only needs what
-      came before it. Code and a written finding for each.</p>
-      <div class="rag-tier"><h3>Beginner<span>Make it work, then make it measurable</span></h3><div class="rag-tier-grid"><a class="rag-lv" href="/RAG/level-01/" data-reveal><span class="rag-lv-n">1</span><span class="rag-lv-t">Naive RAG</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-02/" data-reveal><span class="rag-lv-n">2</span><span class="rag-lv-t">Measure first</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-03/" data-reveal><span class="rag-lv-n">3</span><span class="rag-lv-t">Move to a real benchmark</span><span class="rag-lv-s">measured</span></a></div></div><div class="rag-tier"><h3>Core retrieval<span>The fundamentals</span></h3><div class="rag-tier-grid"><a class="rag-lv" href="/RAG/level-04/" data-reveal><span class="rag-lv-n">4</span><span class="rag-lv-t">Chunking</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-05/" data-reveal><span class="rag-lv-n">5</span><span class="rag-lv-t">Keyword search (BM25)</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-06/" data-reveal><span class="rag-lv-n">6</span><span class="rag-lv-t">Hybrid retrieval</span><span class="rag-lv-s">measured</span></a></div></div><div class="rag-tier"><h3>Intermediate<span>Two-stage and query side</span></h3><div class="rag-tier-grid"><a class="rag-lv" href="/RAG/level-07/" data-reveal><span class="rag-lv-n">7</span><span class="rag-lv-t">Cross-encoder reranking</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-08/" data-reveal><span class="rag-lv-n">8</span><span class="rag-lv-t">Query rewriting</span><span class="rag-lv-s">measured</span></a></div></div><div class="rag-tier"><h3>Advanced<span>Representation and grounding</span></h3><div class="rag-tier-grid"><a class="rag-lv" href="/RAG/level-09/" data-reveal><span class="rag-lv-n">9</span><span class="rag-lv-t">Context enrichment</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-10/" data-reveal><span class="rag-lv-n">10</span><span class="rag-lv-t">Multi-vector / late interaction</span><span class="rag-lv-s">measured</span></a><a class="rag-lv" href="/RAG/level-11/" data-reveal><span class="rag-lv-n">11</span><span class="rag-lv-t">Grounded generation</span><span class="rag-lv-s">measured</span></a></div></div><div class="rag-tier"><h3>Pro<span>Control flow and knowledge structure</span></h3><div class="rag-tier-grid"><a class="rag-lv" href="/RAG/level-12/" data-reveal><span class="rag-lv-n">12</span><span class="rag-lv-t">Self-correction (CRAG, Self-RAG)</span><span class="rag-lv-s">measured</span></a><a class="rag-lv is-wip" href="/RAG/level-13/" data-reveal><span class="rag-lv-n">13</span><span class="rag-lv-t">Agentic / multi-hop retrieval</span><span class="rag-lv-s">in progress</span></a><a class="rag-lv is-wip" href="/RAG/level-14/" data-reveal><span class="rag-lv-n">14</span><span class="rag-lv-t">GraphRAG</span><span class="rag-lv-s">in progress</span></a><a class="rag-lv is-wip" href="/RAG/level-15/" data-reveal><span class="rag-lv-n">15</span><span class="rag-lv-t">Production scale</span><span class="rag-lv-s">in progress</span></a></div></div>
+      <h2>The fifteen levels</h2>
+      <div class="rag-rows"><a class="rag-row" href="/RAG/level-01/"><span class="rag-row-n">1</span><span class="rag-row-t">Naive RAG</span></a><a class="rag-row" href="/RAG/level-02/"><span class="rag-row-n">2</span><span class="rag-row-t">Measure first</span></a><a class="rag-row" href="/RAG/level-03/"><span class="rag-row-n">3</span><span class="rag-row-t">Move to a real benchmark</span></a><a class="rag-row" href="/RAG/level-04/"><span class="rag-row-n">4</span><span class="rag-row-t">Chunking</span></a><a class="rag-row" href="/RAG/level-05/"><span class="rag-row-n">5</span><span class="rag-row-t">Keyword search (BM25)</span></a><a class="rag-row" href="/RAG/level-06/"><span class="rag-row-n">6</span><span class="rag-row-t">Hybrid retrieval</span></a><a class="rag-row" href="/RAG/level-07/"><span class="rag-row-n">7</span><span class="rag-row-t">Cross-encoder reranking</span></a><a class="rag-row" href="/RAG/level-08/"><span class="rag-row-n">8</span><span class="rag-row-t">Query rewriting</span></a><a class="rag-row" href="/RAG/level-09/"><span class="rag-row-n">9</span><span class="rag-row-t">Context enrichment</span></a><a class="rag-row" href="/RAG/level-10/"><span class="rag-row-n">10</span><span class="rag-row-t">Multi-vector / late interaction</span></a><a class="rag-row" href="/RAG/level-11/"><span class="rag-row-n">11</span><span class="rag-row-t">Grounded generation</span></a><a class="rag-row" href="/RAG/level-12/"><span class="rag-row-n">12</span><span class="rag-row-t">Self-correction (CRAG, Self-RAG)</span></a><a class="rag-row is-wip" href="/RAG/level-13/"><span class="rag-row-n">13</span><span class="rag-row-t">Agentic / multi-hop retrieval</span></a><a class="rag-row is-wip" href="/RAG/level-14/"><span class="rag-row-n">14</span><span class="rag-row-t">GraphRAG</span></a><a class="rag-row is-wip" href="/RAG/level-15/"><span class="rag-row-n">15</span><span class="rag-row-t">Production scale</span></a></div>
 
-      <h2>Read it a different way</h2>
-      <div class="rag-cards">
-        <a class="rag-card" href="/RAG/learn/"><strong>Learner's guide</strong>
-          <span>Eight parts, basic to advanced. Explains each mechanism before showing the
-          result, with something to run at every step.</span></a>
-        <a class="rag-card" href="/RAG/flow/"><strong>Decision procedure</strong>
-          <span>The same material as a build order, with a diagnostic gate before each
-          technique. For when you already know the techniques.</span></a>
-        <a class="rag-card" href="/RAG/systems/"><strong>Taxonomy</strong>
-          <span>Every kind of RAG system, organised by the problem it solves rather than by
-          how fashionable it is.</span></a>
-        <a class="rag-card" href="/RAG/notes/"><strong>Lab notebook</strong>
-          <span>What broke, what I got wrong, and the open questions. Including two
-          hypotheses I falsified before landing the reranking rule.</span></a>
-      </div>
+      <h2>More</h2>
+      <p><a href="/RAG/flow/">Decision procedure</a>, a build order with a diagnostic before
+      each technique. <a href="/RAG/systems/">Taxonomy</a> of every RAG system by the problem
+      it solves. <a href="/RAG/notes/">Lab notebook</a>, what broke and what I got wrong.</p>
     </article>
 
   </main>

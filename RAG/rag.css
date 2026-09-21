@@ -83,6 +83,7 @@
 .rag-card span { color: var(--muted); font-size: .84rem; line-height: 1.55; }
 
 .codehilite .k, .codehilite .kn { color: #a78bfa; }
+.codehilite .nc, .codehilite .nn { color: var(--accent); }
 .codehilite .s, .codehilite .s1, .codehilite .s2 { color: var(--accent); }
 .codehilite .c, .codehilite .c1 { color: #5b6470; font-style: italic; }
 .codehilite .nf { color: #38bdf8; }

@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AIFORG | Sandeep Vijayarao</title>
-  <meta name="description" content="A modular orchestration framework that makes third-party tools first-class citizens for agents, in hours instead of weeks.">
+  <meta name="description" content="AI for Organization: one agent platform for every employee in a company, grounded in its own documents, gated by role, and built so raw PII never reaches a model.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/aiforg/">
   <meta property="og:title" content="AIFORG | Sandeep Vijayarao">
-  <meta property="og:description" content="A modular orchestration framework that makes third-party tools first-class citizens for agents, in hours instead of weeks.">
+  <meta property="og:description" content="AI for Organization: one agent platform for every employee in a company, grounded in its own documents, gated by role, and built so raw PII never reaches a model.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/aiforg/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,8 +36,8 @@
 
     <header class="page-header container">
       <h1>AIFORG</h1>
-      <p class="case-context">Built independently before Google I/O 2026, structurally similar to Google Spark</p>
-      <p class="lede">A modular orchestration framework that makes third-party tools first-class citizens for agents, in hours instead of weeks.</p>
+      <p class="case-context">A Palantir-style operating layer for AI agents inside a business</p>
+      <p class="lede">AI for Organization: one agent platform for every employee in a company, grounded in its own documents, gated by role, and built so raw PII never reaches a model.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -47,18 +47,26 @@
           <span class="stat-label">to integrate a new third-party tool</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">Apr 2026</span>
-          <span class="stat-label">built, ahead of Google Spark at I/O</span>
+          <span class="stat-num">14</span>
+          <span class="stat-label">PII categories tokenized before any model call</span>
+        </div>
+        <div class="stat" data-reveal style="--d:.14s">
+          <span class="stat-num">5</span>
+          <span class="stat-label">role levels enforced on every retrieval</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Every agent framework eventually hits the same wall: wiring in new tools is slow, bespoke work. AIFORG standardizes that seam. Agents declare what they need, tools register what they offer, and the framework handles the handshake.</p>
-      <p data-reveal>I built it in April 2026, before Google I/O; the framework architecture Google later announced as Spark is structurally similar.</p>
+      <p data-reveal>Companies want every employee using AI, and cannot let company data leak into external models to get there. AIFORG is the platform in between: deployed once by the company, used daily by everyone from an intern to the CEO. It knows the organization's documents, knows each person's role, and decides what every agent is allowed to see.</p>
+      <p data-reveal>Underneath is a modular orchestration framework. Agents declare what they need, tools register what they offer, and the framework handles the handshake, so a new third-party tool joins in hours rather than weeks.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
+        <li>FastAPI REST layer with JWT auth and RBAC/ABAC across five role levels, from basic user to executive.</li>
+        <li>Access-filtered RAG over company documents in ChromaDB: retrieval only returns chunks the requesting role may see.</li>
+        <li>14-category PII tokenization before anything reaches the LLM gateway (Claude), enforced by architecture rather than policy.</li>
+        <li>Role-specific agents for analysis, audit, email, and meeting notes, over a complete audit log of every query and document touched.</li>
         <li>Standardized agent interfaces define a common contract for any agent joining the system.</li>
         <li>Dynamic tool registration lets new capabilities attach at runtime, without framework changes.</li>
         <li>Plan, Reason, Act execution loops coordinate agents and tools through each task.</li>
@@ -67,14 +75,17 @@
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
         <li>Cut third-party agentic tool integration time to under 2 hours.</li>
-        <li>Architecture built independently before I/O 2026 and structurally similar to Google Spark.</li>
+        <li>Zero raw PII reaches any model; every interaction is auditable and exportable for compliance.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
         <li>google adk</li>
         <li>langchain</li>
-        <li>tool-use agents</li>
+        <li>fastapi</li>
+        <li>chromadb</li>
+        <li>rbac/abac</li>
+        <li>claude</li>
       </ul>
       <div class="case-actions" data-reveal>
         <p class="case-note">This project is not open source.</p>

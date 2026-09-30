@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="13%" r="72%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0b0c0f"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="40" y="40" width="1120" height="550" rx="28" fill="none" stroke="#232830" stroke-width="2"/>
+
+  <rect x="80" y="76" width="84" height="84" rx="20" fill="#101218" stroke="#2a313b" stroke-width="2"/>
+  <text x="122" y="133" text-anchor="middle" font-family="-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="40" font-weight="700" fill="#34d399">SV</text>
+
+  <text x="80" y="334" font-family="-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="84" font-weight="700" fill="#e9ecf1">Sandeep Vijayarao</text>
+  <rect x="82" y="362" width="72" height="6" rx="3" fill="#34d399"/>
+
+  <text x="80" y="436" font-family="-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="40" font-weight="600"><tspan fill="#34d399">AI Engineer</tspan><tspan fill="#c7ccd4">&#160;&#160;&#183;&#160;&#160;MS CS at Northeastern</tspan></text>
+
+  <text x="80" y="490" font-family="-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="28" font-weight="400" fill="#98a2ad">Swift Student Challenge 2026 &#183; IEEE published &#183; Google I/O 2026</text>
+
+  <circle cx="92" cy="558" r="6" fill="#34d399"/>
+  <text x="112" y="567" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="26" font-weight="600" fill="#98a2ad">sandeepvijayarao09.github.io</text>
+</svg>

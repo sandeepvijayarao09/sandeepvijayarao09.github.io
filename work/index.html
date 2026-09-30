@@ -45,20 +45,20 @@
         <div class="card-featured-copy">
           <h3>ANU</h3>
           <p class="card-context">Apple Swift Student Challenge 2026 winner</p>
-          <p>A Swift-native iOS app with a 10-agent orchestration system on Apple Intelligence APIs. On-device CoreML routing resolves most intents before touching cloud models.</p>
+          <p>A voice-first iOS assistant whose brain runs on the phone: Gemma 4 E4B through LiteRT, on-device classifiers routing every message, and the cloud only as a sanitized, optional fallback.</p>
           <ul class="tags" aria-label="Built with">
-            <li>swift</li><li>coreml</li><li>apple intelligence</li><li>swiftui</li>
+            <li>swift 6</li><li>litert</li><li>gemma 4 e4b</li><li>swiftui</li>
           </ul>
           <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
         </div>
         <div class="card-featured-stats">
           <div class="stat">
-            <span class="stat-num">10</span>
-            <span class="stat-label">coordinated on-device agents</span>
+            <span class="stat-num">86.7%</span>
+            <span class="stat-label">task classifier, 60-case eval</span>
           </div>
           <div class="stat">
-            <span class="stat-num">50%</span>
-            <span class="stat-label">fewer frontier API tokens</span>
+            <span class="stat-num">300+</span>
+            <span class="stat-label">unit and UI tests green in CI</span>
           </div>
         </div>
       </a>
@@ -88,7 +88,7 @@
       <div class="work-grid">
         <a class="card" data-hue="product" href="/work/notova/" data-reveal>
           <h3>Notova</h3>
-          <p>Privacy-first voice notes across iOS, Android and macOS from one shared Swift core, with a backend architected so it can never receive audio.</p>
+          <p>Privacy-first voice notes on iOS and macOS from one shared Swift core, a parallel Kotlin app on Android, and a backend architected so it can never receive audio.</p>
           <p class="metric">3 platforms, 0 bytes of audio server-side</p>
           <ul class="tags" aria-label="Built with"><li>swift 6</li><li>kotlin</li><li>typescript</li><li>oauth2</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
@@ -148,7 +148,7 @@
         <a class="card span-2" data-hue="product" href="/work/autofill-pro/" data-reveal>
           <h3>AutoFill Pro</h3>
           <p>Shipped Chrome extension that fills job applications across 50+ application platforms from 44 locally stored profile fields, with an AI fallback for custom questions. Privacy-first: sensitive data never leaves the device.</p>
-          <p class="metric">30+ platforms, 424 test cases</p>
+          <p class="metric">50+ platforms, 424 test cases</p>
           <ul class="tags" aria-label="Built with"><li>javascript</li><li>chrome mv3</li><li>nvidia nim</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
@@ -167,26 +167,12 @@
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
       
-        <a class="card span-2" data-hue="product" href="https://github.com/sandeepvijayarao09/notova-ios" target="_blank" rel="noopener" data-reveal>
-          <h3>Notova</h3>
-          <p>On-device notes for iOS and Android from one record, transcribe, summarize pipeline. Transcription and summarization run on the phone; the TypeScript backend is an OAuth2 broker that holds no note content.</p>
-          <p class="metric">two native platforms, metadata-only sync</p>
-          <ul class="tags" aria-label="Built with"><li>swift</li><li>swiftui</li><li>kotlin</li><li>jetpack compose</li><li>typescript</li><li>whisper</li></ul>
-          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
-        </a>
-        <a class="card" data-hue="product" href="https://github.com/sandeepvijayarao09/meeting-bot" target="_blank" rel="noopener" data-reveal style="--d:.07s">
-          <h3>Meeting Bot</h3>
-          <p>Local-first macOS notetaker that captures system audio from any running app and transcribes it on device with Whisper, producing summary, decisions, and action items with speaker attribution.</p>
-          <p class="metric">three frontends, fully local</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>swift</li><li>swiftui</li><li>whisper</li></ul>
-          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
-        </a>
-        <a class="card" data-hue="tools" href="https://github.com/sandeepvijayarao09/Agent-Certifier" target="_blank" rel="noopener" data-reveal>
-          <h3>Agent-Certifier</h3>
-          <p>Reads agent codebases it did not author and runs a static-analysis suite across six safety and reliability categories, returning one weighted certification level.</p>
-          <p class="metric">60 tests across 6 categories</p>
-          <ul class="tags" aria-label="Built with"><li>python</li><li>fastapi</li><li>next.js</li></ul>
-          <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
+        <a class="card span-2" data-hue="llm" href="/RAG/" data-reveal>
+          <h3>RAG from Scratch</h3>
+          <p>Ten commonly recommended RAG techniques implemented and measured on BEIR SciFact against a bge-base dense baseline (nDCG@10 0.759). Eight of them made retrieval worse; the guide walks through each result and why.</p>
+          <p class="metric">10 techniques measured, 8 made it worse</p>
+          <ul class="tags" aria-label="Built with"><li>python</li><li>beir</li><li>bge</li><li>ndcg@10</li></ul>
+          <span class="ext card-arrow" aria-hidden="true">&#8594;</span>
         </a>
         <a class="card" data-hue="agent" href="https://github.com/sandeepvijayarao09/AI-Agentic-Mar28" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>Agentic Second Brain</h3>
@@ -230,7 +216,7 @@
           <ul class="tags" aria-label="Built with"><li>typescript</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="card span-2" data-hue="product" href="https://github.com/sandeepvijayarao09/avigis-biopharma" target="_blank" rel="noopener" data-reveal style="--d:.07s">
+        <a class="card" data-hue="product" href="https://github.com/sandeepvijayarao09/avigis-biopharma" target="_blank" rel="noopener" data-reveal style="--d:.07s">
           <h3>Avigis Biopharma</h3>
           <p>The official website for Avigis Biopharma Private Limited, built and deployed end to end for an external client.</p>
           <p class="metric">shipped for a client</p>

@@ -36,7 +36,7 @@
 
     <header class="page-header container">
       <h1>Dual-LLM Personalization System</h1>
-      <p class="case-context">Called parallel to Google Omni by DeepMind researchers at Google I/O 2026</p>
+      <p class="case-context">Built in March 2026, independently, closely matching Google Omni as announced at I/O 2026</p>
       <p class="lede">Most queries sent to a frontier model do not need one. This routes each query to the model it actually deserves, at zero added latency, and personalizes both paths.</p>
     </header>
 
@@ -60,7 +60,7 @@
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
       <p data-reveal>Most LLM applications send every query to the most expensive model available, including &ldquo;hi&rdquo; and &ldquo;what is 2+2&rdquo;. The cost of that is obvious; the latency cost is the one people miss.</p>
-      <p data-reveal>This system decides per query, through a three-layer cascade, and was evaluated on 1,500 labeled cases across two eval sets. At Google I/O 2026, DeepMind product and AI researchers independently recognized the routing architecture as parallel to Google Omni.</p>
+      <p data-reveal>This system decides per query, through a three-layer cascade, and was evaluated on 1,500 labeled cases across two eval sets. I built it in March 2026, before Google I/O; the routing architecture Google later announced as Omni follows a closely similar shape.</p>
       <h2 data-reveal>The three layers</h2>
       <ul class="case-list" data-reveal>
         <li><strong>Layer 1: local ML router.</strong> TF-IDF over a tag-augmented encoding of the query, classified by logistic regression. No network call, no added latency, and it resolves 85.3% of traffic by itself.</li>

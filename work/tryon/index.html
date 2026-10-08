@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TryOn | Sandeep Vijayarao</title>
-  <meta name="description" content="A NeRF plus 3D Gaussian Splatting pipeline that turns a single 360 degree video into a textured human mesh, no studio rig required.">
+  <meta name="description" content="Embeddable virtual try-on: a 360 degree phone video becomes a 3D body mesh, a brand size chart drives the fit, and a 2D photo mode warps garments onto the shopper's own photo.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/work/tryon/">
   <meta property="og:title" content="TryOn | Sandeep Vijayarao">
-  <meta property="og:description" content="A NeRF plus 3D Gaussian Splatting pipeline that turns a single 360 degree video into a textured human mesh, no studio rig required.">
+  <meta property="og:description" content="Embeddable virtual try-on: a 360 degree phone video becomes a 3D body mesh, a brand size chart drives the fit, and a 2D photo mode warps garments onto the shopper's own photo.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/work/tryon/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary_large_image">
@@ -45,51 +45,56 @@
 
     <header class="page-header container">
       <h1>TryOn</h1>
-      <p class="case-context">360 degree video to textured 3D human reconstruction</p>
-      <p class="lede">A NeRF plus 3D Gaussian Splatting pipeline that turns a single 360 degree video into a textured human mesh, no studio rig required.</p>
+      <p class="case-context">Virtual try-on as an engine brands embed in their own apps</p>
+      <p class="lede">The shopper records a 360 degree video on their phone. TryOn reconstructs their body as a 3D mesh, reads the brand&rsquo;s size chart to work out how each size actually fits, and renders the garment on them. A 2D mode does the same from a single photo.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
       <div class="container case-strip-grid">
         <div class="stat" data-reveal>
-          <span class="stat-num">85%</span>
-          <span class="stat-label">accuracy vs professional 3D cameras</span>
+          <span class="stat-num">3</span>
+          <span class="stat-label">client SDKs: web, Android, iOS</span>
         </div>
         <div class="stat" data-reveal style="--d:.07s">
-          <span class="stat-num">12 min</span>
-          <span class="stat-label">end-to-end processing</span>
+          <span class="stat-num">128&sup3;</span>
+          <span class="stat-label">voxel visual hull per capture</span>
         </div>
         <div class="stat" data-reveal style="--d:.014s">
-          <span class="stat-num">18%</span>
-          <span class="stat-label">lower per-frame pose error</span>
+          <span class="stat-num">1,000</span>
+          <span class="stat-label">case garment-placement stress test in CI</span>
         </div>
       </div>
     </section>
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Professional 3D body capture needs a camera rig and a studio. TryOn needs a person, a phone, and twelve minutes. The pipeline reconstructs a textured 3D human mesh from a single 360 degree walk-around video, accurate enough to stand next to rig-based capture.</p>
+      <p data-reveal>Most try-on demos are a website. TryOn is built as an engine: a multi-tenant FastAPI service with a versioned <code>/v1</code> API and per-brand API keys, plus thin SDKs so a brand can put try-on inside its own Android app, iOS app or web store.</p>
+      <p data-reveal>Generative try-on models render one fit regardless of size. TryOn renders the <em>fit</em>: size S sits tight, XL drapes loose, driven by the brand&rsquo;s real size chart.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
-        <li>MediaPipe landmark preprocessing normalizes each frame before volumetric rendering, anchoring the body's pose.</li>
-        <li>A NeRF stage learns the volumetric representation of the subject from the video sweep.</li>
-        <li>3D Gaussian Splatting converts that representation into a fast, textured mesh.</li>
-        <li>The full pipeline runs end to end in about 12 minutes per subject.</li>
+        <li><strong>Frames.</strong> The upload is sampled at about 4 fps, capped at 80 frames and downscaled to 720 px.</li>
+        <li><strong>Silhouettes.</strong> Each frame is thresholded and cleaned with morphology, keeping the largest connected component as the body.</li>
+        <li><strong>Camera model.</strong> The shopper turns in place, so the pipeline treats the capture as a turntable with evenly spaced viewing angles.</li>
+        <li><strong>Visual hull to mesh.</strong> A 128&sup3; voxel grid is carved against every silhouette, then marching cubes turns the surviving volume into a <code>.glb</code> body mesh.</li>
+        <li><strong>Size-accurate fit.</strong> A body or finished-measurement size chart, the garment&rsquo;s cut and the shopper&rsquo;s measurements give their true size and the drape and tension for any size they pick.</li>
+        <li><strong>2D photo try-on.</strong> <code>POST /v1/tryon-photo</code> warps a garment onto the person in their own photo, following their silhouette.</li>
       </ul>
-      <h2 data-reveal>Results</h2>
+      <h2 data-reveal>Testing, and its limits</h2>
       <ul class="case-list" data-reveal>
-        <li>Achieved 85% reconstruction accuracy compared with professional 3D camera rigs.</li>
-        <li>Reduced per-frame pose estimation error by 18% via MediaPipe input normalization.</li>
-        <li>End-to-end processing in roughly 12 minutes.</li>
+        <li>CI runs the API test suite, the 1,000-case placement stress test, and the web SDK, demo storefront and iOS SDK builds on every push.</li>
+        <li>Body reconstruction is gated at 85% or better width-profile agreement with the source silhouette. That gate runs on synthetic bodies, not against professional 3D capture.</li>
+        <li>Captures currently assume tight dark clothing on a lighter background and a slow in-place turn. Learned camera pose and physical cloth draping are next.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>
-        <li>nerf</li>
-        <li>gaussian splatting</li>
-        <li>mediapipe</li>
-        <li>pytorch</li>
+        <li>fastapi</li>
         <li>opencv</li>
+        <li>scikit-image</li>
+        <li>typescript</li>
+        <li>kotlin</li>
+        <li>swift</li>
+        <li>next.js</li>
       </ul>
       <div class="case-actions" data-reveal>
         <p class="case-note">This project is not open source.</p>

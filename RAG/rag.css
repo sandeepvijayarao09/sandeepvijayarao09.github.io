@@ -79,7 +79,7 @@
 .rag-row-n { font-family: var(--mono); font-size: .75rem; color: var(--muted); min-width: 1.4rem; }
 .rag-row-t { color: var(--text); font-size: .92rem; }
 .rag-row.is-wip .rag-row-t { color: var(--muted); }
-.rag-row.is-wip .rag-row-t::after { content: " in progress"; font-family: var(--mono);
+.rag-row.is-wip .rag-row-t::after { content: " roadmap"; font-family: var(--mono);
   font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; opacity: .55; }
 
 .codehilite .k, .codehilite .kn { color: #a78bfa; }

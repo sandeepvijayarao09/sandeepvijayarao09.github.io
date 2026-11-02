@@ -36,7 +36,7 @@
   <main id="main">
     <header class="page-header container">
       <h1>Building RAG from scratch</h1>
-      <p class="lede">I built a fifteen-stage RAG ladder and measured each technique on the same
+      <p class="lede">I built a twelve-stage RAG ladder and measured each technique on the same
       benchmark, then re-tested every result with paired significance tests. LLM query
       rewriting made retrieval worse, a strong reranker made it better, and most of the rest
       made no detectable difference.</p>
@@ -68,7 +68,8 @@
       techniques made things worse; the significance tests showed most of those were noise.
       <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/results/v2/RESULTS.md">Full results</a>.</p>
 
-      <h2>The fifteen levels</h2>
+      <h2>The levels</h2>
+      <p>Levels 1 to 12 are built and measured. 13 to 15 are roadmap notes.</p>
       <div class="rag-rows"><a class="rag-row" href="/RAG/level-01/"><span class="rag-row-n">1</span><span class="rag-row-t">Naive RAG</span></a><a class="rag-row" href="/RAG/level-02/"><span class="rag-row-n">2</span><span class="rag-row-t">Measure first</span></a><a class="rag-row" href="/RAG/level-03/"><span class="rag-row-n">3</span><span class="rag-row-t">Move to a real benchmark</span></a><a class="rag-row" href="/RAG/level-04/"><span class="rag-row-n">4</span><span class="rag-row-t">Chunking</span></a><a class="rag-row" href="/RAG/level-05/"><span class="rag-row-n">5</span><span class="rag-row-t">Keyword search (BM25)</span></a><a class="rag-row" href="/RAG/level-06/"><span class="rag-row-n">6</span><span class="rag-row-t">Hybrid retrieval</span></a><a class="rag-row" href="/RAG/level-07/"><span class="rag-row-n">7</span><span class="rag-row-t">Cross-encoder reranking</span></a><a class="rag-row" href="/RAG/level-08/"><span class="rag-row-n">8</span><span class="rag-row-t">Query rewriting</span></a><a class="rag-row" href="/RAG/level-09/"><span class="rag-row-n">9</span><span class="rag-row-t">Context enrichment</span></a><a class="rag-row" href="/RAG/level-10/"><span class="rag-row-n">10</span><span class="rag-row-t">Multi-vector / late interaction</span></a><a class="rag-row" href="/RAG/level-11/"><span class="rag-row-n">11</span><span class="rag-row-t">Grounded generation</span></a><a class="rag-row" href="/RAG/level-12/"><span class="rag-row-n">12</span><span class="rag-row-t">Self-correction (CRAG, Self-RAG)</span></a><a class="rag-row is-wip" href="/RAG/level-13/"><span class="rag-row-n">13</span><span class="rag-row-t">Agentic / multi-hop retrieval</span></a><a class="rag-row is-wip" href="/RAG/level-14/"><span class="rag-row-n">14</span><span class="rag-row-t">GraphRAG</span></a><a class="rag-row is-wip" href="/RAG/level-15/"><span class="rag-row-n">15</span><span class="rag-row-t">Production scale</span></a></div>
 
       <h2>More</h2>

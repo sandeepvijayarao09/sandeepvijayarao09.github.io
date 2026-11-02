@@ -178,7 +178,7 @@
       
         <a class="card span-2" data-hue="llm" href="/RAG/" data-reveal>
           <h3>RAG from Scratch</h3>
-          <p>Ten commonly recommended RAG techniques implemented and measured on BEIR SciFact against a bge-base dense baseline (nDCG@10 0.759). Seven of them made retrieval worse, one was flat and two helped; the guide walks through each result and why.</p>
+          <p>Ten commonly recommended RAG techniques implemented and measured on BEIR SciFact against a bge-base dense baseline (nDCG@10 0.759). Re-tested with paired significance tests: LLM query rewriting made retrieval worse, a strong reranker made it better (+0.044 on dense, +0.110 on BM25), and the rest made no detectable difference; the guide walks through each result and why.</p>
           <p class="metric">10 techniques measured, 8 made it worse</p>
           <ul class="tags" aria-label="Built with"><li>python</li><li>beir</li><li>bge</li><li>ndcg@10</li></ul>
           <span class="ext card-arrow" aria-hidden="true">&#8594;</span>

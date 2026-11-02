@@ -44,6 +44,13 @@
       <article class="case-body rag-prose">
 
 <p><strong>Tier: Core retrieval</strong> · prerequisite: Stage 3</p>
+<blockquote>
+<p><strong>Re-tested (v2).</strong> None of the six chunking configs is significantly
+different from whole documents, on any of three embedding models (bge-base
+−0.017 to −0.003). So chunking did not measurably <em>hurt</em> here; it did nothing.
+The diagnostic below still predicts why. The numbers on this page are the
+original v1 record. Tested results: <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/results/v2/RESULTS.md"><code>results/v2/RESULTS.md</code></a>.</p>
+</blockquote>
 <p>Chunking is the most cargo-culted step in RAG. This stage measures whether it
 earns its place, and the answer here is a clean no, predicted in advance.</p>
 <h2 id="4a-run-the-cheap-diagnostic-first">4a, Run the cheap diagnostic first</h2>

@@ -44,6 +44,12 @@
       <article class="case-body rag-prose">
 
 <p><strong>Tier: Advanced</strong> · prerequisite: Stage 8</p>
+<blockquote>
+<p><strong>Re-tested (v2).</strong> With <code>gemma4:12b</code> blurbs on the same 600-document
+subset, contextual retrieval is not significantly different from whole
+documents on any embedding model (bge-base +0.001, CI [−0.009, +0.011]).
+The numbers on this page are the original v1 record. Tested results: <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/results/v2/RESULTS.md"><code>results/v2/RESULTS.md</code></a>.</p>
+</blockquote>
 <p>Stage 4 showed chunking costs you context. Contextual retrieval (Anthropic,
 2024) is the fix: before embedding, ask an LLM to write a short blurb situating
 each chunk inside its parent document, and prepend it.</p>

@@ -48,11 +48,12 @@
 <li><a href="#step-2-validate-the-pipeline-before-you-trust-it">Step 2, Validate the pipeline before you trust it</a></li>
 <li><a href="#step-3-diagnose-before-you-optimise">Step 3, Diagnose before you optimise</a></li>
 <li><a href="#step-4-retrieval-techniques-in-value-order">Step 4, Retrieval techniques, in value order</a><ul>
-<li><a href="#do-this-first-hybrid-retrieval-stage-6">Do this first: hybrid retrieval (Stage 6)</a></li>
-<li><a href="#reranking-stage-7-only-on-a-weak-first-stage">Reranking (Stage 7), only on a weak first stage</a></li>
-<li><a href="#late-interaction-stage-10-probably-not">Late interaction (Stage 10), probably not</a></li>
-<li><a href="#chunking-stage-4-only-if-step-3-said-yes">Chunking (Stage 4), only if Step 3 said yes</a></li>
-<li><a href="#query-rewriting-stage-8-mostly-not">Query rewriting (Stage 8), mostly not</a></li>
+<li><a href="#first-choose-the-embedding-model">First: choose the embedding model</a></li>
+<li><a href="#then-reranking-stage-7-with-a-reranker-stronger-than-your-first-stage">Then: reranking (Stage 7), with a reranker stronger than your first stage</a></li>
+<li><a href="#cheap-but-measure-before-keeping-weighted-hybrid-stage-6">Cheap, but measure before keeping: weighted hybrid (Stage 6)</a></li>
+<li><a href="#late-interaction-stage-10-probably-not">Late interaction (Stage 10): probably not</a></li>
+<li><a href="#chunking-stage-4-only-if-step-3-said-yes">Chunking (Stage 4): only if Step 3 said yes</a></li>
+<li><a href="#query-rewriting-stage-8-avoid-on-claim-like-queries">Query rewriting (Stage 8): avoid on claim-like queries</a></li>
 </ul>
 </li>
 <li><a href="#step-5-the-generation-half">Step 5, The generation half</a></li>
@@ -70,8 +71,10 @@
 measurement in this repo, and the point of each step is to tell you whether the
 <em>next</em> step is worth taking.</p>
 <p>The short version: most RAG advice is a list of techniques. What you actually
-need is a way to decide which ones apply to you, because on my benchmark eight
-of ten recommended techniques made things worse.</p>
+need is a way to decide which ones apply to you, because on my benchmark, tested
+with paired significance tests, LLM query rewriting made things significantly
+worse, a strong reranker made them significantly better, and most of the other
+recommended techniques made no detectable difference at all.</p>
 <hr />
 <h2 id="step-0-do-you-need-retrieval-at-all">Step 0, Do you need retrieval at all?</h2>
 <p>Before building anything, check whether your corpus fits in a context window.</p>
@@ -179,85 +182,95 @@ worth hours will help.</p>
 <p><strong>Only proceed to a technique whose diagnostic came back positive.</strong></p>
 <hr />
 <h2 id="step-4-retrieval-techniques-in-value-order">Step 4, Retrieval techniques, in value order</h2>
-<p>Measured on SciFact with <code>bge-base-en-v1.5</code> at 0.759 nDCG@10.</p>
-<h3 id="do-this-first-hybrid-retrieval-stage-6">Do this first: hybrid retrieval (Stage 6)</h3>
-<p>+0.010, and it is nearly free: a BM25 index builds in 0.21s and adds 0.7ms per
-query. Best value in the repo.</p>
-<p><strong>But weight it.</strong> RRF, the "needs no tuning" default, lost in all four variants
-I tried (−0.009 to −0.024). It discards score magnitude, so it treats a weaker
-retriever's rank-1 as equally credible. Weighted 0.7/0.3 favouring the stronger
-retriever won.</p>
-<h3 id="reranking-stage-7-only-on-a-weak-first-stage">Reranking (Stage 7), only on a weak first stage</h3>
+<p>Measured on SciFact (300 test queries) with paired bootstrap 95% CIs and Holm
+correction, on three embedding models. Baseline <code>bge-base-en-v1.5</code>, 0.759
+nDCG@10. Full tables: <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/results/v2/RESULTS.md">results/v2/RESULTS.md</a>.</p>
+<h3 id="first-choose-the-embedding-model">First: choose the embedding model</h3>
+<p>The biggest single lever measured. <code>embeddinggemma-300m</code> alone scores 0.799,
+more than any technique adds on top of bge-base. Use each model's documented
+query and document formats, and check them on your data.</p>
+<h3 id="then-reranking-stage-7-with-a-reranker-stronger-than-your-first-stage">Then: reranking (Stage 7), with a reranker stronger than your first stage</h3>
 <table>
 <thead>
 <tr>
 <th>First stage</th>
-<th>Δ</th>
+<th>bge-reranker-base</th>
+<th>Qwen3-Reranker-4B</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>BM25 (0.665)</td>
-<td><strong>+0.041</strong></td>
+<td><strong>+0.041</strong> (significant)</td>
+<td><strong>+0.110</strong> (significant)</td>
 </tr>
 <tr>
-<td>dense (0.759)</td>
-<td><strong>−0.033</strong></td>
+<td>dense bge-base (0.759)</td>
+<td>−0.033 (not significant)</td>
+<td><strong>+0.044</strong> (significant)</td>
 </tr>
 </tbody>
 </table>
-<p>Same reranker, opposite signs. Reranking <em>overwrites</em> your ordering, so you end
-up with the reranker's quality bounded by candidate recall. Two consequences:</p>
+<p>Reranking <em>replaces</em> your ordering, so you end up with the reranker's quality
+bounded by candidate recall. Two consequences:</p>
 <ul>
-<li>Rerank only if the reranker ranks better than your first stage <strong>on your data</strong>.</li>
+<li>Rerank only if the reranker ranks better than your first stage <strong>on your data</strong>.
+  A small reranker behind a strong dense model is wasted latency, or worse.</li>
 <li>Under reranking, optimise the first stage for <strong>recall</strong>, not ordering. Its
   ordering is about to be discarded.</li>
 </ul>
-<p>Costs 1,515ms/query at depth 50. Set depth deliberately.</p>
-<h3 id="late-interaction-stage-10-probably-not">Late interaction (Stage 10), probably not</h3>
-<p>+0.011, same gain as hybrid, for a <strong>241x larger index</strong> and 28ms/query. Real
-ColBERT compresses that to roughly 20x with residual quantization, which is most
-of what makes it practical.</p>
-<h3 id="chunking-stage-4-only-if-step-3-said-yes">Chunking (Stage 4), only if Step 3 said yes</h3>
-<p>All six configs lost 0.010 to 0.020 on a corpus that did not need it. And the
-strategy barely matters: at size 200 fixed, sentence and recursive spanned
-0.0026 while the penalty for chunking at all was 0.011.</p>
+<p>bge-reranker-base costs 1,515ms/query at depth 50; a 4B reranker costs more.
+Set depth deliberately.</p>
+<h3 id="cheap-but-measure-before-keeping-weighted-hybrid-stage-6">Cheap, but measure before keeping: weighted hybrid (Stage 6)</h3>
+<p>Weighted 0.7/0.3 was +0.010, not significant. It is nearly free (a BM25 index
+builds in 0.21s and adds 0.7ms per query), so it is worth trying where your
+queries depend on rare exact terms, which SciFact's mostly do not. <strong>Weight it.</strong>
+Unweighted RRF, the "needs no tuning" default, was −0.009 to −0.024 across three
+variants on bge-base and significantly worse (−0.057) on the stronger
+embeddinggemma-300m, because it treats a weaker retriever's rank-1 as equally
+credible.</p>
+<h3 id="late-interaction-stage-10-probably-not">Late interaction (Stage 10): probably not</h3>
+<p>A trained ColBERT on the full corpus was +0.002 against bge-base (not
+significant) and significantly worse than embeddinggemma-300m (−0.038), for a
+much larger index.</p>
+<h3 id="chunking-stage-4-only-if-step-3-said-yes">Chunking (Stage 4): only if Step 3 said yes</h3>
+<p>All six configs made no detectable difference (−0.017 to −0.003) on a corpus
+where only 2.8% of documents exceed the model's window. The strategy barely
+matters either: at size 200 fixed, sentence and recursive spanned 0.0026.</p>
 <p>If you do chunk, remember your index now returns chunks while your labels judge
 documents. Pool with <code>max</code>, and overfetch <code>k × 5</code> or you silently cap recall@k.</p>
-<h3 id="query-rewriting-stage-8-mostly-not">Query rewriting (Stage 8), mostly not</h3>
+<h3 id="query-rewriting-stage-8-avoid-on-claim-like-queries">Query rewriting (Stage 8): avoid on claim-like queries</h3>
+<p>With a 12B rewriter, on all 300 queries:</p>
 <table>
 <thead>
 <tr>
 <th></th>
-<th>Δ</th>
+<th>Δ (bge-base)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>multi-query</td>
-<td>+0.001 nDCG, <strong>+0.040 recall</strong></td>
+<td>+0.009 (not significant)</td>
 </tr>
 <tr>
 <td>HyDE</td>
-<td>−0.048</td>
+<td><strong>−0.040</strong> (significant)</td>
 </tr>
 <tr>
 <td>step-back</td>
-<td>−0.066</td>
+<td><strong>−0.039</strong> (significant)</td>
 </tr>
 <tr>
 <td>decomposition</td>
-<td>−0.095</td>
+<td><strong>−0.087</strong> (significant)</td>
 </tr>
 </tbody>
 </table>
-<p>The ordering is not random. Techniques that <strong>add to</strong> the original query
-survive; techniques that <strong>replace</strong> it do not. HyDE fails when your queries are
-already written like your documents, because there is no asymmetry to bridge and
-only the hallucinated specifics remain.</p>
-<p>Multi-query is the exception worth knowing: it raises recall without improving
-ranking. Useful if something downstream can exploit extra recall. Reranking
-could not.</p>
+<p>Techniques that <strong>replace</strong> the original query lose; blending the rewrite back
+in with the original at a tuned weight only recovers a tie. HyDE fails when your
+queries are already written like your documents, because there is no asymmetry
+to bridge and only the hallucinated specifics remain.</p>
 <hr />
 <h2 id="step-5-the-generation-half">Step 5, The generation half</h2>
 <p>Retrieval metrics cannot see the failures here (Stage 11).</p>

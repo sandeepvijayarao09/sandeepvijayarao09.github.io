@@ -66,6 +66,8 @@
 .rag-scores span { color: var(--text); }
 .rag-scores em { font-family: var(--mono); font-size: .8rem; font-style: normal; white-space: nowrap; }
 .rag-lost em { color: #fb7185; }
+.rag-flat { margin-bottom: 1.6rem; }
+.rag-flat em { color: var(--muted); }
 .rag-won em { color: var(--accent); }
 .rag-won span { font-weight: 500; }
 

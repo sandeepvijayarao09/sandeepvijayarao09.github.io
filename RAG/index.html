@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Building RAG from scratch | Sandeep Vijayarao</title>
-  <meta name="description" content="A fifteen-stage RAG ladder, twelve stages measured. Seven of ten recommended techniques made retrieval worse.">
+  <meta name="description" content="Ten RAG techniques measured on one benchmark with paired significance tests: query rewriting hurt, a strong reranker helped, most made no difference.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/RAG/">
   <meta property="og:title" content="Building RAG from scratch | Sandeep Vijayarao">
-  <meta property="og:description" content="A fifteen-stage RAG ladder, twelve stages measured. Seven of ten recommended techniques made retrieval worse.">
+  <meta property="og:description" content="Ten RAG techniques measured on one benchmark with paired significance tests: query rewriting hurt, a strong reranker helped, most made no difference.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/RAG/">
   <meta property="og:type" content="article">
   <meta name="twitter:card" content="summary">
@@ -36,8 +36,10 @@
   <main id="main">
     <header class="page-header container">
       <h1>Building RAG from scratch</h1>
-      <p class="lede">I built a fifteen-stage RAG ladder and measured the first twelve stages on the same
-      benchmark. Of ten recommended techniques, seven made retrieval worse, one was flat and two helped.</p>
+      <p class="lede">I built a fifteen-stage RAG ladder and measured each technique on the same
+      benchmark, then re-tested every result with paired significance tests. LLM query
+      rewriting made retrieval worse, a strong reranker made it better, and most of the rest
+      made no detectable difference.</p>
       <div class="case-actions">
         <a class="btn btn-primary" href="/RAG/learn/">Read the guide</a>
         <a class="btn btn-ghost" href="https://github.com/sandeepvijayarao09/rag-from-scratch" target="_blank" rel="noopener">Code</a>
@@ -47,21 +49,24 @@
     <article class="case-body rag-prose container">
       <div class="rag-split">
         <div>
-          <h3 class="rag-h">Made it worse</h3>
-          <ul class="rag-scores rag-lost"><li><span>Chunking</span><em>-0.010 to -0.020</em></li><li><span>RRF fusion</span><em>-0.009 to -0.024</em></li><li><span>Reranking on dense</span><em>-0.033</em></li><li><span>HyDE</span><em>-0.048</em></li><li><span>Step-back prompting</span><em>-0.066</em></li><li><span>Query decomposition</span><em>-0.095</em></li><li><span>CRAG relevance grading</span><em>chance</em></li><li><span>Contextual retrieval</span><em>-0.006</em></li></ul>
+          <h3 class="rag-h">Significantly worse</h3>
+          <ul class="rag-scores rag-lost"><li><span>Query decomposition</span><em>-0.087</em></li><li><span>HyDE</span><em>-0.040</em></li><li><span>Step-back prompting</span><em>-0.039</em></li><li><span>CRAG relevance grading</span><em>chance</em></li></ul>
         </div>
         <div>
-          <h3 class="rag-h">Helped</h3>
-          <ul class="rag-scores rag-won"><li><span>Weighted hybrid 0.7/0.3</span><em>+0.010</em></li><li><span>Late interaction</span><em>+0.011</em></li><li><span>Reranking on BM25</span><em>+0.041</em></li></ul>
+          <h3 class="rag-h">Significantly better</h3>
+          <ul class="rag-scores rag-won"><li><span>Reranking on dense, Qwen3-Reranker-4B</span><em>+0.044</em></li><li><span>Reranking on BM25, bge-reranker-base</span><em>+0.041</em></li><li><span>Reranking on BM25, Qwen3-Reranker-4B</span><em>+0.110</em></li></ul>
         </div>
       </div>
+      <h3 class="rag-h">No detectable difference</h3>
+      <ul class="rag-scores rag-flat"><li><span>Reranking on dense, bge-reranker-base</span><em>-0.033</em></li><li><span>RRF fusion, 3 variants</span><em>-0.024 to -0.009</em></li><li><span>Chunking, 6 configs</span><em>-0.017 to -0.003</em></li><li><span>BGE query prefix</span><em>-0.014</em></li><li><span>Contextual retrieval</span><em>+0.001</em></li><li><span>Late interaction (ColBERT)</span><em>+0.002</em></li><li><span>Multi-query</span><em>+0.009</em></li><li><span>Weighted hybrid 0.7/0.3</span><em>+0.010</em></li></ul>
 
-      <p>Change in nDCG@10 against a 0.759 baseline on BEIR SciFact, 5,183 abstracts and
-      300 labelled queries. The two that helped are the two where I measured the gap before
-      applying the technique. None of these are bad techniques. They are conditional, and
-      the condition is whether your pipeline is already good at the thing they fix.
-      Reranking flipped sign inside this repo: -0.033 on a strong first stage, +0.041 on a
-      weak one.</p>
+      <p>Change in nDCG@10 against dense bge-base (0.759) on BEIR SciFact, 5,183 abstracts
+      and 300 labelled queries; the BM25 rows are against BM25 alone (0.665). Each is a paired
+      bootstrap 95% CI, Holm-corrected, with query rewriting by a 12B model. None of these
+      are bad techniques. They are conditional, and the condition is whether your pipeline is
+      already good at the thing they fix. The first version of this guide said seven of ten
+      techniques made things worse; the significance tests showed most of those were noise.
+      <a href="https://github.com/sandeepvijayarao09/rag-from-scratch/blob/main/results/v2/RESULTS.md">Full results</a>.</p>
 
       <h2>The fifteen levels</h2>
       <div class="rag-rows"><a class="rag-row" href="/RAG/level-01/"><span class="rag-row-n">1</span><span class="rag-row-t">Naive RAG</span></a><a class="rag-row" href="/RAG/level-02/"><span class="rag-row-n">2</span><span class="rag-row-t">Measure first</span></a><a class="rag-row" href="/RAG/level-03/"><span class="rag-row-n">3</span><span class="rag-row-t">Move to a real benchmark</span></a><a class="rag-row" href="/RAG/level-04/"><span class="rag-row-n">4</span><span class="rag-row-t">Chunking</span></a><a class="rag-row" href="/RAG/level-05/"><span class="rag-row-n">5</span><span class="rag-row-t">Keyword search (BM25)</span></a><a class="rag-row" href="/RAG/level-06/"><span class="rag-row-n">6</span><span class="rag-row-t">Hybrid retrieval</span></a><a class="rag-row" href="/RAG/level-07/"><span class="rag-row-n">7</span><span class="rag-row-t">Cross-encoder reranking</span></a><a class="rag-row" href="/RAG/level-08/"><span class="rag-row-n">8</span><span class="rag-row-t">Query rewriting</span></a><a class="rag-row" href="/RAG/level-09/"><span class="rag-row-n">9</span><span class="rag-row-t">Context enrichment</span></a><a class="rag-row" href="/RAG/level-10/"><span class="rag-row-n">10</span><span class="rag-row-t">Multi-vector / late interaction</span></a><a class="rag-row" href="/RAG/level-11/"><span class="rag-row-n">11</span><span class="rag-row-t">Grounded generation</span></a><a class="rag-row" href="/RAG/level-12/"><span class="rag-row-n">12</span><span class="rag-row-t">Self-correction (CRAG, Self-RAG)</span></a><a class="rag-row is-wip" href="/RAG/level-13/"><span class="rag-row-n">13</span><span class="rag-row-t">Agentic / multi-hop retrieval</span></a><a class="rag-row is-wip" href="/RAG/level-14/"><span class="rag-row-n">14</span><span class="rag-row-t">GraphRAG</span></a><a class="rag-row is-wip" href="/RAG/level-15/"><span class="rag-row-n">15</span><span class="rag-row-t">Production scale</span></a></div>

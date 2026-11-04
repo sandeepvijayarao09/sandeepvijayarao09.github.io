@@ -9,7 +9,7 @@
   /* both of my GitHub accounts; totals are summed across them */
   const USERS = ["sandeepvijayarao09", "mlzerotoheroyoutube"];
   const API = "https://api.github.com";
-  const CACHE_KEY = "oss-stats-v2";
+  const CACHE_KEY = "oss-stats-v3";
   const CACHE_MS = 15 * 60 * 1000;
   const GITHUB_LIST = "https://github.com/pulls?q=" + encodeURIComponent(
     "is:pr " + USERS.map((u) => `author:${u}`).join(" ") + " " + USERS.map((u) => `-user:${u}`).join(" "));
@@ -30,12 +30,6 @@
     const authors = USERS.map((u) => `author:${u}`).join(" ");
     const owners = USERS.map((u) => `-user:${u}`).join(" ");
     const prs = await get(`/search/issues?q=${encodeURIComponent(`is:pr ${authors} ${owners}`)}&sort=created&order=desc&per_page=100`);
-    /* commit search ignores a second author: one query per account */
-    const [commits, users] = await Promise.all([
-      Promise.all(USERS.map((u) => get(`/search/commits?q=${encodeURIComponent(`author:${u}`)}&per_page=1`))),
-      Promise.all(USERS.map((u) => get(`/users/${u}`))),
-    ]);
-
     const items = prs.items.map((i) => ({
       repo: i.repository_url.split("/repos/")[1],
       number: i.number,
@@ -52,6 +46,21 @@
     );
     const stars = Object.fromEntries(repos);
 
+    /* Commits that landed in those upstream repos, so personal projects
+       never count. Commit search ignores a second author and caps q at
+       256 characters, so query per account and in batches of repos. */
+    const batches = [];
+    for (const r of repoNames) {
+      const last = batches[batches.length - 1];
+      if (last && (last.join(" ") + ` repo:${r}`).length < 200) last.push(`repo:${r}`);
+      else batches.push([`repo:${r}`]);
+    }
+    const [commitCounts, users] = await Promise.all([
+      Promise.all(USERS.flatMap((u) => batches.map((b) =>
+        get(`/search/commits?q=${encodeURIComponent(`author:${u} ${b.join(" ")}`)}&per_page=1`).then((d) => d.total_count)))),
+      Promise.all(USERS.map((u) => get(`/users/${u}`))),
+    ]);
+
     return {
       at: Date.now(),
       items,
@@ -61,7 +70,7 @@
         open: items.filter((i) => i.state === "open").length,
         repos: repoNames.length,
         stars: repos.reduce((s, [, n]) => s + n, 0),
-        commits: commits.reduce((s, c) => s + c.total_count, 0),
+        commits: commitCounts.reduce((s, n) => s + n, 0),
         publicRepos: users.reduce((s, u) => s + u.public_repos, 0),
       },
     };

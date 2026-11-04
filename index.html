@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sandeep Vijayarao | AI Engineer</title>
-  <meta name="description" content="Sandeep Vijayarao is an AI engineer building agents, retrieval systems and on-device LLM apps. MS CS at Northeastern University (May 2027), Apple Swift Student Challenge 2026 winner, and upstream contributor to LiteRT, MLX Swift and Hugging Face Diffusers.">
+  <title>Sandeep Vijayarao | Applied AI, SWE, AI Engineer</title>
+  <meta name="description" content="Sandeep Vijayarao is an AI engineer building agents, retrieval systems and on-device LLM apps. MS CS at Northeastern University (2027), Apple Swift Challenge 2026 Winner, and upstream contributor to LiteRT, MLX Swift and Hugging Face Diffusers.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/">
-  <meta property="og:title" content="Sandeep Vijayarao | AI Engineer">
-  <meta property="og:description" content="Agents, retrieval and on-device LLMs. MS CS at Northeastern, Apple Swift Student Challenge 2026 winner, upstream contributor to LiteRT, MLX Swift and Diffusers.">
+  <meta property="og:title" content="Sandeep Vijayarao | Applied AI, SWE, AI Engineer">
+  <meta property="og:description" content="Agents, retrieval and on-device LLMs. MS CS at Northeastern, Apple Swift Challenge 2026 Winner, upstream contributor to LiteRT, MLX Swift and Diffusers.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +16,7 @@
   <meta property="og:image" content="https://sandeepvijayarao09.github.io/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Sandeep Vijayarao | AI Engineer">
+  <meta property="og:image:alt" content="Sandeep Vijayarao | Applied AI, SWE, AI Engineer">
   <meta name="twitter:image" content="https://sandeepvijayarao09.github.io/assets/og.png">
   <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#161617" media="(prefers-color-scheme: dark)">
@@ -26,7 +26,7 @@
   <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
   <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
-  <link rel="stylesheet" href="/styles.css?v=20261104c">
+  <link rel="stylesheet" href="/styles.css?v=20261104d">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -67,8 +67,9 @@
 
     <section class="hero container">
       <div class="hero-copy">
+        <p class="hero-eyebrow">Applied AI &middot; SWE &middot; AI Engineer</p>
         <h1>I build AI systems<br>that ship.</h1>
-        <p class="hero-sub">AI engineer working on agents, retrieval and on-device LLMs. Apple Swift Student Challenge 2026 winner, upstream contributor to LiteRT and MLX, and an MS CS student at Northeastern, graduating May 2027.</p>
+        <p class="hero-sub">AI engineer working on agents, retrieval and on-device LLMs. Apple Swift Challenge 2026 Winner, upstream contributor to LiteRT and MLX, and an MS CS student at Northeastern in San Jose, California, graduating 2027.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="/work/">View work</a>
           <a class="btn btn-ghost" href="/assets/resume.pdf" target="_blank" rel="noopener">Resume<span class="ext" aria-hidden="true">&#8599;</span></a>
@@ -79,8 +80,8 @@
     <section class="proof" aria-label="Recognition">
       <div class="container proof-grid">
         <div class="proof-item" data-reveal>
-          <strong>Apple Swift Student Challenge</strong>
-          <span>2026 winner with Anu, an iOS agent that runs Gemma 4 on the phone</span>
+          <strong>Apple Swift Challenge 2026 Winner</strong>
+          <span>With Anu, an iOS agent that runs Gemma 4 on the phone</span>
         </div>
         <div class="proof-item" data-reveal style="--d:.06s">
           <strong>Production AI at Trominosoft</strong>
@@ -106,7 +107,7 @@
       <a class="card card-featured" data-hue="agent" href="/work/anu/" data-reveal>
         <div class="card-featured-copy">
           <h3>ANU</h3>
-          <p class="card-context">Apple Swift Student Challenge 2026 winner</p>
+          <p class="card-context">Apple Swift Challenge 2026 Winner</p>
           <p>A voice-first iOS assistant whose brain runs on the phone: Gemma 4 E4B through LiteRT, on-device classifiers routing every message, and the cloud only as a sanitized, optional fallback.</p>
           <ul class="tags" aria-label="Built with">
             <li>swift 6</li><li>litert</li><li>gemma 4 e4b</li><li>swiftui</li>
@@ -147,47 +148,45 @@
         </div>
       </a>
 
-      <a class="card card-featured" data-hue="product" href="/work/notova/" data-reveal>
+      <a class="card card-featured" data-hue="tools" href="/work/agent-certifier/" data-reveal>
         <div class="card-featured-copy">
-          <h3>Notova</h3>
-          <p class="card-context">Three native platforms, zero audio server-side</p>
-          <p>Privacy-first voice notes: iOS and macOS share one Swift core, Android is a parallel Kotlin app on the same contract, and the backend is scoped so tightly it has no code path to receive audio at all.</p>
-          <ul class="tags" aria-label="Built with">
-            <li>swift 6</li><li>kotlin</li><li>typescript</li><li>oauth2</li>
-          </ul>
+          <h3>Agent Certifier</h3>
+          <p class="card-context">Grades agent code it did not write, without running it</p>
+          <p>A FastAPI and Next.js service that statically analyzes an AI agent codebase across 60 tests in 6 weighted categories, from security to ethics, and returns a certification level with a report of what failed and why.</p>
+          <ul class="tags" aria-label="Built with"><li>fastapi</li><li>next.js 14</li><li>sqlalchemy</li><li>docker</li></ul>
           <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
         </div>
         <div class="card-featured-stats">
           <div class="stat">
-            <span class="stat-num">3</span>
-            <span class="stat-label">native platforms, one pipeline contract</span>
+            <span class="stat-num">60</span>
+            <span class="stat-label">static-analysis tests in 6 weighted categories</span>
           </div>
           <div class="stat">
-            <span class="stat-num">0</span>
-            <span class="stat-label">bytes of audio the server sees</span>
+            <span class="stat-num">10</span>
+            <span class="stat-label">languages supported</span>
           </div>
         </div>
       </a>
 
-      <a class="card card-featured card-featured-alt" data-hue="product" href="/work/meeting-bot/" data-reveal>
+      <a class="card card-featured card-featured-alt" data-hue="llm" href="/RAG/" data-reveal>
         <div class="card-featured-stats">
           <div class="stat">
-            <span class="stat-num">3</span>
-            <span class="stat-label">front-ends over one engine</span>
+            <span class="stat-num">+0.110</span>
+            <span class="stat-label">nDCG@10 from a strong reranker on BM25</span>
           </div>
           <div class="stat">
-            <span class="stat-num">$0</span>
-            <span class="stat-label">running cost</span>
+            <span class="stat-num">12</span>
+            <span class="stat-label">RAG stages built and significance-tested</span>
           </div>
         </div>
         <div class="card-featured-copy">
-          <h3>Meeting Bot</h3>
-          <p class="card-context">No bot joins the call, and the audio never leaves the Mac</p>
-          <p>Captures whatever audio is already playing on macOS, transcribes it locally with Whisper, and ships a native app, a CLI and a Chrome extension over one engine.</p>
+          <h3>RAG from Scratch</h3>
+          <p class="card-context">Every technique measured, then re-tested for significance</p>
+          <p>A twelve-stage RAG ladder benchmarked on BEIR SciFact. LLM query rewriting made retrieval worse, a strong reranker made it better, and most of the rest made no detectable difference. The guide explains each result.</p>
           <ul class="tags" aria-label="Built with">
-            <li>python</li><li>whisper</li><li>swiftui</li><li>chrome extension</li>
+            <li>python</li><li>beir</li><li>bge</li><li>ndcg@10</li>
           </ul>
-          <span class="card-link-hint">Case study<span class="ext" aria-hidden="true">&#8594;</span></span>
+          <span class="card-link-hint">Read the guide<span class="ext" aria-hidden="true">&#8594;</span></span>
         </div>
       </a>
 
@@ -228,7 +227,7 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <span>&copy; 2026 Sandeep Vijayarao, San Jose, CA</span>
+      <span>&copy; 2026 Sandeep Vijayarao, San Jose, California</span>
       <span class="footer-links">
         <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.linkedin.com/in/sandeepvijayarao/" target="_blank" rel="noopener">LinkedIn</a>
@@ -237,6 +236,6 @@
     </div>
   </footer>
 
-  <script src="/script.js?v=20261104c" defer></script>
+  <script src="/script.js?v=20261104d" defer></script>
 </body>
 </html>

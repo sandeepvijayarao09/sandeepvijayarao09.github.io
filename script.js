@@ -79,7 +79,8 @@
     requestAnimationFrame(tick);
   }
 
-  const statNums = document.querySelectorAll(".stat-num");
+  /* [data-oss] stats load live and animate themselves in oss.js */
+  const statNums = document.querySelectorAll(".stat-num:not([data-oss])");
   if (!reduceMotion && statNums.length) {
     const statObserver = new IntersectionObserver(
       (entries) => {

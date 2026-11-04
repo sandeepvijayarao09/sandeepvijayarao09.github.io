@@ -9,7 +9,7 @@
   /* both of my GitHub accounts; totals are summed across them */
   const USERS = ["sandeepvijayarao09", "mlzerotoheroyoutube"];
   const API = "https://api.github.com";
-  const CACHE_KEY = "oss-stats-v3";
+  const CACHE_KEY = "oss-stats-v4";
   const CACHE_MS = 15 * 60 * 1000;
   const GITHUB_LIST = "https://github.com/pulls?q=" + encodeURIComponent(
     "is:pr " + USERS.map((u) => `author:${u}`).join(" ") + " " + USERS.map((u) => `-user:${u}`).join(" "));
@@ -55,11 +55,8 @@
       if (last && (last.join(" ") + ` repo:${r}`).length < 200) last.push(`repo:${r}`);
       else batches.push([`repo:${r}`]);
     }
-    const [commitCounts, users] = await Promise.all([
-      Promise.all(USERS.flatMap((u) => batches.map((b) =>
-        get(`/search/commits?q=${encodeURIComponent(`author:${u} ${b.join(" ")}`)}&per_page=1`).then((d) => d.total_count)))),
-      Promise.all(USERS.map((u) => get(`/users/${u}`))),
-    ]);
+    const commitCounts = await Promise.all(USERS.flatMap((u) => batches.map((b) =>
+      get(`/search/commits?q=${encodeURIComponent(`author:${u} ${b.join(" ")}`)}&per_page=1`).then((d) => d.total_count))));
 
     return {
       at: Date.now(),
@@ -71,7 +68,6 @@
         repos: repoNames.length,
         stars: repos.reduce((s, [, n]) => s + n, 0),
         commits: commitCounts.reduce((s, n) => s + n, 0),
-        publicRepos: users.reduce((s, u) => s + u.public_repos, 0),
       },
     };
   }

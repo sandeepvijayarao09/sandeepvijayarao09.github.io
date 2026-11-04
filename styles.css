@@ -845,9 +845,13 @@ article.card { cursor: default; }
 
 .oss-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 2.2rem 2rem;
   padding-block: 2.4rem;
+}
+
+@media (max-width: 880px) {
+  .oss-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 .oss-strip .stat-num { font-size: clamp(1.9rem, 3.4vw, 2.5rem); }
@@ -939,6 +943,7 @@ article.card { cursor: default; }
   .nav nav { gap: 0.8rem; }
   .nav nav a { font-size: 0.84rem; }
   .oss-grid { grid-template-columns: 1fr 1fr; gap: 1.6rem 1.2rem; padding-block: 1.8rem; }
+  .oss-grid > :last-child:nth-child(odd) { grid-column: 1 / -1; }
   .oss-strip { margin-top: 2rem; }
   .oss { padding-block: 3rem 3.5rem; }
   .oss-pr { padding: 1.1rem 1.15rem; }

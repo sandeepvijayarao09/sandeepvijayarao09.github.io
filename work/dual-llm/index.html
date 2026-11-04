@@ -52,7 +52,7 @@
     <header class="page-header container">
       <h1>Dual-LLM Personalization System</h1>
       <p class="case-context">Final project for Northeastern&rsquo;s graduate Generative AI course, written up as a NeurIPS-format paper</p>
-      <p class="lede">Most queries sent to a frontier model do not need one. This routes each query to the model it actually deserves, at zero added latency, and personalizes both paths.</p>
+      <p class="lede">Most queries sent to a frontier model do not need one. This three-layer router sends each query to the model it actually needs, handles 85.3% of traffic locally at zero API cost and zero added latency, and personalizes both paths.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,28 +74,28 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Most LLM applications send every query to the most expensive model available, including &ldquo;hi&rdquo; and &ldquo;what is 2+2&rdquo;. The cost of that is obvious; the latency cost is the one people miss.</p>
-      <p data-reveal>This system decides per query, through a three-layer cascade, and was evaluated on 1,500 labeled cases across two eval sets.</p>
+      <p data-reveal>Most LLM applications send every query to the most expensive model available, including &ldquo;hi&rdquo; and &ldquo;what is 2+2&rdquo;. The dollar cost is obvious; the latency cost is the one people miss.</p>
+      <p data-reveal>This system decides per query through a three-layer cascade. It was evaluated on 1,500 labeled cases across two eval sets, and on the 1,000-case set it reaches 92.6% routing accuracy at a 14.7% cascade rate.</p>
       <h2 data-reveal>The three layers</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Layer 1: local ML router.</strong> TF-IDF over a tag-augmented encoding of the query, classified by logistic regression. No network call, no added latency, and it resolves 85.3% of traffic by itself.</li>
-        <li><strong>Layer 2: LLM fallback classifier.</strong> Only low-confidence queries reach a GPT-4o-mini JSON classifier, and they reach it <em>before</em> any answer is generated, so the routing decision never costs a wasted completion.</li>
-        <li><strong>Layer 3: answer.</strong> Simple queries are answered by GPT-4o-mini; only genuinely complex ones escalate to GPT-4o.</li>
+        <li><strong>Layer 1: local ML router.</strong> TF-IDF over a tag-augmented encoding of the query, classified by logistic regression. No network call, no added latency, and it resolves 85.3% of traffic on its own.</li>
+        <li><strong>Layer 2: LLM fallback classifier.</strong> Only low-confidence queries reach a GPT-4o-mini JSON classifier, and they reach it <em>before</em> any answer is generated, so a routing decision never wastes a completion.</li>
+        <li><strong>Layer 3: answer.</strong> GPT-4o-mini answers simple queries; only complex ones escalate to GPT-4o.</li>
       </ul>
       <h2 data-reveal>Feature engineering</h2>
-      <p data-reveal>The router does not embed the raw query. Each query is rewritten into a tag-augmented string before vectorization: length bands (<code>LEN_SHORT</code> at &le;8 words, <code>LEN_MEDIUM</code>, <code>LEN_LONG</code> above 40), a code-presence flag, and related signals. Giving the linear model explicit categorical features is what lets something as small as TF-IDF plus logistic regression hold 92.6%: the hard part of the decision is encoded rather than learned.</p>
+      <p data-reveal>The router does not vectorize the raw query. Each query is first rewritten into a tag-augmented string: length bands (<code>LEN_SHORT</code> at &le;8 words, <code>LEN_MEDIUM</code>, <code>LEN_LONG</code> above 40), a code-presence flag, and related signals. Explicit categorical features are what let a model as small as TF-IDF plus logistic regression reach 92.6%: the hard part of the decision is encoded, not learned.</p>
       <h2 data-reveal>Personalization on both paths</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Persistent user profiles</strong> in SQLite carry expertise level, tone, domain, interests, topics already discussed, and preferred response format.</li>
-        <li><strong>Sliding-window memory</strong> keeps the last three turn-pairs verbatim; older turns are evicted and compressed into a rolling summary capped at 80 tokens, so context stays bounded without losing the thread.</li>
-        <li><strong>A self-improving loop</strong> logs every routing decision for retraining, and a Streamlit UI exposes each choice so the routing is inspectable rather than opaque.</li>
+        <li><strong>Persistent user profiles</strong> in SQLite store expertise level, tone, domain, interests, topics already discussed, and preferred response format.</li>
+        <li><strong>Sliding-window memory</strong> keeps the last three turn-pairs verbatim. Older turns are compressed into a rolling summary capped at 80 tokens, so context stays bounded without losing the thread.</li>
+        <li><strong>A self-improving loop</strong> logs every routing decision for retraining, and a Streamlit UI shows each choice so routing is inspectable.</li>
       </ul>
       <h2 data-reveal>Measured results</h2>
       <ul class="case-list" data-reveal>
         <li>92.6% routing accuracy on the 1,000-case eval, up from an 88.2% baseline.</li>
         <li>Precision 0.885, recall 0.963, F1 0.922 (TP 438, FN 17, FP 57, TN 488).</li>
         <li>Cascade rate cut from 30.8% to 14.7%.</li>
-        <li>Mean routing confidence improved from 0.706 to 0.764.</li>
+        <li>Mean routing confidence up from 0.706 to 0.764.</li>
         <li>85.3% of queries handled by the local layer alone, at zero API cost.</li>
       </ul>
       <h2 data-reveal>Stack</h2>

@@ -51,8 +51,8 @@
 
     <header class="page-header container">
       <h1>Agentic Research Assistant</h1>
-      <p class="case-context">A VLA-inspired Plan, Reason, Act loop applied to research automation</p>
-      <p class="lede">An orchestrator decomposes a query, routes it to research and reasoning specialists, and synthesizes the result over dual-layer memory that survives the session.</p>
+      <p class="case-context">A multi-agent research system built on a VLA-inspired Plan, Reason, Act loop</p>
+      <p class="lede">An orchestrator breaks a query into parts, routes each to a research or reasoning specialist, and synthesizes the answer over two layers of memory that persist beyond the session.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,17 +74,19 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Single-agent loops degrade on multi-part questions: context fills with intermediate work, and the model loses the thread of what it was originally asked. This system borrows the Plan &rarr; Reason &rarr; Act structure from Vision-Language-Action architectures and applies it to research, so decomposition and execution are separate concerns handled by separate agents.</p>
+      <p data-reveal>Single-agent loops degrade on multi-part questions: the context fills with intermediate work, and the model loses track of what it was originally asked.</p>
+      <p data-reveal>This system borrows the Plan &rarr; Reason &rarr; Act structure from Vision-Language-Action architectures and applies it to research. Decomposing the question and executing the parts become separate concerns, handled by separate agents.</p>
       <h2 data-reveal>Architecture</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Orchestrator</strong> decomposes the incoming query and routes each part to a specialist rather than answering it directly.</li>
-        <li><strong>Research and Reasoning specialists</strong> handle retrieval-shaped and inference-shaped subtasks respectively, then hand results back for synthesis.</li>
-        <li><strong>Dual-layer memory</strong>: ChromaDB provides semantic long-term recall; a sliding working-memory window with pruning keeps the active context bounded.</li>
-        <li><strong>Tool registry</strong> exposing Calculator, ArXiv and Search through OpenAI-compatible function calling, so tools are declared once and callable by any agent.</li>
-        <li><strong>Fully async</strong> on asyncio, so agent operations run concurrently instead of serializing behind each other.</li>
+        <li><strong>Orchestrator</strong>: decomposes the incoming query and routes each part to a specialist instead of answering it directly.</li>
+        <li><strong>Research and Reasoning specialists</strong>: handle retrieval-shaped and inference-shaped subtasks, then hand results back for synthesis.</li>
+        <li><strong>Dual-layer memory</strong>: ChromaDB provides semantic long-term recall, and a sliding working-memory window with pruning keeps the active context bounded.</li>
+        <li><strong>Tool registry</strong>: Calculator, ArXiv and Search exposed through OpenAI-compatible function calling, so each tool is declared once and callable by any agent.</li>
+        <li><strong>Fully async</strong>: built on asyncio, so agent operations run concurrently instead of queuing behind each other.</li>
       </ul>
-      <h2 data-reveal>Interface</h2>
-      <p data-reveal>It runs as an interactive CLI with explicit verbs: <code>search</code> for research, <code>reason</code> for analysis, <code>stats</code> to inspect memory and system state. Making the agent&rsquo;s mode an explicit command rather than an inferred intent keeps the system debuggable: when a result is wrong, you know which path produced it.</p>
+      <h2 data-reveal>Interface: explicit modes over inferred intent</h2>
+      <p data-reveal>It runs as an interactive CLI with explicit verbs: <code>search</code> for research, <code>reason</code> for analysis, and <code>stats</code> to inspect memory and system state.</p>
+      <p data-reveal>Making the agent&rsquo;s mode a command rather than something the model infers keeps the system debuggable: when a result is wrong, you know which path produced it.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>

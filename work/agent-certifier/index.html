@@ -51,8 +51,8 @@
 
     <header class="page-header container">
       <h1>Agent Certifier</h1>
-      <p class="case-context">Grading agent code without executing a line of it</p>
-      <p class="lede">Upload an AI agent codebase and get back a weighted score across security, stability, performance, informatics, compliance and ethics, from static analysis alone.</p>
+      <p class="case-context">A testing and certification service that grades agent code without running it</p>
+      <p class="lede">Point it at an AI agent codebase and it returns a weighted score across security, stability, performance, informatics, compliance and ethics, plus a certification level, from static analysis alone.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,9 +74,10 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Agent code fails in ways ordinary application code does not: prompt injection, unbounded tool loops, silent data exfiltration, missing human oversight. Those are review problems, and review does not scale.</p>
-      <p data-reveal>Agent Certifier turns the review into a graded, repeatable artifact. It reads a codebase it did not author and returns a weighted score, a certification level, and a report naming what failed and why.</p>
+      <p data-reveal>Agent code fails in ways ordinary application code does not: prompt injection, unbounded tool loops, silent data exfiltration, missing human oversight. Catching those is a review problem, and manual review does not scale.</p>
+      <p data-reveal>Agent Certifier makes that review graded and repeatable. I built it as a FastAPI and Next.js service that reads a codebase it did not author, runs 60 tests across 6 weighted categories, and returns a score, a certification level, and a report naming what failed and why.</p>
       <h2 data-reveal>The scoring model</h2>
+      <p data-reveal>Six categories of ten checks each, weighted toward security and stability:</p>
       <ul class="case-list" data-reveal>
         <li><strong>Security, 30%</strong>: injection, hardcoded secrets, prompt injection, data exfiltration, auth, input validation, dependencies, privilege escalation, information disclosure, LLM code injection.</li>
         <li><strong>Stability, 20%</strong>: error handling, infinite loops, unbounded recursion, resource leaks, timeouts, graceful degradation, state management, memory, concurrency, exception specificity.</li>
@@ -85,13 +86,14 @@
         <li><strong>Compliance, 10%</strong>: PII handling, retention, audit logging, GDPR, licensing, terms of service, output filtering, consent, data minimization, regulatory awareness.</li>
         <li><strong>Ethics, 10%</strong>: bias detection, transparency, human oversight, refusal mechanisms, fairness, explainability, harm prevention, misinformation, manipulation, accountability.</li>
       </ul>
-      <h2 data-reveal>Why static analysis</h2>
-      <p data-reveal>Nothing is executed. Running untrusted agent code to grade it would reproduce the exact class of risk the tool is looking for, so the analysis is pattern and heuristic based instead. That trades some recall for a guarantee that the grader cannot be turned into an attack surface, which is the right trade for a tool meant to be pointed at code you do not trust.</p>
+      <h2 data-reveal>The key decision: never execute the code</h2>
+      <p data-reveal>Running untrusted agent code in order to grade it would reproduce the exact risks the tool is looking for. So nothing is executed, and every check is pattern and heuristic based.</p>
+      <p data-reveal>The cost is some recall: a static check can miss behavior that only shows up at runtime. In return, the grader cannot be turned into an attack surface, which is the right trade for a tool meant to be pointed at code you do not trust.</p>
       <h2 data-reveal>Engineering</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Backend</strong>: FastAPI with async SQLAlchemy over SQLite, exposing OpenAPI docs.</li>
-        <li><strong>Frontend</strong>: Next.js 14 with TypeScript and Tailwind, polling live test progress as a run proceeds.</li>
-        <li><strong>Output</strong>: certification level from PLATINUM (90+) down through GOLD, SILVER and BRONZE to NOT_CERTIFIED, with a downloadable JSON report and a printable view.</li>
+        <li><strong>Backend</strong>: FastAPI with async SQLAlchemy over SQLite, with OpenAPI docs.</li>
+        <li><strong>Frontend</strong>: Next.js 14 with TypeScript and Tailwind, polling live test progress while a run proceeds.</li>
+        <li><strong>Output</strong>: a certification level from PLATINUM (90+) down through GOLD, SILVER and BRONZE to NOT_CERTIFIED, with a downloadable JSON report and a printable view.</li>
         <li><strong>Reach</strong>: ten languages: Python, JavaScript, TypeScript, Go, Java, Ruby, Rust, C++, C# and PHP.</li>
         <li><strong>Deployment</strong>: one <code>docker compose up</code> brings up both services.</li>
       </ul>

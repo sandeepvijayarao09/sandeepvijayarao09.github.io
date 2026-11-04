@@ -52,7 +52,7 @@
     <header class="page-header container">
       <h1>Vision-Language Grounding</h1>
       <p class="case-context">Four interconnected pipelines for VLM and VLA research</p>
-      <p class="lede">Zero-shot image-text grounding with CLIP, cross-modal attention pulled straight out of the Vision Transformer, prompt-conditioned generation, and an honest look at the embedding space underneath.</p>
+      <p class="lede">A toolkit for seeing inside a vision-language model: zero-shot image-text grounding with OpenCLIP ViT-B/32, attention maps pulled from the Vision Transformer, Stable Diffusion v1.5 generation, and embedding analysis that checks whether the two modalities actually align.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,16 +74,18 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Vision-language models are usually consumed as a black box: text in, similarity out. This pipeline opens the box in four directions at once, because the interesting failures live between the parts rather than inside any one of them.</p>
+      <p data-reveal>Vision-language models are usually used as a black box: text in, similarity score out. I built four pipelines that open that box from different sides and run over the same inputs, because the informative failures tend to sit between the parts, not inside any one of them.</p>
       <h2 data-reveal>The four pipelines</h2>
       <ul class="case-list" data-reveal>
         <li><strong>Image-text grounding</strong>: zero-shot matching of images to prompts with OpenCLIP ViT-B/32.</li>
-        <li><strong>Attention visualization</strong>: custom hooks extract multi-head attention from the Vision Transformer, overlaid as heatmaps so you can see which patches carried a match.</li>
-        <li><strong>Image generation</strong>: Stable Diffusion v1.5 through <code>diffusers</code>, with configurable conditioning, to probe the same semantics from the generative side.</li>
-        <li><strong>Embedding analysis</strong>: cosine similarity matrices plus t-SNE and UMAP projections to inspect how well the two modalities actually align.</li>
+        <li><strong>Attention visualization</strong>: custom hooks extract multi-head attention from the Vision Transformer and overlay it as heatmaps, showing which image patches carried a match.</li>
+        <li><strong>Image generation</strong>: Stable Diffusion v1.5 through <code>diffusers</code>, with configurable conditioning, probes the same semantics from the generative side.</li>
+        <li><strong>Embedding analysis</strong>: cosine similarity matrices plus t-SNE and UMAP projections show how well image and text embeddings line up.</li>
       </ul>
       <h2 data-reveal>Why the combination matters</h2>
-      <p data-reveal>Grounding scores tell you <em>that</em> a match happened; attention maps tell you <em>where</em>; the embedding analysis tells you whether the space is separable at all or whether a good score was luck. Running all four over the same inputs is what makes a VLM result interpretable rather than merely reported.</p>
+      <p data-reveal>Grounding scores tell you <em>that</em> a match happened. Attention maps tell you <em>where</em>. The embedding analysis tells you whether the space is separable at all, or whether a good score was luck. Running all four over the same inputs is what makes a VLM result interpretable instead of just reported.</p>
+      <h2 data-reveal>Scope</h2>
+      <p data-reveal>This is an analysis tool for VLM and VLA research, not a benchmark entry. Its outputs are heatmaps, similarity matrices and projections to be read and compared, so the page reports no single accuracy score.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>

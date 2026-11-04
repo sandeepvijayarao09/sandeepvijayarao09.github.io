@@ -52,7 +52,7 @@
     <header class="page-header container">
       <h1>Real-Time Pose Estimation</h1>
       <p class="case-context">Published at IEEE AISP 2024 &middot; co-authored, six authors &middot; DOI <a href="https://doi.org/10.1109/AISP61711.2024.10870725" target="_blank" rel="noopener">10.1109/AISP61711.2024.10870725</a></p>
-      <p class="lede">Thirty-three body landmarks, 3D joint angles and velocities, LSTM activity classification and repetition counting, all holding real time.</p>
+      <p class="lede">A real-time human pose pipeline for health and fitness: 33 body landmarks, 3D joint angles and velocities, LSTM activity classification and exercise repetition counting, running at 30+ FPS on GPU.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -75,16 +75,22 @@
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
       <p data-reveal>This is peer-reviewed work, presented at the 4th IEEE International Conference on Artificial Intelligence and Signal Processing in October 2024. I am one of six authors on the paper, &ldquo;Real-Time Human Pose Estimation Using MediaPipe and Artificial Intelligence Applications in Health and Fitness&rdquo;.</p>
-      <p data-reveal>The system detects a full 33-landmark skeleton, computes 3D joint angles and velocities from it, classifies activity with an LSTM, and counts exercise repetitions, with the whole chain holding real-time frame rates.</p>
+      <p data-reveal>The engineering problem is keeping a four-stage chain, from landmark detection to repetition counting, at real-time frame rates end to end, not just in the detector.</p>
       <h2 data-reveal>What the pipeline does</h2>
       <ul class="case-list" data-reveal>
         <li><strong>Landmark detection</strong> of the full 33-point body skeleton through MediaPipe.</li>
-        <li><strong>Spatial reasoning</strong> on top of the raw landmarks: 3D joint angles and per-joint velocities, which is what turns a point cloud into something you can reason about.</li>
+        <li><strong>Spatial features</strong> computed from the raw landmarks: 3D joint angles and per-joint velocities, which turn a set of points into a signal you can reason about.</li>
         <li><strong>Activity classification</strong> with LSTM networks over the landmark time series.</li>
-        <li><strong>Repetition counting</strong> for exercise tracking, driven by the angle and velocity signals rather than by raw position.</li>
+        <li><strong>Repetition counting</strong> for exercise tracking, driven by the angle and velocity signals instead of raw position.</li>
       </ul>
       <h2 data-reveal>Reported results</h2>
-      <p data-reveal>85% mAP on the COCO standard, 0.78 IoU, and 30+ FPS on GPU. These are the figures reported in the peer-reviewed paper and measured in that study, not numbers produced by this repository&rsquo;s test suite. The repo ships benchmarking utilities so they can be re-run on other hardware and data, and the distinction between &ldquo;published result&rdquo; and &ldquo;what this code asserts&rdquo; is kept explicit in the README.</p>
+      <ul class="case-list" data-reveal>
+        <li>85% mAP on the COCO standard.</li>
+        <li>0.78 IoU.</li>
+        <li>30+ FPS on GPU across the full 33-landmark pipeline.</li>
+      </ul>
+      <h2 data-reveal>What these numbers are</h2>
+      <p data-reveal>These figures were measured in the study and reported in the peer-reviewed paper. They are not produced by this repository&rsquo;s test suite. The repo ships benchmarking utilities so they can be re-run on other hardware and data, and the README keeps the line between &ldquo;published result&rdquo; and &ldquo;what this code asserts&rdquo; explicit.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>python</li>

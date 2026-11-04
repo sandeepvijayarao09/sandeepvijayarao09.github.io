@@ -52,7 +52,7 @@
     <header class="page-header container">
       <h1>TryOn</h1>
       <p class="case-context">Virtual try-on as an engine brands embed in their own apps</p>
-      <p class="lede">The shopper records a 360 degree video on their phone. TryOn reconstructs their body as a 3D mesh, reads the brand&rsquo;s size chart to work out how each size actually fits, and renders the garment on them. A 2D mode does the same from a single photo.</p>
+      <p class="lede">A shopper records a 360 degree video on their phone. TryOn reconstructs their body as a 3D mesh, reads the brand&rsquo;s size chart to work out how each size actually fits, and renders the garment on them. A 2D mode does the same from a single photo.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,15 +74,15 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Most try-on demos are a website. TryOn is built as an engine: a multi-tenant FastAPI service with a versioned <code>/v1</code> API and per-brand API keys, plus thin SDKs so a brand can put try-on inside its own Android app, iOS app or web store.</p>
-      <p data-reveal>Generative try-on models render one fit regardless of size. TryOn renders the <em>fit</em>: size S sits tight, XL drapes loose, driven by the brand&rsquo;s real size chart.</p>
+      <p data-reveal>Most try-on demos are a website. TryOn is an engine: a multi-tenant FastAPI service with a versioned <code>/v1</code> API and per-brand API keys, plus thin SDKs so a brand can put try-on inside its own Android app, iOS app or web store.</p>
+      <p data-reveal>Generative try-on models render one fit regardless of size. TryOn renders the <em>fit</em>: size S sits tight and XL drapes loose, driven by the brand&rsquo;s real size chart.</p>
       <h2 data-reveal>How it works</h2>
       <ul class="case-list" data-reveal>
         <li><strong>Frames.</strong> The upload is sampled at about 4 fps, capped at 80 frames and downscaled to 720 px.</li>
-        <li><strong>Silhouettes.</strong> Each frame is thresholded and cleaned with morphology, keeping the largest connected component as the body.</li>
+        <li><strong>Silhouettes.</strong> Each frame is thresholded and cleaned with morphology, and the largest connected component is kept as the body.</li>
         <li><strong>Camera model.</strong> The shopper turns in place, so the pipeline treats the capture as a turntable with evenly spaced viewing angles.</li>
         <li><strong>Visual hull to mesh.</strong> A 128&sup3; voxel grid is carved against every silhouette, then marching cubes turns the surviving volume into a <code>.glb</code> body mesh.</li>
-        <li><strong>Size-accurate fit.</strong> A body or finished-measurement size chart, the garment&rsquo;s cut and the shopper&rsquo;s measurements give their true size and the drape and tension for any size they pick.</li>
+        <li><strong>Size-accurate fit.</strong> A body or finished-measurement size chart, the garment&rsquo;s cut and the shopper&rsquo;s measurements give their true size, plus the drape and tension for any size they pick.</li>
         <li><strong>2D photo try-on.</strong> <code>POST /v1/tryon-photo</code> warps a garment onto the person in their own photo, following their silhouette.</li>
       </ul>
       <h2 data-reveal>Testing, and its limits</h2>

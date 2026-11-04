@@ -52,7 +52,7 @@
     <header class="page-header container">
       <h1>Real-Time Lane Detection</h1>
       <p class="case-context">Benchmarked on TuSimple against a named baseline</p>
-      <p class="lede">An encoder-decoder LaneNet that runs at 150 frames per second on an RTX 3080, about 6.7 milliseconds per frame, with instance clustering and spline fitting on the output.</p>
+      <p class="lede">A LaneNet lane detector built for real time: 99% accuracy on TuSimple at 150 frames per second on an RTX 3080, about 6.7 milliseconds per frame, with instance clustering and spline fitting turning the output into lane geometry.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,20 +74,20 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Lane detection is a latency problem before it is an accuracy problem: a model that is right and late is not useful to a vehicle. This implementation targets both, and reports against a named baseline on a public dataset so the numbers mean something.</p>
+      <p data-reveal>Lane detection is a latency problem before it is an accuracy problem: a model that is right but late is no use to a vehicle. I built this implementation to meet both targets and to report them against a named baseline on a public dataset, so the numbers can be checked.</p>
       <h2 data-reveal>Architecture</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Encoder</strong>: a pretrained EfficientNet-B0 or MobileNetV2 backbone, chosen for the accuracy-latency trade the deployment target needs.</li>
+        <li><strong>Encoder</strong>: a pretrained EfficientNet-B0 or MobileNetV2 backbone, picked per deployment target to set the accuracy and latency trade.</li>
         <li><strong>Decoder</strong>: four progressive upsampling blocks with skip connections.</li>
-        <li><strong>Two heads</strong>: a segmentation head predicting the binary lane mask, and an embedding head producing 4-dimensional instance embeddings so individual lanes can be clustered apart.</li>
-        <li><strong>Post-processing</strong>: instance clustering, perspective transform and spline fitting turn the mask into lane geometry.</li>
+        <li><strong>Two heads</strong>: a segmentation head predicts the binary lane mask, and an embedding head produces 4-dimensional instance embeddings so individual lanes can be clustered apart.</li>
+        <li><strong>Post-processing</strong>: instance clustering, a perspective transform and spline fitting turn the mask into lane geometry.</li>
       </ul>
       <h2 data-reveal>Training and deployment</h2>
       <ul class="case-list" data-reveal>
-        <li><strong>Mixed-precision training</strong> with AMP, about 40% faster than full precision.</li>
-        <li><strong>TorchScript export</strong> so the model deploys as an optimized <code>.pt</code> artifact rather than a Python dependency graph.</li>
-        <li><strong>Mock-data mode</strong> generates a synthetic dataset so the model and tests can run in CI without shipping TuSimple.</li>
-        <li><strong>Unit tests</strong> exercise the model on random tensors, which keeps shape and dtype regressions out without needing the real dataset.</li>
+        <li><strong>Mixed-precision training</strong> with AMP, about 40% faster than full-precision training.</li>
+        <li><strong>TorchScript export</strong>, so the model ships as an optimized <code>.pt</code> artifact instead of a Python dependency graph.</li>
+        <li><strong>Mock-data mode</strong> generates a synthetic dataset, so the model and tests run in CI without shipping TuSimple.</li>
+        <li><strong>Unit tests</strong> run the model on random tensors to catch shape and dtype regressions without the real dataset.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
@@ -95,6 +95,8 @@
         <li>150 FPS on an NVIDIA RTX 3080, roughly 6.7ms per frame.</li>
         <li>80% faster inference than the baseline implementation.</li>
       </ul>
+      <h2 data-reveal>Limits</h2>
+      <p data-reveal>The CI tests run on synthetic data and random tensors, so they guard shapes and types, not the accuracy figure; that comes from TuSimple. The frame rate is measured on an RTX 3080 and will differ on other hardware.</p>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>
         <li>pytorch</li>
@@ -114,7 +116,7 @@
       <a class="next-link" href="/work/vision-language-grounding/" data-reveal>
         <div>
           <strong>Next: Vision-Language Grounding</strong><br>
-          <span>CLIP grounding, attention maps, and what the embedding space actually looks like</span>
+          <span>CLIP grounding, attention maps, and a direct look at the embedding space</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>

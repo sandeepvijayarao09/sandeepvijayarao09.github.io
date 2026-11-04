@@ -52,7 +52,7 @@
     <header class="page-header container">
       <h1>AIFORG</h1>
       <p class="case-context">A Palantir-style operating layer for AI agents inside a business</p>
-      <p class="lede">AI for Organization: one agent platform for every employee in a company, grounded in its own documents, gated by role, and built so raw PII never reaches a model.</p>
+      <p class="lede">AI for Organization: one agent platform for every employee in a company, grounded in the company&rsquo;s own documents, gated by role, and built so raw PII never reaches a model.</p>
     </header>
 
     <section class="case-strip" aria-label="Key numbers">
@@ -74,23 +74,27 @@
 
     <article class="case-body container">
       <h2 data-reveal>Overview</h2>
-      <p data-reveal>Companies want every employee using AI, and cannot let company data leak into external models to get there. AIFORG is the platform in between: deployed once by the company, used daily by everyone from an intern to the CEO. It knows the organization's documents, knows each person's role, and decides what every agent is allowed to see.</p>
+      <p data-reveal>Companies want every employee using AI, and cannot let company data leak into external models to get there. AIFORG is the platform in between: deployed once by the company and used daily by everyone from an intern to the CEO. It knows the organization&rsquo;s documents, knows each person&rsquo;s role, and decides what every agent is allowed to see.</p>
       <p data-reveal>Underneath is a modular orchestration framework. Agents declare what they need, tools register what they offer, and the framework handles the handshake, so a new third-party tool joins in hours rather than weeks.</p>
-      <h2 data-reveal>How it works</h2>
+      <h2 data-reveal>Access control and privacy</h2>
       <ul class="case-list" data-reveal>
-        <li>FastAPI REST layer with JWT auth and RBAC/ABAC across five role levels, from basic user to executive.</li>
-        <li>Access-filtered RAG over company documents in ChromaDB: retrieval only returns chunks the requesting role may see.</li>
-        <li>14-category PII tokenization before anything reaches the LLM gateway (Claude), enforced by architecture rather than policy.</li>
-        <li>Role-specific agents for analysis, audit, email, and meeting notes, over a complete audit log of every query and document touched.</li>
-        <li>Standardized agent interfaces define a common contract for any agent joining the system.</li>
-        <li>Dynamic tool registration lets new capabilities attach at runtime, without framework changes.</li>
-        <li>Plan, Reason, Act execution loops coordinate agents and tools through each task.</li>
-        <li>Built on Google ADK and LangChain, so existing agent ecosystems plug in rather than port over.</li>
+        <li><strong>Auth</strong>: a FastAPI REST layer with JWT auth and RBAC/ABAC across five role levels, from basic user to executive.</li>
+        <li><strong>Access-filtered RAG</strong>: retrieval over company documents in ChromaDB only returns chunks the requesting role may see.</li>
+        <li><strong>PII tokenization</strong>: 14 categories of PII are tokenized before anything reaches the LLM gateway (Claude). This is enforced by the architecture, not by policy.</li>
+        <li><strong>Audit log</strong>: every query and every document it touched is recorded.</li>
+      </ul>
+      <h2 data-reveal>Agent framework</h2>
+      <ul class="case-list" data-reveal>
+        <li><strong>Role-specific agents</strong> for analysis, audit, email and meeting notes.</li>
+        <li><strong>Standardized agent interfaces</strong> define a common contract for any agent joining the system.</li>
+        <li><strong>Dynamic tool registration</strong> lets new capabilities attach at runtime, without framework changes.</li>
+        <li><strong>Plan, Reason, Act loops</strong> coordinate agents and tools through each task.</li>
+        <li><strong>Google ADK and LangChain</strong> underneath, so existing agent ecosystems plug in rather than port over.</li>
       </ul>
       <h2 data-reveal>Results</h2>
       <ul class="case-list" data-reveal>
         <li>Cut third-party agentic tool integration time to under 2 hours.</li>
-        <li>Zero raw PII reaches any model; every interaction is auditable and exportable for compliance.</li>
+        <li>Zero raw PII reaches any model, and every interaction is auditable and exportable for compliance.</li>
       </ul>
       <h2 data-reveal>Stack</h2>
       <ul class="tags case-tags" aria-label="Built with" data-reveal>

@@ -106,6 +106,8 @@
       else el.textContent = text;
     }
     requestAnimationFrame(tick);
+    /* rAF can stall in background tabs; never leave a placeholder */
+    setTimeout(() => { el.textContent = text; }, 1000);
   }
 
   const LABEL = { merged: "Merged", open: "In review", closed: "Closed" };

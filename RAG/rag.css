@@ -29,7 +29,7 @@
 .rag-prose blockquote a { color: var(--accent); text-decoration: none; }
 .rag-prose p a:hover, .rag-prose li a:hover, .rag-prose td a:hover,
 .rag-prose blockquote a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.rag-prose .btn-primary { color: var(--accent-ink); }
+.rag-prose .btn-primary { color: #ffffff; }
 .rag-prose strong { color: var(--text); }
 .rag-prose blockquote { margin: 1.6rem 0; padding: 1.1rem 1.4rem; border-left: 3px solid var(--accent);
   background: var(--bg-2); border-radius: 0 var(--r-surface) var(--r-surface) 0; color: var(--muted); }
@@ -56,7 +56,7 @@
 .rag-results td:last-child { text-align: right; font-family: var(--mono); font-size: .84rem;
   white-space: nowrap; }
 .rag-results em { color: var(--muted); font-style: normal; font-size: .82rem; }
-.rag-bad td:last-child { color: var(--hue-tools); }
+.rag-bad td:last-child { color: var(--red); }
 .rag-good td:last-child { color: var(--accent); }
 .rag-good td:first-child { font-weight: 500; }
 
@@ -70,7 +70,7 @@
 .rag-scores li:last-child { border-bottom: none; }
 .rag-scores span { color: var(--text); }
 .rag-scores em { font-family: var(--mono); font-size: .8rem; font-style: normal; white-space: nowrap; }
-.rag-lost em { color: var(--hue-tools); }
+.rag-lost em { color: var(--red); }
 .rag-flat { margin-bottom: 1.6rem; }
 .rag-flat em { color: var(--muted); }
 .rag-won em { color: var(--accent); }
@@ -88,12 +88,12 @@
 .rag-row.is-wip .rag-row-t::after { content: " roadmap"; font-family: var(--mono);
   font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; opacity: .55; }
 
-.codehilite .k, .codehilite .kn { color: var(--hue-llm); }
+.codehilite .k, .codehilite .kn { color: var(--text); font-weight: 600; }
 .codehilite .nc, .codehilite .nn { color: var(--accent); }
-.codehilite .s, .codehilite .s1, .codehilite .s2 { color: var(--accent); }
+.codehilite .s, .codehilite .s1, .codehilite .s2 { color: var(--red); }
 .codehilite .c, .codehilite .c1 { color: var(--muted); font-style: italic; }
-.codehilite .nf { color: var(--hue-vision); }
-.codehilite .mi, .codehilite .mf { color: var(--hue-product); }
+.codehilite .nf { color: var(--accent); }
+.codehilite .mi, .codehilite .mf { color: var(--accent); }
 
 @media (max-width: 720px) {
   .rag-split, .rag-rows { grid-template-columns: 1fr; gap: 1.6rem 0; }

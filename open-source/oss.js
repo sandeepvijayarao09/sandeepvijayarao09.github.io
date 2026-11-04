@@ -6,10 +6,13 @@
      results are cached for 15 minutes and the last good copy is shown
      if GitHub rate-limits us. */
 
-  const USER = "sandeepvijayarao09";
+  /* both of my GitHub accounts; totals are summed across them */
+  const USERS = ["sandeepvijayarao09", "mlzerotoheroyoutube"];
   const API = "https://api.github.com";
-  const CACHE_KEY = "oss-stats-v1";
+  const CACHE_KEY = "oss-stats-v2";
   const CACHE_MS = 15 * 60 * 1000;
+  const GITHUB_LIST = "https://github.com/pulls?q=" + encodeURIComponent(
+    "is:pr " + USERS.map((u) => `author:${u}`).join(" ") + " " + USERS.map((u) => `-user:${u}`).join(" "));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const list = document.getElementById("oss-list");
@@ -23,11 +26,14 @@
   }
 
   async function load() {
-    /* PRs I opened on repos I do not own */
-    const prs = await get(`/search/issues?q=${encodeURIComponent(`is:pr author:${USER} -user:${USER}`)}&sort=created&order=desc&per_page=100`);
-    const [commits, user] = await Promise.all([
-      get(`/search/commits?q=${encodeURIComponent(`author:${USER}`)}&per_page=1`),
-      get(`/users/${USER}`),
+    /* PRs from either account on repos neither account owns */
+    const authors = USERS.map((u) => `author:${u}`).join(" ");
+    const owners = USERS.map((u) => `-user:${u}`).join(" ");
+    const prs = await get(`/search/issues?q=${encodeURIComponent(`is:pr ${authors} ${owners}`)}&sort=created&order=desc&per_page=100`);
+    /* commit search ignores a second author: one query per account */
+    const [commits, users] = await Promise.all([
+      Promise.all(USERS.map((u) => get(`/search/commits?q=${encodeURIComponent(`author:${u}`)}&per_page=1`))),
+      Promise.all(USERS.map((u) => get(`/users/${u}`))),
     ]);
 
     const items = prs.items.map((i) => ({
@@ -36,6 +42,7 @@
       title: i.title,
       url: i.html_url,
       created: i.created_at,
+      author: i.user.login,
       state: i.pull_request && i.pull_request.merged_at ? "merged" : i.state === "open" ? "open" : "closed",
     }));
 
@@ -54,8 +61,8 @@
         open: items.filter((i) => i.state === "open").length,
         repos: repoNames.length,
         stars: repos.reduce((s, [, n]) => s + n, 0),
-        commits: commits.total_count,
-        publicRepos: user.public_repos,
+        commits: commits.reduce((s, c) => s + c.total_count, 0),
+        publicRepos: users.reduce((s, u) => s + u.public_repos, 0),
       },
     };
   }
@@ -132,7 +139,7 @@
       meta.className = "oss-meta";
       const starCount = data.stars[pr.repo];
       const date = new Date(pr.created).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-      meta.textContent = starCount ? `${date} · ★ ${fmt(starCount)}` : date;
+      meta.textContent = [date, starCount ? `★ ${fmt(starCount)}` : "", `@${pr.author}`].filter(Boolean).join(" · ");
 
       const pill = document.createElement("span");
       pill.className = "oss-pill";
@@ -160,7 +167,7 @@
         list.replaceChildren();
         const li = document.createElement("li");
         li.className = "oss-empty";
-        li.innerHTML = 'GitHub is rate-limiting this page right now. <a href="https://github.com/pulls?q=is%3Apr+author%3Asandeepvijayarao09+-user%3Asandeepvijayarao09" target="_blank" rel="noopener">See the list on GitHub</a>.';
+        li.innerHTML = 'GitHub is rate-limiting this page right now. <a href="' + GITHUB_LIST + '" target="_blank" rel="noopener">See the list on GitHub</a>.';
         list.append(li);
       }
     }

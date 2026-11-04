@@ -915,6 +915,8 @@ article.card { cursor: default; }
   font-size: 0.85rem;
 }
 
+.page-header .lede a { color: var(--text); text-decoration-color: var(--line); text-underline-offset: 3px; }
+
 .oss-empty { color: var(--muted); }
 .oss-empty a { color: var(--accent); }
 

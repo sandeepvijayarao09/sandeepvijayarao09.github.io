@@ -2,7 +2,6 @@
   "use strict";
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   /* nav border: sentinel observer instead of scroll listener */
   const nav = document.getElementById("nav");
@@ -96,17 +95,6 @@
     statNums.forEach((n) => statObserver.observe(n));
   }
 
-  /* card spotlight: cursor-tracked sheen, fine pointers only */
-  if (finePointer && !reduceMotion) {
-    document.querySelectorAll("a.card").forEach((card) => {
-      card.addEventListener("pointermove", (e) => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty("--mx", e.clientX - r.left + "px");
-        card.style.setProperty("--my", e.clientY - r.top + "px");
-      });
-    });
-  }
-
   /* hero canvas: drifting node field with proximity edges */
   const canvas = document.getElementById("field");
   if (!canvas) return;
@@ -142,7 +130,7 @@
   }
 
   function seed() {
-    const count = Math.min(90, Math.round((width * height) / 9000));
+    const count = Math.min(140, Math.round((width * height) / 6500));
     nodes = Array.from({ length: count }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,

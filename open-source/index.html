@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Open source | Sandeep Vijayarao</title>
-  <meta name="description" content="Sandeep Vijayarao's upstream open-source contributions to on-device ML projects such as LiteRT and MLX Swift, pulled live from GitHub.">
+  <meta name="description" content="Sandeep Vijayarao's upstream open-source contributions to on-device ML projects: LiteRT, MLX Swift, Hugging Face Diffusers and RunAnywhere, pulled live from GitHub.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/open-source/">
   <meta property="og:title" content="Open source | Sandeep Vijayarao">
   <meta property="og:description" content="Upstream fixes to on-device ML projects, pulled live from GitHub.">
@@ -18,13 +18,15 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Sandeep Vijayarao | AI Engineer">
   <meta name="twitter:image" content="https://sandeepvijayarao09.github.io/assets/og.png">
-  <meta name="theme-color" content="#fbfbfd">
-  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161617" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=20261103e">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="/styles.css?v=20261104b">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -32,13 +34,16 @@
 
   <header class="nav" id="nav">
     <div class="container nav-inner">
-      <a class="nav-name" href="/">Sandeep Vijayarao</a>
-      <nav aria-label="Primary">
-        <a href="/work/">Work</a>
-        <a href="/open-source/" aria-current="page"><span class="nav-full">Open source</span><span class="nav-short">OSS</span></a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-      </nav>
+      <a class="nav-name" href="/">Sandeep<span class="nav-last"> Vijayarao</span></a>
+      <div class="nav-end">
+        <nav aria-label="Primary">
+          <a href="/work/">Work</a>
+          <a href="/open-source/" aria-current="page"><span class="nav-full">Open source</span><span class="nav-short">OSS</span></a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Use dark theme" data-theme-toggle><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5a8.5 8.5 0 1 0 10.6 10.6Z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg></button>
+      </div>
     </div>
   </header>
 
@@ -46,7 +51,7 @@
 
     <header class="page-header container">
       <h1>Open source</h1>
-      <p class="lede">Upstream fixes to the on-device ML stack I build on: LiteRT, MLX, RunAnywhere, Diffusers. Every number on this page comes live from GitHub, so a merge shows up here when a maintainer presses the button. Totals cover both of my GitHub accounts, <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">sandeepvijayarao09</a> and <a href="https://github.com/mlzerotoheroyoutube" target="_blank" rel="noopener">mlzerotoheroyoutube</a>.</p>
+      <p class="lede">Upstream fixes to the on-device ML stack I build on: Google&rsquo;s LiteRT, MLX Swift, Hugging Face Diffusers and RunAnywhere. Every number on this page comes live from GitHub, so a merge shows up here when a maintainer presses the button. Totals cover both of my GitHub accounts, <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">sandeepvijayarao09</a> and <a href="https://github.com/mlzerotoheroyoutube" target="_blank" rel="noopener">mlzerotoheroyoutube</a>.</p>
     </header>
 
     <section class="oss-strip" aria-label="Contribution totals">
@@ -104,7 +109,7 @@
     </div>
   </footer>
 
-  <script src="/script.js?v=20261103e" defer></script>
+  <script src="/script.js?v=20261104b" defer></script>
   <script src="/open-source/oss.js?v=5" defer></script>
 </body>
 </html>

@@ -1,10 +1,11 @@
 /* ------------------------------------------------------------------
    Sandeep Vijayarao, portfolio
 
-   Theme: light-first, locked site-wide. White and #f5f5f7 canvases
-   carry the reading; black "stage" bands carry the hero visual and
-   the measured numbers. One accent per page (the domain hue on
-   <body data-hue>), deep on light, bright on black.
+   Theme: light and dark. Follows the system setting; the nav toggle
+   pins a choice in localStorage as <html data-theme>. Light uses white
+   and #f5f5f7 canvases; dark uses black and #1c1c1e. The measured
+   numbers always sit on a dark band. One accent per page (the domain
+   hue on <body data-hue>), deep on light, bright on dark.
 
    Type: Geist, large display sizes with tight tracking, 17px body.
    Radius: tiles 28px, small surfaces 18px, pills 999px, code 6px.
@@ -26,6 +27,11 @@
 }
 
 :root {
+  color-scheme: light;
+  --nav-bg: rgba(251, 251, 253, 0.8);
+  --band: #000000;
+  --tile-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), 0 16px 40px rgba(0, 0, 0, 0.1);
+
   /* light canvas */
   --bg: #ffffff;
   --bg-2: #f5f5f7;
@@ -71,6 +77,53 @@
   --section: 7.5rem;
 }
 
+/* ---------- dark theme ---------- */
+/* Same token names, dark values. Written twice because CSS cannot share
+   one block between an attribute and a media query. */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --nav-bg: rgba(22, 22, 23, 0.78);
+  --band: #161617;
+  --tile-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.6);
+  --bg: #000000;
+  --bg-2: #1c1c1e;
+  --surface: #1c1c1e;
+  --line: #424245;
+  --line-soft: rgba(255, 255, 255, 0.12);
+  --text: #f5f5f7;
+  --muted: #a1a1a6;
+  --muted-rgb: 161, 161, 166;
+  --hue-agent: var(--hue-agent-d);     --hue-agent-rgb: var(--hue-agent-d-rgb);
+  --hue-vision: var(--hue-vision-d);   --hue-vision-rgb: var(--hue-vision-d-rgb);
+  --hue-llm: var(--hue-llm-d);         --hue-llm-rgb: var(--hue-llm-d-rgb);
+  --hue-product: var(--hue-product-d); --hue-product-rgb: var(--hue-product-d-rgb);
+  --hue-tools: var(--hue-tools-d);     --hue-tools-rgb: var(--hue-tools-d-rgb);
+  --accent-ink: #000000;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --nav-bg: rgba(22, 22, 23, 0.78);
+    --band: #161617;
+    --tile-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.6);
+    --bg: #000000;
+    --bg-2: #1c1c1e;
+    --surface: #1c1c1e;
+    --line: #424245;
+    --line-soft: rgba(255, 255, 255, 0.12);
+    --text: #f5f5f7;
+    --muted: #a1a1a6;
+    --muted-rgb: 161, 161, 166;
+    --hue-agent: var(--hue-agent-d);     --hue-agent-rgb: var(--hue-agent-d-rgb);
+    --hue-vision: var(--hue-vision-d);   --hue-vision-rgb: var(--hue-vision-d-rgb);
+    --hue-llm: var(--hue-llm-d);         --hue-llm-rgb: var(--hue-llm-d-rgb);
+    --hue-product: var(--hue-product-d); --hue-product-rgb: var(--hue-product-d-rgb);
+    --hue-tools: var(--hue-tools-d);     --hue-tools-rgb: var(--hue-tools-d-rgb);
+    --accent-ink: #000000;
+  }
+}
+
 /* ---------- domain hues ---------- */
 
 [data-hue="agent"]   { --accent: var(--hue-agent);   --accent-rgb: var(--hue-agent-rgb);   --accent-d: var(--hue-agent-d);   --accent-d-rgb: var(--hue-agent-d-rgb); }
@@ -79,12 +132,11 @@
 [data-hue="product"] { --accent: var(--hue-product); --accent-rgb: var(--hue-product-rgb); --accent-d: var(--hue-product-d); --accent-d-rgb: var(--hue-product-d-rgb); }
 [data-hue="tools"]   { --accent: var(--hue-tools);   --accent-rgb: var(--hue-tools-rgb);   --accent-d: var(--hue-tools-d);   --accent-d-rgb: var(--hue-tools-d-rgb); }
 
-/* ---------- black stage bands ---------- */
+/* ---------- dark number bands ---------- */
 /* Same token names, dark values, so every rule inside just works. */
 
 .case-strip,
-.oss-strip,
-.hero-visual {
+.oss-strip {
   --bg: #000000;
   --bg-2: #161617;
   --surface: #1d1d1f;
@@ -95,7 +147,7 @@
   --muted-rgb: 161, 161, 166;
   --accent: var(--accent-d);
   --accent-rgb: var(--accent-d-rgb);
-  background: var(--bg);
+  background: var(--band);
   color: var(--text);
   color-scheme: dark;
 }
@@ -207,7 +259,7 @@ code {
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  background: rgba(251, 251, 253, 0.8);
+  background: var(--nav-bg);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   box-shadow: inset 0 -1px 0 transparent;
@@ -231,7 +283,31 @@ code {
   white-space: nowrap;
 }
 
+.nav-end { display: flex; align-items: center; gap: 1.25rem; }
 .nav nav { display: flex; gap: 2rem; }
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-right: -0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease, transform 150ms var(--ease);
+}
+.theme-toggle:active { transform: scale(0.92); }
+.theme-toggle svg { width: 1.05rem; height: 1.05rem; }
+.theme-toggle .i-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .i-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .i-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .i-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .i-moon { display: none; }
+}
 
 .nav nav a {
   display: inline-flex;
@@ -336,7 +412,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-block: 7rem 0;
+  padding-block: 8rem 2rem;
 }
 
 .hero-copy { display: flex; flex-direction: column; align-items: center; }
@@ -364,22 +440,6 @@ h2 {
   justify-content: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-}
-
-.hero-visual {
-  position: relative;
-  width: 100%;
-  margin-top: 5rem;
-  aspect-ratio: 21 / 9;
-  border-radius: var(--r-tile);
-  background: radial-gradient(90% 120% at 50% 0%, #121315 0%, #000 70%);
-  overflow: hidden;
-}
-.hero-visual canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
 }
 
 /* ---------- proof strip ---------- */
@@ -453,7 +513,7 @@ a.card::after {
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), 0 16px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tile-shadow);
   transition: opacity 300ms var(--ease);
 }
 
@@ -945,8 +1005,6 @@ section.next { padding-block: 5rem var(--section); }
   .page-header .lede { animation-delay: 120ms; }
   .page-header .case-actions { animation-delay: 200ms; }
 
-  .hero-visual { animation: stage-in 1100ms var(--ease) 200ms both; }
-
   .hero h1:not(.split),
   .page-header h1:not(.split) { animation: rise 800ms var(--ease) both; }
 
@@ -966,31 +1024,12 @@ section.next { padding-block: 5rem var(--section); }
   from { opacity: 0; transform: translateY(0.4em); }
   to { opacity: 1; transform: none; }
 }
-@keyframes stage-in {
-  from { opacity: 0; transform: translateY(40px) scale(0.96); }
-  to { opacity: 1; transform: none; }
-}
-
-/* scroll-driven: the hero stage widens into place as it scrolls up,
-   the way a product shot settles. Progressive; ignored where unsupported. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-visual canvas {
-      animation: stage-settle linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 45%;
-    }
-    @keyframes stage-settle {
-      from { transform: scale(1.12); opacity: 0.5; }
-      to { transform: none; opacity: 1; }
-    }
-  }
-}
-
 /* ---------- hover: fine pointers only ---------- */
 
 @media (hover: hover) and (pointer: fine) {
-  .nav nav a:hover { color: var(--text); }
+  .nav nav a:hover,
+  .theme-toggle:hover { color: var(--text); }
+  .theme-toggle:hover { background: var(--bg-2); }
 
   .btn-primary:hover { background: color-mix(in srgb, var(--accent) 86%, #000); }
   .btn-ghost:hover { background: var(--accent); color: var(--accent-ink); }
@@ -1026,7 +1065,6 @@ section.next { padding-block: 5rem var(--section); }
   :root { --section: 5.5rem; }
 
   .hero { padding-top: 5rem; }
-  .hero-visual { aspect-ratio: 16 / 10; margin-top: 3.5rem; }
 
   .proof-grid { grid-template-columns: 1fr 1fr; gap: 2rem; padding-block: 3rem; }
 
@@ -1067,15 +1105,21 @@ section.next { padding-block: 5rem var(--section); }
   .nav-short { display: inline; }
   .nav-inner { gap: 0.9rem; }
   .nav-name { font-size: 0.92rem; }
-  .nav nav { gap: 1rem; }
+  .nav-end { gap: 0.6rem; }
+  .nav nav { gap: 0.85rem; }
   .nav nav a { font-size: 0.84rem; }
+  .theme-toggle { margin-right: -0.35rem; }
+}
+
+/* the full name stays in titles and copy; the bar keeps room for the toggle */
+@media (max-width: 400px) {
+  .nav-last { display: none; }
 
   .page-header { padding-block: 4rem 0.5rem; }
   .page-header h1 { letter-spacing: -0.04em; }
 
   .hero { padding-top: 4rem; }
   .hero h1 { letter-spacing: -0.045em; }
-  .hero-visual { aspect-ratio: 4 / 3; margin-top: 3rem; border-radius: 22px; }
 
   .proof-grid { grid-template-columns: 1fr; gap: 1.5rem; padding-block: 2.5rem; }
 
@@ -1109,7 +1153,8 @@ section.next { padding-block: 5rem var(--section); }
 
 @media (prefers-contrast: more) {
   :root { --muted: #424245; --line: #86868b; --line-soft: rgba(0, 0, 0, 0.3); }
-  .case-strip, .oss-strip, .hero-visual { --muted: #d2d2d7; }
+  .case-strip, .oss-strip { --muted: #d2d2d7; }
+  :root[data-theme="dark"] { --muted: #d2d2d7; --line: #86868b; --line-soft: rgba(255, 255, 255, 0.35); }
   .tags li { color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
 }
 

@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About | Sandeep Vijayarao</title>
-  <meta name="description" content="About Sandeep Vijayarao: AI engineer, MS CS at Northeastern University, graduate TA, IEEE published researcher, GDG Sunnyvale core team.">
+  <meta name="description" content="About Sandeep Vijayarao: AI engineer building agents, retrieval and on-device LLM systems. MS CS at Northeastern University, graduate TA, open-source contributor, IEEE published researcher.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/about/">
   <meta property="og:title" content="About | Sandeep Vijayarao">
-  <meta property="og:description" content="AI engineer, MS CS at Northeastern University, graduate TA, IEEE published researcher.">
+  <meta property="og:description" content="AI engineer building agents, retrieval and on-device LLM systems. MS CS at Northeastern, graduate TA, open-source contributor.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/about/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -18,13 +18,15 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Sandeep Vijayarao | AI Engineer">
   <meta name="twitter:image" content="https://sandeepvijayarao09.github.io/assets/og.png">
-  <meta name="theme-color" content="#fbfbfd">
-  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161617" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=20261103e">
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="stylesheet" href="/styles.css?v=20261104b">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -32,13 +34,16 @@
 
   <header class="nav" id="nav">
     <div class="container nav-inner">
-      <a class="nav-name" href="/">Sandeep Vijayarao</a>
-      <nav aria-label="Primary">
-        <a href="/work/">Work</a>
-        <a href="/open-source/"><span class="nav-full">Open source</span><span class="nav-short">OSS</span></a>
-        <a href="/about/" aria-current="page">About</a>
-        <a href="/contact/">Contact</a>
-      </nav>
+      <a class="nav-name" href="/">Sandeep<span class="nav-last"> Vijayarao</span></a>
+      <div class="nav-end">
+        <nav aria-label="Primary">
+          <a href="/work/">Work</a>
+          <a href="/open-source/"><span class="nav-full">Open source</span><span class="nav-short">OSS</span></a>
+          <a href="/about/" aria-current="page">About</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Use dark theme" data-theme-toggle><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5a8.5 8.5 0 1 0 10.6 10.6Z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg></button>
+      </div>
     </div>
   </header>
 
@@ -46,36 +51,40 @@
 
     <header class="page-header container">
       <h1>About</h1>
-      <p class="lede">AI engineer focused on systems architecture: LLM routing, multi-agent orchestration, on-device inference, and the interfaces around them.</p>
+      <p class="lede">I build AI systems end to end: agent loops with real tools, retrieval I can measure, models that run on the device, and the product people actually touch.</p>
     </header>
 
     <section class="about container" aria-label="Bio and stack">
       <div class="about-grid">
         <div class="about-bio" data-reveal>
-          <p>I'm Sandeep (Sai Sandeep Kumar Vijayarao). I like the part of AI engineering where research meets product: routing layers that keep most queries local, agent frameworks that hold up outside the demo, and vision pipelines that run in real time on real hardware.</p>
-          <p>I published IEEE research on real-time pose estimation as an undergrad. More recently I won the Apple Swift Student Challenge 2026 with ANU, an on-device agentic iOS assistant, and built a cost-aware model router whose local classifier makes 85% of routing decisions with no API call.</p>
-          <p>Right now I'm pursuing my MS in Computer Science at Northeastern University in San Jose and TAing three graduate courses: Computer Vision, Generative AI, and HCI.</p>
+          <p>I&rsquo;m Sandeep (Sai Sandeep Kumar Vijayarao), an MS CS student at Northeastern University in San Jose, graduating May 2027. I like the part of AI engineering where a model has to survive contact with a real product.</p>
+          <p>At Trominosoft I built the orchestration, retrieval and tool-use layers of a multi-model platform, load-tested to 10K+ requests a day, then cut its latency 30% and its hallucination rate 38%. At Northeastern I TA three graduate courses, Computer Vision, Generative AI and HCI, and build the evaluation harnesses behind them.</p>
+          <p>In 2026 I won the Apple Swift Student Challenge with Anu, an iOS agent that runs Gemma 4 entirely on the phone. Building on that stack led me upstream: I now send fixes to LiteRT, MLX Swift, Hugging Face Diffusers and RunAnywhere when the tools I depend on break.</p>
         </div>
         <div class="about-stack" data-reveal style="--d:.1s">
           <div class="stack-group">
             <h3>Languages</h3>
-            <ul class="tags"><li>python</li><li>swift</li><li>typescript</li><li>kotlin</li><li>java</li><li>c/c++</li><li>sql</li></ul>
+            <ul class="tags"><li>python</li><li>typescript</li><li>swift</li><li>kotlin</li><li>sql</li><li>c/c++</li><li>bash</li></ul>
           </div>
           <div class="stack-group">
-            <h3>LLMs and fine-tuning</h3>
-            <ul class="tags"><li>pytorch</li><li>huggingface</li><li>vllm</li><li>lora</li><li>dpo</li><li>quantization</li></ul>
+            <h3>LLMs and agents</h3>
+            <ul class="tags"><li>openai, anthropic, gemini apis</li><li>langchain</li><li>google adk</li><li>mcp</li><li>react agents</li><li>multi-agent</li></ul>
           </div>
           <div class="stack-group">
-            <h3>Agents and retrieval</h3>
-            <ul class="tags"><li>langchain</li><li>google adk</li><li>rag</li><li>chromadb</li><li>litert</li><li>coreml</li><li>whisper</li></ul>
+            <h3>Retrieval and evaluation</h3>
+            <ul class="tags"><li>rag</li><li>chromadb</li><li>bm25</li><li>rerankers</li><li>sentence-transformers</li><li>ndcg@10</li><li>bertscore</li></ul>
           </div>
           <div class="stack-group">
-            <h3>Vision and 3D</h3>
-            <ul class="tags"><li>opencv</li><li>yolo</li><li>mediapipe</li><li>openclip</li><li>visual hull</li><li>3d reconstruction</li></ul>
+            <h3>Training and inference</h3>
+            <ul class="tags"><li>pytorch</li><li>huggingface</li><li>lora</li><li>dpo</li><li>vllm</li><li>int4/int8</li><li>litert</li><li>core ml</li><li>mlx</li></ul>
           </div>
           <div class="stack-group">
-            <h3>Full-stack and cloud</h3>
-            <ul class="tags"><li>typescript</li><li>react</li><li>swift</li><li>node.js</li><li>gcp</li><li>azure</li><li>docker</li><li>kubernetes</li></ul>
+            <h3>Vision</h3>
+            <ul class="tags"><li>opencv</li><li>yolo</li><li>mediapipe</li><li>openclip</li><li>3d reconstruction</li></ul>
+          </div>
+          <div class="stack-group">
+            <h3>Backend and cloud</h3>
+            <ul class="tags"><li>fastapi</li><li>node.js</li><li>next.js</li><li>docker</li><li>kubernetes</li><li>gcp</li><li>ci/cd</li></ul>
           </div>
         </div>
       </div>
@@ -86,11 +95,19 @@
       <div class="exp-list">
         <div class="exp-row" data-reveal>
           <div class="exp-head">
+            <h3>Open-source contributor</h3>
+            <p class="exp-org">LiteRT, MLX Swift, Diffusers, RunAnywhere</p>
+            <p class="exp-dates">2026 - present</p>
+          </div>
+          <p class="exp-desc">Upstream fixes to the on-device ML stack I build on: int16 comparison kernels in Google&rsquo;s LiteRT, a zero-size-array crash in MLX Swift, documentation links in Hugging Face Diffusers, and a run of SDK fixes and ABI documentation in RunAnywhere, several already merged. <a href="/open-source/">Live list</a>.</p>
+        </div>
+        <div class="exp-row" data-reveal>
+          <div class="exp-head">
             <h3>Graduate Teaching Assistant</h3>
             <p class="exp-org">Northeastern University</p>
             <p class="exp-dates">Sep 2025 - present</p>
           </div>
-          <p class="exp-desc">Built the evaluation harnesses and lab infrastructure behind three graduate courses, Computer Vision, Generative AI, and HCI, running agentic AI, on-device inference, and multimodal workloads for 100+ MS students across two semesters.</p>
+          <p class="exp-desc">Built the evaluation harnesses and lab infrastructure behind three graduate courses, Computer Vision, Generative AI and HCI, running agentic AI, on-device inference and multimodal workloads for 100+ MS students across two semesters.</p>
         </div>
         <div class="exp-row" data-reveal>
           <div class="exp-head">
@@ -98,7 +115,7 @@
             <p class="exp-org">Trominosoft</p>
             <p class="exp-dates">Feb 2025 - Aug 2025</p>
           </div>
-          <p class="exp-desc">Engineered the orchestration, retrieval, and tool-use layers of a multi-model AI platform in Python on Docker and Kubernetes on GCP, load-tested to 10K+ requests/day. Cut production request latency 30% by profiling model serving, and reduced hallucination rate 38% with DPO and LoRA fine-tuning pipelines.</p>
+          <p class="exp-desc">Engineered the orchestration, retrieval and tool-use layers of a multi-model AI platform in Python on Docker and Kubernetes on GCP, load-tested to 10K+ requests a day behind zero-downtime updates. Instrumented its request paths end to end, then cut production latency 30% by profiling model serving, and reduced hallucination rate 38% with DPO and LoRA fine-tuning on models already serving traffic.</p>
         </div>
         <div class="exp-row" data-reveal>
           <div class="exp-head">
@@ -155,14 +172,14 @@
       <a class="next-link" href="/work/" data-reveal>
         <div>
           <strong>Work</strong><br>
-          <span>Case studies and builds across agents, vision, and full-stack</span>
+          <span>Thirteen case studies across agents, retrieval, on-device AI and vision</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
       <a class="next-link" href="/contact/" data-reveal style="--d:.07s">
         <div>
           <strong>Contact</strong><br>
-          <span>Email, LinkedIn, and resume</span>
+          <span>Open to AI engineering and software roles</span>
         </div>
         <span class="ext" aria-hidden="true">&#8594;</span>
       </a>
@@ -181,6 +198,6 @@
     </div>
   </footer>
 
-  <script src="/script.js?v=20261103e" defer></script>
+  <script src="/script.js?v=20261104b" defer></script>
 </body>
 </html>

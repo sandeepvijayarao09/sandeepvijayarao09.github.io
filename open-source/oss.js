@@ -17,7 +17,12 @@
 
   const list = document.getElementById("oss-list");
   const updated = document.getElementById("oss-updated");
+  const filters = document.getElementById("oss-filters");
   if (!list) return;
+  /* the home page shows only the latest few: <ol data-limit="4"> */
+  const limit = Number(list.dataset.limit) || Infinity;
+  let filter = "all";
+  let current = null;
 
   async function get(path) {
     const res = await fetch(API + path, { headers: { Accept: "application/vnd.github+json" } });
@@ -113,19 +118,36 @@
   const LABEL = { merged: "Merged", open: "In review", closed: "Closed" };
 
   function render(data) {
+    current = data;
     for (const el of document.querySelectorAll("[data-oss]")) {
       const v = data.totals[el.dataset.oss];
       if (typeof v === "number") countTo(el, v);
     }
+    renderList(data);
 
+    const when = new Date(data.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    if (updated) updated.textContent = `Live from the GitHub API. Last refreshed ${when}.`;
+  }
+
+  function renderList(data) {
+    if (filters) {
+      for (const b of filters.querySelectorAll("[data-filter]")) {
+        const f = b.dataset.filter;
+        const n = f === "all" ? data.items.length : data.items.filter((i) => i.state === f).length;
+        b.querySelector(".oss-count").textContent = n;
+        b.setAttribute("aria-pressed", String(f === filter));
+      }
+    }
+
+    const shown = data.items.filter((i) => filter === "all" || i.state === filter).slice(0, limit);
     list.replaceChildren();
-    if (!data.items.length) {
+    if (!shown.length) {
       const li = document.createElement("li");
       li.className = "oss-empty";
-      li.textContent = "No upstream pull requests yet.";
+      li.textContent = data.items.length ? "Nothing in this state right now." : "No upstream pull requests yet.";
       list.append(li);
     }
-    for (const pr of data.items) {
+    for (const pr of shown) {
       const li = document.createElement("li");
       const a = document.createElement("a");
       a.className = "oss-pr";
@@ -156,9 +178,6 @@
       li.append(a);
       list.append(li);
     }
-
-    const when = new Date(data.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-    updated.textContent = `Live from the GitHub API. Last refreshed ${when}.`;
   }
 
   async function init() {
@@ -178,6 +197,15 @@
         list.append(li);
       }
     }
+  }
+
+  if (filters) {
+    filters.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-filter]");
+      if (!b || !current) return;
+      filter = b.dataset.filter;
+      renderList(current);
+    });
   }
 
   init();

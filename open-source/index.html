@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Open source | Sandeep Vijayarao</title>
-  <meta name="description" content="Sandeep Vijayarao's upstream open-source contributions to on-device ML projects: LiteRT, MLX Swift, Hugging Face Diffusers and RunAnywhere, pulled live from GitHub.">
+  <title>Open-source journey | Sandeep Vijayarao</title>
+  <meta name="description" content="Sandeep Vijayarao's open-source journey: upstream pull requests to ONNX Runtime, LiteRT, MLX, Swift Collections, LiteLLM, NVIDIA, Hugging Face and more, pulled live from GitHub.">
   <link rel="canonical" href="https://sandeepvijayarao09.github.io/open-source/">
-  <meta property="og:title" content="Open source | Sandeep Vijayarao">
-  <meta property="og:description" content="Upstream fixes to on-device ML projects, pulled live from GitHub.">
+  <meta property="og:title" content="Open-source journey | Sandeep Vijayarao">
+  <meta property="og:description" content="Upstream fixes across on-device runtimes, model tooling, LLM infrastructure and Swift, pulled live from GitHub.">
   <meta property="og:url" content="https://sandeepvijayarao09.github.io/open-source/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -26,7 +26,7 @@
   <link rel="preload" href="/assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/geist-mono-var.woff2" as="font" type="font/woff2" crossorigin>
   <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
-  <link rel="stylesheet" href="/styles.css?v=20261104d">
+  <link rel="stylesheet" href="/styles.css?v=20261105a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -50,8 +50,9 @@
   <main id="main">
 
     <header class="page-header container">
-      <h1>Open source</h1>
-      <p class="lede">Upstream fixes to the on-device ML stack I build on: Google&rsquo;s LiteRT, MLX Swift, Hugging Face Diffusers and RunAnywhere. Every number on this page comes live from GitHub, so a merge shows up here when a maintainer presses the button. Totals cover both of my GitHub accounts, <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">sandeepvijayarao09</a> and <a href="https://github.com/mlzerotoheroyoutube" target="_blank" rel="noopener">mlzerotoheroyoutube</a>.</p>
+      <p class="status" data-reveal><span class="status-dot" aria-hidden="true"></span>Open to work</p>
+      <h1>My open-source journey</h1>
+      <p class="lede">I started by fixing the tools that broke under my own projects. Now I read other people&rsquo;s codebases on purpose: on-device runtimes, model converters, LLM gateways and the Swift standard libraries, from Google, Microsoft, Apple, NVIDIA and Hugging Face. Every pull request below is pulled live from GitHub, across both of my accounts, <a href="https://github.com/sandeepvijayarao09" target="_blank" rel="noopener">sandeepvijayarao09</a> and <a href="https://github.com/mlzerotoheroyoutube" target="_blank" rel="noopener">mlzerotoheroyoutube</a>.</p>
     </header>
 
     <section class="oss-strip" aria-label="Contribution totals">
@@ -79,10 +80,68 @@
       </div>
     </section>
 
+    <section class="oss-areas container" aria-labelledby="oss-areas-title">
+      <div class="section-head" data-reveal>
+        <h2 id="oss-areas-title">Where the work lands</h2>
+      </div>
+      <div class="area-grid">
+        <div class="area" data-reveal>
+          <h3>On-device runtimes</h3>
+          <p class="area-repos">LiteRT &middot; ONNX Runtime &middot; MLX Swift &middot; TFLite Micro</p>
+          <p>Kernel and backend bugs: int16 comparison kernels in LiteRT, a Core ML model-cache leak in ONNX Runtime, a zero-size-array crash in MLX Swift.</p>
+        </div>
+        <div class="area" data-reveal style="--d:.06s">
+          <h3>Model tooling</h3>
+          <p class="area-repos">ONNX Runtime GenAI &middot; LiteRT Torch &middot; MLX Swift LM &middot; Argmax</p>
+          <p>Converters and loaders: Gemma 3 RoPE scaling in the model builder, a silent no-op in the NPU compiler, GLM-OCR image handling, M5 and A19 device support.</p>
+        </div>
+        <div class="area" data-reveal style="--d:.12s">
+          <h3>LLM and agent infrastructure</h3>
+          <p class="area-repos">LiteLLM &middot; NVIDIA auto-ontology &middot; Semantic Router</p>
+          <p>Error mapping for Anthropic streams in LiteLLM, keeping PII sample values out of text-to-SQL prompts, and encoder defaults in Semantic Router.</p>
+        </div>
+        <div class="area" data-reveal style="--d:.18s">
+          <h3>Swift and SDKs</h3>
+          <p class="area-repos">Swift Collections &middot; RunAnywhere &middot; Diffusers</p>
+          <p>A B-tree invariant in Apple&rsquo;s SortedCollections, cross-platform SDK fixes and ABI documentation in RunAnywhere, and 22 dead links in the Diffusers docs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="journey container" aria-labelledby="journey-title">
+      <div class="section-head" data-reveal>
+        <h2 id="journey-title">How it started</h2>
+      </div>
+      <ol class="journey-list">
+        <li data-reveal>
+          <span class="journey-date">Early 2026</span>
+          <div><strong>Building Anu on LiteRT</strong><p>Shipping Gemma 4 on an iPhone for the Apple Swift Challenge meant living inside LiteRT, MLX and Core ML, and finding where they break.</p></div>
+        </li>
+        <li data-reveal>
+          <span class="journey-date">Mar 2026</span>
+          <div><strong>First pull request</strong><p>A memoized solver for a classmate&rsquo;s CodeCorrect project. Small, but it was the first time my code went through someone else&rsquo;s review.</p></div>
+        </li>
+        <li data-reveal>
+          <span class="journey-date">Nov 2026</span>
+          <div><strong>First upstream merges</strong><p>RunAnywhere and Hugging Face Diffusers merged my first fixes within a day of each other.</p></div>
+        </li>
+        <li data-reveal>
+          <span class="journey-date">Now</span>
+          <div><strong>Going wider</strong><p>Fixes in review at Google, Microsoft, Apple, NVIDIA, ml-explore and BerriAI. Each one starts with a reproducible failing test.</p></div>
+        </li>
+      </ol>
+    </section>
+
     <section class="oss container" aria-labelledby="oss-prs-title">
       <div class="section-head">
-        <h2 id="oss-prs-title">Pull requests</h2>
+        <h2 id="oss-prs-title">Every pull request</h2>
         <a class="more-link" href="https://github.com/pulls?q=is%3Apr+author%3Asandeepvijayarao09+author%3Amlzerotoheroyoutube+-user%3Asandeepvijayarao09+-user%3Amlzerotoheroyoutube" target="_blank" rel="noopener">On GitHub<span class="ext" aria-hidden="true">&#8599;</span></a>
+      </div>
+
+      <div class="oss-filters" id="oss-filters" role="group" aria-label="Filter pull requests">
+        <button type="button" data-filter="all" aria-pressed="true">All <span class="oss-count"></span></button>
+        <button type="button" data-filter="merged" aria-pressed="false">Merged <span class="oss-count"></span></button>
+        <button type="button" data-filter="open" aria-pressed="false">In review <span class="oss-count"></span></button>
       </div>
 
       <ol class="oss-list" id="oss-list" aria-live="polite">
@@ -94,6 +153,20 @@
       </noscript>
 
       <p class="oss-note" id="oss-updated"></p>
+    </section>
+
+    <section class="hire container" aria-label="Open to work">
+      <div class="hire-card" data-reveal>
+        <div>
+          <p class="status"><span class="status-dot" aria-hidden="true"></span>Open to work</p>
+          <h2>Looking for a team that ships AI.</h2>
+          <p>AI engineering and software internships and new-grad roles. MS CS at Northeastern, graduating 2027, based in San Jose.</p>
+        </div>
+        <div class="hire-actions">
+          <a class="btn btn-primary" href="/contact/">Get in touch</a>
+          <a class="btn btn-ghost" href="/assets/resume.pdf" target="_blank" rel="noopener">Resume<span class="ext" aria-hidden="true">&#8599;</span></a>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -110,6 +183,6 @@
   </footer>
 
   <script src="/script.js?v=20261104d" defer></script>
-  <script src="/open-source/oss.js?v=5" defer></script>
+  <script src="/open-source/oss.js?v=6" defer></script>
 </body>
 </html>
